@@ -3,9 +3,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "server": "tsx server.ts",
-        "client": "tsx client.ts",
-        "client:browser": "tsx simpleOAuthClient.ts"
+        "server": "bun server.ts",
+        "client": "bun client.ts",
+        "client:browser": "bun simpleOAuthClient.ts",
+        "dev": "bun --watch server.ts"
     },
     "dependencies": {
         "@mcp-examples/shared": "workspace:*",

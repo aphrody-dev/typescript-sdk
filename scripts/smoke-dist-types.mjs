@@ -1,7 +1,7 @@
 // Compiles a small consumer against the BUILT declaration files with
 // `skipLibCheck: false`, catching dangling type references that the dts
 // bundler emits only as non-fatal warnings (its failOnWarn does not fail on
-// MISSING_EXPORT). Run after `pnpm build:all`.
+// MISSING_EXPORT). Run after `bun run build:all`.
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -63,7 +63,7 @@ try {
             2
         )
     );
-    execFileSync('pnpm', ['exec', 'tsc', '-p', dir], { cwd: repo, stdio: 'inherit' });
+    execFileSync('bunx', ['tsc', '-p', dir], { cwd: repo, stdio: 'inherit' });
     console.log('dist-types smoke: clean (skipLibCheck: false)');
 
     // CommonJS consumer: resolves through the package `exports` map to the .d.cts files, which must not import ESM-only packages.
@@ -105,7 +105,7 @@ try {
             2
         )
     );
-    execFileSync('pnpm', ['exec', 'tsc', '-p', cjs], { cwd: repo, stdio: 'inherit' });
+    execFileSync('bunx', ['tsc', '-p', cjs], { cwd: repo, stdio: 'inherit' });
     console.log('dist-types smoke (CommonJS consumer): clean (skipLibCheck: false)');
 } finally {
     rmSync(dir, { recursive: true, force: true });

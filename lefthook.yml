@@ -19,19 +19,19 @@ pre-push:
     parallel: true
     jobs:
         - name: 'Typecheck'
-          run: pnpm run typecheck:all
+          run: bun run typecheck:all
           fail_text: |
               💡 To catch typechecking issues earlier, enable the pre-commit hook:
               cp lefthook-local.example.yml lefthook-local.yml
 
         - name: 'Lint'
-          run: pnpm run lint:all
+          run: bun run lint:all
           fail_text: |
               💡 To catch linting issues earlier, enable the pre-commit hook:
               cp lefthook-local.example.yml lefthook-local.yml
 
         - name: 'Build'
-          run: pnpm run build:all
+          run: bun run build:all
           fail_text: |
               💡 To catch build issues earlier, enable the pre-commit hook:
               cp lefthook-local.example.yml lefthook-local.yml

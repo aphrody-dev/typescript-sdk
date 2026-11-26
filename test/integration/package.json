@@ -13,10 +13,8 @@
         "url": "git+https://github.com/modelcontextprotocol/typescript-sdk.git"
     },
     "engines": {
-        "node": ">=20",
-        "pnpm": ">=10.24.0"
+        "node": ">=20"
     },
-    "packageManager": "pnpm@10.24.0",
     "keywords": [
         "modelcontextprotocol",
         "mcp"
@@ -26,8 +24,8 @@
         "lint": "eslint test/ && prettier --ignore-path ../../.prettierignore --check .",
         "lint:fix": "eslint test/ --fix && prettier --ignore-path ../../.prettierignore --write .",
         "check": "npm run typecheck && npm run lint",
-        "test": "vitest run",
-        "test:watch": "vitest",
+        "test": "bun test --config=../../bunfig.toml",
+        "test:watch": "bun test --watch --config=../../bunfig.toml",
         "test:integration:bun": "bun test test/server/bun.test.ts",
         "test:integration:deno": "deno test --no-check --allow-net --allow-read --allow-env test/server/deno.test.ts"
     },

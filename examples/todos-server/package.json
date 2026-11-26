@@ -3,8 +3,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "start": "tsx server.ts",
-        "start:http": "tsx server.ts --http"
+        "start": "bun server.ts",
+        "start:http": "bun server.ts --http"
     },
     "dependencies": {
         "@hono/node-server": "catalog:runtimeServerOnly",

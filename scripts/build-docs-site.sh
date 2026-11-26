@@ -35,9 +35,9 @@ mkdir -p "$OUTPUT_DIR"
 echo "=== Building V2 site ==="
 
 cd "$REPO_ROOT"
-pnpm install
-pnpm -r --filter='./packages/**' build
-pnpm docs:build
+bun install
+bun run --filter './packages/**' build
+bun run docs:build
 
 mkdir -p "$OUTPUT_DIR/v2"
 cp -r "$REPO_ROOT/docs/.vitepress/dist/." "$OUTPUT_DIR/v2/"
@@ -144,7 +144,7 @@ for f in "$V1_CONTENT"/*.md; do
 done
 
 cd "$REPO_ROOT"
-pnpm exec vitepress build docs/v1
+bunx vitepress build docs/v1
 
 cp -r "$REPO_ROOT/docs/v1/.vitepress/dist/." "$OUTPUT_DIR/"
 

@@ -6,18 +6,18 @@ pre-commit:
     parallel: true
     jobs:
         - name: 'Typecheck'
-          run: pnpm typecheck:all
+          run: bun run typecheck:all
 
         - name: 'Lint Fix & Format'
-          run: pnpm lint:fix:all
+          run: bun run lint:fix:all
           stage_fixed: true
 
 post-checkout:
     jobs:
         - name: 'Install Dependencies'
-          run: pnpm install
+          run: bun install
 
 post-merge:
     jobs:
         - name: 'Install Dependencies'
-          run: pnpm install
+          run: bun install

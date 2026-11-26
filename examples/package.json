@@ -19,7 +19,7 @@
         "typecheck": "tsgo -p tsconfig.json --noEmit",
         "lint": "eslint . && prettier --ignore-path ../.prettierignore --check .",
         "lint:fix": "eslint . --fix && prettier --ignore-path ../.prettierignore --write .",
-        "check": "pnpm run typecheck && pnpm run lint"
+        "check": "bun run typecheck && bun run lint"
     },
     "dependencies": {
         "@hono/node-server": "catalog:runtimeServerOnly",

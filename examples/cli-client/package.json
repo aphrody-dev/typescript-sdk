@@ -3,10 +3,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "start": "tsx cli.ts",
-        "client": "tsx client.ts",
-        "test": "vitest run",
-        "test:watch": "vitest"
+        "start": "bun cli.ts",
+        "client": "bun client.ts",
+        "test": "bun test --config=../../bunfig.toml",
+        "test:watch": "bun test --watch --config=../../bunfig.toml"
     },
     "dependencies": {
         "@anthropic-ai/sdk": "^0.74.0",

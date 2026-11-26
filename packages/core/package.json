@@ -71,12 +71,12 @@
         "typecheck": "tsgo -p tsconfig.json --noEmit",
         "build": "tsdown",
         "build:watch": "tsdown --watch",
-        "prepack": "pnpm run build",
+        "prepack": "bun run build",
         "lint": "eslint src/ && prettier --ignore-path ../../.prettierignore --check .",
         "lint:fix": "eslint src/ --fix && prettier --ignore-path ../../.prettierignore --write .",
-        "check": "pnpm run typecheck && pnpm run lint",
-        "test": "vitest run",
-        "test:watch": "vitest"
+        "check": "bun run typecheck && bun run lint",
+        "test": "bun test --config=../../bunfig.toml",
+        "test:watch": "bun test --watch --config=../../bunfig.toml"
     },
     "dependencies": {
         "zod": "catalog:runtimeShared"
