@@ -1,5 +1,7 @@
 import type { Readable, Writable } from 'node:stream';
 
+import type { FileSink } from 'bun';
+
 import type { JSONRPCMessage, Transport } from '@modelcontextprotocol/core-internal';
 import { ReadBuffer, serializeMessage } from '@modelcontextprotocol/core-internal';
 import { process } from '@modelcontextprotocol/server/_shims';
@@ -13,10 +15,13 @@ import { process } from '@modelcontextprotocol/server/_shims';
  */
 const swallowsErrorsAfterClose = Symbol('swallowsErrorsAfterClose');
 
+const STDIN_EVENTS = ['data', 'readable', 'end', 'close'] as const;
+
 /**
  * Server transport for stdio: this communicates with an MCP client by reading from the current process' `stdin` and writing to `stdout`.
  *
- * This transport is only available in Node.js environments.
+ * Constructed without streams on Bun, it reads `Bun.stdin` and writes through a `Bun.stdout` `FileSink`;
+ * given Node `Readable`/`Writable` streams (or on another runtime), it uses those.
  *
  * When the client closes its end of the pipe (stdin reaches end-of-file), the transport
  * closes itself and fires `onclose`, per the MCP stdio binding's guidance that servers
@@ -36,10 +41,15 @@ export class StdioServerTransport implements Transport {
     private _readBuffer: ReadBuffer;
     private _started = false;
     private _closed = false;
+    private _stdin: Readable;
+    private _stdout: Writable;
+    private _native: boolean;
+    private _nativeReader?: { cancel(): Promise<void> };
+    private _nativeSink?: FileSink;
 
     constructor(
-        private _stdin: Readable = process.stdin,
-        private _stdout: Writable = process.stdout,
+        stdin?: Readable,
+        stdout?: Writable,
         options?: {
             /**
              * Maximum size of the read buffer in bytes. If a single message exceeds
@@ -50,6 +60,9 @@ export class StdioServerTransport implements Transport {
             maxBufferSize?: number;
         }
     ) {
+        this._native = stdin === undefined && stdout === undefined && typeof Bun !== 'undefined';
+        this._stdin = stdin ?? process.stdin;
+        this._stdout = stdout ?? process.stdout;
         this._readBuffer = new ReadBuffer({ maxBufferSize: options?.maxBufferSize });
     }
 
@@ -108,6 +121,14 @@ export class StdioServerTransport implements Transport {
         }
 
         this._started = true;
+        if (this._native && STDIN_EVENTS.some(event => this._stdin.listenerCount(event) > 0)) {
+            // Something else already reads process.stdin; a second reader on fd 0 would split the input.
+            this._native = false;
+        }
+        if (this._native) {
+            this._startNative();
+            return;
+        }
         // Remove swallow-only 'error' listeners left behind by previously closed
         // transports on this stream (see close()). Our own listener covers the
         // stream from here on, so the stale ones are no longer needed — without
@@ -136,6 +157,25 @@ export class StdioServerTransport implements Transport {
         this._stdout.on('error', this._onstdouterror);
     }
 
+    private _startNative(): void {
+        this._nativeSink = Bun.stdout.writer();
+        const reader = Bun.stdin.stream().getReader();
+        this._nativeReader = reader;
+        void (async () => {
+            try {
+                while (!this._closed) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    this._ondata(Buffer.from(value.buffer, value.byteOffset, value.byteLength));
+                }
+            } catch (error) {
+                if (!this._closed) this.onerror?.(error as Error);
+            }
+            // EOF: the client hung up (see _onstdinclose).
+            this._onstdinclose();
+        })();
+    }
+
     private processReadBuffer() {
         while (true) {
             try {
@@ -156,6 +196,15 @@ export class StdioServerTransport implements Transport {
             return;
         }
         this._closed = true;
+
+        if (this._native) {
+            const reader = this._nativeReader;
+            this._nativeReader = undefined;
+            reader?.cancel().catch(() => {});
+            this._readBuffer.clear();
+            this.onclose?.();
+            return;
+        }
 
         // Remove our event listeners first
         this._stdin.off('data', this._ondata);
@@ -187,6 +236,9 @@ export class StdioServerTransport implements Transport {
         if (this._closed) {
             return Promise.reject(new Error('StdioServerTransport is closed'));
         }
+        if (this._nativeSink) {
+            return this._sendNative(this._nativeSink, serializeMessage(message));
+        }
         return new Promise((resolve, reject) => {
             const json = serializeMessage(message);
 
@@ -217,5 +269,16 @@ export class StdioServerTransport implements Transport {
                 this._stdout.once('drain', onDrain);
             }
         });
+    }
+
+    private async _sendNative(sink: FileSink, json: string): Promise<void> {
+        try {
+            await sink.write(json);
+            await sink.flush();
+        } catch (error) {
+            // A write that fails because the client hung up surfaces like a stdout 'error' (see _onstdouterror).
+            this._onstdouterror(error as Error);
+            throw error;
+        }
     }
 }

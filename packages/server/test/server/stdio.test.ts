@@ -466,3 +466,48 @@ test('should fire onerror and close when ReadBuffer overflows', async () => {
     expect(receivedError?.message).toMatch(/ReadBuffer exceeded maximum size/);
     expect(closeCount).toBe(1);
 });
+
+describe('default process stdio on Bun (Bun.stdin / Bun.stdout)', () => {
+    const transportPath = new URL('../../src/server/stdio.ts', import.meta.url).pathname;
+    const echoServer = (prelude = '') => `
+        ${prelude}
+        const { StdioServerTransport } = await import(${JSON.stringify(transportPath)});
+        const transport = new StdioServerTransport();
+        transport.onmessage = message => transport.send({ jsonrpc: '2.0', id: message.id, result: { echoed: message.method } });
+        transport.onclose = () => process.stderr.write('closed\\n');
+        await transport.start();
+    `;
+
+    async function roundTrip(script: string) {
+        const proc = Bun.spawn([process.execPath, '-e', script], { stdin: 'pipe', stdout: 'pipe', stderr: 'pipe' });
+        for (let id = 1; id <= 3; id++) proc.stdin.write(serializeMessage({ jsonrpc: '2.0', id, method: `m${id}` }));
+        await proc.stdin.flush();
+        proc.stdin.end();
+        const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+        return {
+            lines: stdout
+                .trim()
+                .split('\n')
+                .map(line => JSON.parse(line)),
+            stderr,
+            exitCode
+        };
+    }
+
+    test('answers each line and closes (process exits) on stdin EOF', async () => {
+        const { lines, stderr, exitCode } = await roundTrip(echoServer());
+        expect(lines).toEqual([1, 2, 3].map(id => ({ jsonrpc: '2.0', id, result: { echoed: `m${id}` } })));
+        expect(stderr).toBe('closed\n');
+        expect(exitCode).toBe(0);
+    });
+
+    test('falls back to process.stdin when something already listens on it', async () => {
+        const { lines, stderr, exitCode } = await roundTrip(
+            echoServer(`process.stdin.on('end', () => process.stderr.write('end seen\\n'));`)
+        );
+        expect(lines).toHaveLength(3);
+        expect(stderr).toContain('end seen\n');
+        expect(stderr).toContain('closed\n');
+        expect(exitCode).toBe(0);
+    });
+});
