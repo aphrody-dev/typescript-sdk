@@ -72,7 +72,7 @@ verifies('typescript:hosting:entry:auth:missing-401', async ({ transport }: Test
 
     // The documented bearer-gate composition in front of the entry.
     const gatedFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
-        const request = new Request(url, init);
+        const request = new Request(String(url), init);
         const authInfo = verifyBearer(request.headers.get('authorization'));
         if (authInfo === undefined) return unauthorized();
         return handler.fetch(request, { authInfo });
@@ -139,7 +139,7 @@ verifies('typescript:hosting:entry:auth:authinfo-propagates', async ({ transport
 
     const handler = createMcpHandler(factory, { legacy: transport === 'entryStateless' ? 'stateless' : 'reject' });
     const gatedFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
-        const request = new Request(url, init);
+        const request = new Request(String(url), init);
         const authInfo = verifyBearer(request.headers.get('authorization'));
         if (authInfo === undefined) return unauthorized();
         return handler.fetch(request, { authInfo });
@@ -222,7 +222,7 @@ verifies('typescript:hosting:entry:ctx-http-req-headers', async ({ transport }: 
 
     await client.connect(
         new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), {
-            fetch: (url, init) => handler.fetch(new Request(url, init)),
+            fetch: (url, init) => handler.fetch(new Request(String(url), init)),
             requestInit: { headers: { [PROBE_HEADER]: PROBE_VALUE } }
         })
     );
@@ -274,7 +274,7 @@ verifies('typescript:hosting:entry:auth:insufficient-scope-403', async ({ transp
         );
 
     const gatedFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
-        const request = new Request(url, init);
+        const request = new Request(String(url), init);
         const auth = request.headers.get('authorization');
         const token = auth?.startsWith('Bearer ') ? auth.slice('Bearer '.length) : undefined;
         if (!token) return unauthorized();

@@ -57,7 +57,9 @@ async function connect(revision: string, build: (mcp: McpServer) => void): Promi
         revision === MODERN ? { versionNegotiation: { mode: { pin: MODERN } } } : {}
     );
     await client.connect(
-        new StreamableHTTPClientTransport(new URL('http://localhost/mcp'), { fetch: (url, init) => handler.fetch(new Request(url, init)) })
+        new StreamableHTTPClientTransport(new URL('http://localhost/mcp'), {
+            fetch: (url, init) => handler.fetch(new Request(String(url), init))
+        })
     );
     open.push(client);
     return client;

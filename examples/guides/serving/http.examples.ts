@@ -121,7 +121,7 @@ const { Client, StreamableHTTPClientTransport } = await import('@modelcontextpro
 const client = new Client({ name: 'http-docs-harness', version: '1.0.0' });
 await client.connect(
     new StreamableHTTPClientTransport(new URL('http://localhost/mcp'), {
-        fetch: (url, init) => handler.fetch(new Request(url, init))
+        fetch: (url, init) => handler.fetch(new Request(String(url), init))
     })
 );
 const saved = await client.callTool({ name: 'add-note', arguments: { text: 'ship the release notes' } });
@@ -134,7 +134,7 @@ const authInfo = { token: 'verified-elsewhere', clientId: 'alice', scopes: ['not
 const alice = new Client({ name: 'http-docs-harness', version: '1.0.0' });
 await alice.connect(
     new StreamableHTTPClientTransport(new URL('http://localhost/mcp'), {
-        fetch: (url, init) => perCaller.fetch(new Request(url, init), { authInfo })
+        fetch: (url, init) => perCaller.fetch(new Request(String(url), init), { authInfo })
     })
 );
 const who = await alice.callTool({ name: 'whoami' });

@@ -12,7 +12,7 @@ const createMockResponse = () => {
         end: vi.fn<http.ServerResponse['end']>().mockReturnThis()
     };
 
-    return res as unknown as Mocked<http.ServerResponse>;
+    return res as unknown as http.ServerResponse & Mocked<http.ServerResponse>;
 };
 
 const createMockRequest = ({

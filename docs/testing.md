@@ -1,6 +1,7 @@
 ---
 shape: how-to
 ---
+
 # Test a server
 
 Drive your server through a real `Client`, in-process — no port, no socket, no mock transport.
@@ -39,7 +40,7 @@ function createServer() {
 const handler = createMcpHandler(createServer);
 
 const transport = new StreamableHTTPClientTransport(new URL('http://test.local/mcp'), {
-    fetch: (url, init) => handler.fetch(new Request(url, init))
+    fetch: (url, init) => handler.fetch(new Request(String(url), init))
 });
 ```
 

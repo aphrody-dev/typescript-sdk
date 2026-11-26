@@ -29,7 +29,7 @@ const nonceChallenge = (nonce?: string) =>
 describe('StreamableHTTPClientTransport — DPoP', () => {
     const url = new URL('http://localhost:1234/mcp');
     let session: DpopSession;
-    let provider: OAuthClientProvider & { tokens: Mock };
+    let provider: OAuthClientProvider & { tokens: Mock<(...args: any[]) => any> };
     let transport: StreamableHTTPClientTransport;
     let fetchSpy: Mock<typeof fetch>;
 
@@ -92,7 +92,7 @@ describe('StreamableHTTPClientTransport — DPoP', () => {
     });
 
     it('presents a token_type=Bearer token with the Bearer scheme and no proof, even though dpop() resolves (RFC 9449 §7.1)', async () => {
-        provider.tokens.mockResolvedValue({ access_token: 'tok-1', token_type: 'Bearer' });
+        provider.tokens.mockImplementation(async () => ({ access_token: 'tok-1', token_type: 'Bearer' }));
         fetchSpy.mockResolvedValueOnce(new Response(null, { status: 202 }));
 
         await transport.send({ jsonrpc: '2.0', method: 'test', params: {}, id: 'id-1' });
@@ -140,7 +140,7 @@ describe('StreamableHTTPClientTransport — DPoP', () => {
 
     it('bounds retries when the nonce challenge never clears: a nonce retry per attempt, one credential retry, then throws', async () => {
         const onUnauthorized = vi.spyOn(authProviderOf(transport), 'onUnauthorized').mockResolvedValue();
-        fetchSpy.mockImplementation(async () => nonceChallenge('rs-nonce-1'));
+        fetchSpy.mockImplementation((async () => nonceChallenge('rs-nonce-1')) as unknown as typeof fetch);
 
         await expect(transport.send({ jsonrpc: '2.0', method: 'test', params: {}, id: 'id-1' })).rejects.toThrow();
 

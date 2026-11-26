@@ -54,7 +54,7 @@ const handler = createMcpHandler(() => {
 
 const realFetch = globalThis.fetch;
 globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
-    const request = new Request(input, init);
+    const request = new Request(input as string, init);
     if (new URL(request.url).host === 'localhost:3000') return handler.fetch(request);
     return realFetch(input, init);
 }) as typeof fetch;
@@ -85,7 +85,7 @@ console.log(bootstrap.getDiscoverResult());
 // ## Persist the advertisement
 
 //#region persist_advertisement
-import type { DiscoverResult, PriorDiscovery } from '@modelcontextprotocol/client';
+import type { DiscoverResult, FetchLike, PriorDiscovery } from '@modelcontextprotocol/client';
 
 const discover = JSON.parse(persisted) as DiscoverResult;
 const prior: PriorDiscovery = { kind: 'modern', discover };
@@ -157,7 +157,7 @@ const fresh = (entry: { storedAt: number }): boolean => Date.now() - entry.store
 
 // Count server/discover probes at the fetch layer (the wire trace).
 let probes = 0;
-const tracingFetch: typeof fetch = async (input, init) => {
+const tracingFetch: FetchLike = async (input, init) => {
     if (typeof init?.body === 'string' && init.body.includes('"server/discover"')) probes++;
     return fetch(input, init);
 };
@@ -203,7 +203,7 @@ console.log('probes after the horizon passes:', probes);
 
 for (const client of [bootstrap, worker, late, pinnedLegacy, first, second, third, ...fleet]) await client.close();
 await handler.close();
-globalThis.fetch = realFetch;
+globalThis.fetch = realFetch as unknown as typeof fetch;
 console.log = realLog;
 
 const mustHaveLogged = [

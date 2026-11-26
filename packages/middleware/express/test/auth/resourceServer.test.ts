@@ -24,7 +24,7 @@ function createMockReqResNext(authorization?: string) {
         json: vi.fn().mockReturnThis(),
         set: vi.fn().mockReturnThis()
     } as unknown as Response;
-    const next = vi.fn() as Mock;
+    const next = vi.fn() as Mock<(...args: any[]) => any>;
     return { req, res, next };
 }
 

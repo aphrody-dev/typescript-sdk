@@ -42,7 +42,7 @@ describe('Proxy OAuth Server Provider', () => {
     beforeEach(() => {
         provider = new ProxyOAuthServerProvider(baseOptions);
         originalFetch = global.fetch;
-        global.fetch = vi.fn();
+        global.fetch = vi.fn() as unknown as typeof fetch;
 
         // Setup mock implementations
         mockVerifyToken.mockImplementation(async (token: string) => {
@@ -67,7 +67,7 @@ describe('Proxy OAuth Server Provider', () => {
 
     // Add helper function for failed responses
     const mockFailedResponse = () => {
-        (global.fetch as Mock).mockImplementation(() =>
+        (global.fetch as unknown as Mock<(...args: any[]) => any>).mockImplementation(() =>
             Promise.resolve({
                 ok: false,
                 status: 400
@@ -76,7 +76,7 @@ describe('Proxy OAuth Server Provider', () => {
     };
 
     afterEach(() => {
-        global.fetch = originalFetch;
+        global.fetch = originalFetch as unknown as typeof fetch;
         vi.clearAllMocks();
     });
 
@@ -125,7 +125,7 @@ describe('Proxy OAuth Server Provider', () => {
         };
 
         beforeEach(() => {
-            (global.fetch as Mock).mockImplementation(() =>
+            (global.fetch as unknown as Mock<(...args: any[]) => any>).mockImplementation(() =>
                 Promise.resolve({
                     ok: true,
                     json: () => Promise.resolve(mockTokenResponse)
@@ -191,7 +191,7 @@ describe('Proxy OAuth Server Provider', () => {
         it('handles authorization code exchange without resource parameter', async () => {
             const tokens = await provider.exchangeAuthorizationCode(validClient, 'test-code', 'test-verifier');
 
-            const fetchCall = (global.fetch as Mock).mock.calls[0];
+            const fetchCall = (global.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[0];
             const body = fetchCall![1].body as string;
             expect(body).not.toContain('resource=');
             expect(tokens).toEqual(mockTokenResponse);
@@ -235,7 +235,7 @@ describe('Proxy OAuth Server Provider', () => {
         });
 
         it('does not forward an issuer from the upstream token response', async () => {
-            (global.fetch as Mock).mockImplementation(() =>
+            (global.fetch as unknown as Mock<(...args: any[]) => any>).mockImplementation(() =>
                 Promise.resolve({
                     ok: true,
                     json: () => Promise.resolve({ ...mockTokenResponse, issuer: 'https://upstream.example.com' })
@@ -259,7 +259,7 @@ describe('Proxy OAuth Server Provider', () => {
                 redirect_uris: ['https://new-client.com/callback']
             };
 
-            (global.fetch as Mock).mockImplementation(() =>
+            (global.fetch as unknown as Mock<(...args: any[]) => any>).mockImplementation(() =>
                 Promise.resolve({
                     ok: true,
                     json: () => Promise.resolve(newClient)
@@ -287,7 +287,7 @@ describe('Proxy OAuth Server Provider', () => {
                 redirect_uris: ['https://new-client.com/callback']
             };
 
-            (global.fetch as Mock).mockImplementation(() =>
+            (global.fetch as unknown as Mock<(...args: any[]) => any>).mockImplementation(() =>
                 Promise.resolve({
                     ok: true,
                     json: () => Promise.resolve({ ...newClient, issuer: 'https://upstream.example.com' })
@@ -313,7 +313,7 @@ describe('Proxy OAuth Server Provider', () => {
 
     describe('token revocation', () => {
         it('revokes token', async () => {
-            (global.fetch as Mock).mockImplementation(() =>
+            (global.fetch as unknown as Mock<(...args: any[]) => any>).mockImplementation(() =>
                 Promise.resolve({
                     ok: true
                 })

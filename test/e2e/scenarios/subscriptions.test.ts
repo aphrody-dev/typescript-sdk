@@ -35,7 +35,7 @@ async function hostListenAllKinds() {
         return server;
     };
     const handler = createMcpHandler(factory, { legacy: 'reject', keepAliveMs: 0 });
-    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(String(u), init));
     const client = new Client({ name: 'subs-e2e-client', version: '1' }, { versionNegotiation: { mode: 'auto' } });
     await client.connect(new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), { fetch }));
     expect(client.getNegotiatedProtocolVersion()).toBe('2026-07-28');
@@ -51,7 +51,7 @@ async function hostListenAllKinds() {
 async function hostListen() {
     const handler = createMcpHandler(() => makeServer(), { legacy: 'reject', keepAliveMs: 0 });
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(String(u), init));
     const client = new Client({ name: 'subs-e2e-client', version: '1' }, { versionNegotiation: { mode: 'auto' } });
     await client.connect(new StreamableHTTPClientTransport(url, { fetch }));
     expect(client.getNegotiatedProtocolVersion()).toBe('2026-07-28');
@@ -101,7 +101,7 @@ verifies('subscriptions:listen:graceful-close', async () => {
     // Hosted directly so the test owns handler.close(); `await using` of
     // hostListen() would close on dispose and obscure the assertion.
     const handler = createMcpHandler(() => makeServer(), { legacy: 'reject', keepAliveMs: 0 });
-    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(String(u), init));
     const client = new Client({ name: 'subs-e2e-client', version: '1' }, { versionNegotiation: { mode: 'auto' } });
     await client.connect(new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), { fetch }));
     const sub = await client.listen({ toolsListChanged: true });
@@ -130,7 +130,7 @@ verifies('subscriptions:listen:per-stream-filter', async () => {
 
 verifies('typescript:subscriptions:listChanged-auto-open-modern', async () => {
     const handler = createMcpHandler(() => makeServer(), { legacy: 'reject', keepAliveMs: 0 });
-    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(String(u), init));
     let count = 0;
     let done!: () => void;
     const finished = new Promise<void>(r => {
@@ -228,7 +228,7 @@ verifies('client:listen:auto-refresh', async () => {
         return server;
     };
     const handler = createMcpHandler(factory, { legacy: 'reject', keepAliveMs: 0 });
-    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handler.fetch(new Request(String(u), init));
     let done!: () => void;
     const finished = new Promise<void>(r => {
         done = r;

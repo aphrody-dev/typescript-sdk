@@ -136,7 +136,7 @@ describe('redirects', () => {
         test('SSE stream given its own fetch is not followed', async () => {
             handle = redirectTo(new URL('/sse', otherUrl));
             const client = new SSEClientTransport(new URL('/sse', endpointUrl), {
-                eventSourceInit: { fetch: (url, init) => fetch(url, { ...init, headers: { ...init.headers, 'x-api-key': 'key-1' } }) }
+                eventSourceInit: { fetch: (url, init) => fetch(url, { ...init, headers: { ...init?.headers, 'x-api-key': 'key-1' } }) }
             });
             transport = client;
 

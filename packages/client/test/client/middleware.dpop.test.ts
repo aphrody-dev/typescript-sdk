@@ -1,5 +1,5 @@
 import type { FetchLike } from '@modelcontextprotocol/core-internal';
-import type { Mock, Mocked, MockedFunction } from 'bun:test';
+import type { Mock, Mocked } from 'bun:test';
 import { beforeEach, describe, expect, it, vi } from 'bun:test';
 
 import type { OAuthClientProvider } from '../../src/client/auth';
@@ -17,7 +17,7 @@ vi.mock('../../src/client/auth', async () => {
 import { auth } from '../../src/client/auth';
 import { withDpop, withDpopFromProvider, withOAuth } from '../../src/client/middleware';
 
-const mockAuth = auth as MockedFunction<typeof auth>;
+const mockAuth = auth as Mock<typeof auth>;
 
 function decodeJwtPart(part: string): Record<string, unknown> {
     return JSON.parse(Buffer.from(part, 'base64url').toString('utf8'));
@@ -25,8 +25,8 @@ function decodeJwtPart(part: string): Record<string, unknown> {
 
 describe('withDpop', () => {
     let session: DpopSession;
-    let getToken: MockedFunction<() => string | undefined | Promise<string | undefined>>;
-    let mockFetch: MockedFunction<FetchLike>;
+    let getToken: Mock<() => string | undefined | Promise<string | undefined>>;
+    let mockFetch: Mock<FetchLike>;
 
     beforeEach(async () => {
         session = await DpopSession.create();
@@ -60,7 +60,7 @@ describe('withDpop', () => {
     });
 
     it('sends no Authorization/DPoP headers when getToken resolves to undefined', async () => {
-        getToken.mockResolvedValue(undefined);
+        getToken.mockImplementation(async () => undefined);
         mockFetch.mockResolvedValue(new Response(null, { status: 200 }));
         const enhancedFetch = withDpop(session, getToken)(mockFetch);
 
@@ -167,7 +167,7 @@ describe('withDpop — session/token sources', () => {
 describe('withDpopFromProvider', () => {
     let session: DpopSession;
     let provider: Mocked<OAuthClientProvider>;
-    let mockFetch: MockedFunction<FetchLike>;
+    let mockFetch: Mock<FetchLike>;
     const bearerInit = { method: 'POST', headers: { Authorization: 'Bearer tok-1' } };
 
     beforeEach(async () => {
@@ -203,7 +203,7 @@ describe('withDpopFromProvider', () => {
     it('leaves a token_type=Bearer token on the Bearer scheme with no proof, even though dpop() resolves (RFC 9449 §7.1)', async () => {
         // An AS that ignored the DPoP proof (or does not support DPoP) issues token_type=Bearer;
         // presenting that with the DPoP scheme to a Bearer-only resource server is a guaranteed 401.
-        provider.tokens.mockResolvedValue({ access_token: 'tok-1', token_type: 'Bearer' });
+        provider.tokens.mockImplementation(async () => ({ access_token: 'tok-1', token_type: 'Bearer' }));
 
         await withDpopFromProvider(provider)(mockFetch)('https://mcp.example.com/mcp', bearerInit);
 
@@ -211,7 +211,7 @@ describe('withDpopFromProvider', () => {
     });
 
     it('is a pass-through when dpop() resolves to undefined', async () => {
-        (provider.dpop as Mock).mockResolvedValue(undefined);
+        (provider.dpop as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
         await withDpopFromProvider(provider)(mockFetch)('https://mcp.example.com/mcp', bearerInit);
 
@@ -234,7 +234,9 @@ describe('withDpopFromProvider', () => {
 
     it('stamps a throwing tokens()/dpop() as an auth-seam failure (not a network error)', async () => {
         const { isAuthSeamEscape } = await import('../../src/client/authSeam');
-        provider.tokens.mockRejectedValue(new Error('storage unavailable'));
+        provider.tokens.mockImplementation(async () => {
+            throw new Error('storage unavailable');
+        });
 
         const error = await withDpopFromProvider(provider)(mockFetch)('https://mcp.example.com/mcp', bearerInit).catch(error_ => error_);
 
@@ -245,7 +247,7 @@ describe('withDpopFromProvider', () => {
 
 describe('withOAuth — DPoP-aware', () => {
     let mockProvider: Mocked<OAuthClientProvider>;
-    let mockFetch: MockedFunction<FetchLike>;
+    let mockFetch: Mock<FetchLike>;
     let session: DpopSession;
 
     beforeEach(async () => {
@@ -270,7 +272,7 @@ describe('withOAuth — DPoP-aware', () => {
     });
 
     it('presents DPoP Authorization + proof (not Bearer) when provider.dpop() resolves to a session', async () => {
-        mockProvider.tokens.mockResolvedValue({ access_token: 'tok-1', token_type: 'DPoP' });
+        mockProvider.tokens.mockImplementation(async () => ({ access_token: 'tok-1', token_type: 'DPoP' }));
         mockFetch.mockResolvedValue(new Response(null, { status: 200 }));
         const enhancedFetch = withOAuth(mockProvider, 'https://mcp.example.com')(mockFetch);
 
@@ -283,7 +285,7 @@ describe('withOAuth — DPoP-aware', () => {
 
     it('keeps presenting plain Bearer when the provider has no dpop() (existing behavior unaffected)', async () => {
         mockProvider.dpop = undefined;
-        mockProvider.tokens.mockResolvedValue({ access_token: 'tok-1', token_type: 'Bearer' });
+        mockProvider.tokens.mockImplementation(async () => ({ access_token: 'tok-1', token_type: 'Bearer' }));
         mockFetch.mockResolvedValue(new Response(null, { status: 200 }));
         const enhancedFetch = withOAuth(mockProvider, 'https://mcp.example.com')(mockFetch);
 
@@ -295,7 +297,7 @@ describe('withOAuth — DPoP-aware', () => {
     });
 
     it('retries once on a use_dpop_nonce challenge without invoking the auth() re-authorization flow', async () => {
-        mockProvider.tokens.mockResolvedValue({ access_token: 'tok-1', token_type: 'DPoP' });
+        mockProvider.tokens.mockImplementation(async () => ({ access_token: 'tok-1', token_type: 'DPoP' }));
         mockFetch
             .mockResolvedValueOnce(
                 new Response(null, {
@@ -321,9 +323,9 @@ describe('withOAuth — DPoP-aware', () => {
         // server reveal its nonce requirement. Regression test for a bug where the nonce check
         // only ran *before* the credential retry, never after it — real conformance servers
         // (auth/dpop-nonce) hit exactly this ordering.
-        mockProvider.tokens.mockResolvedValue(undefined);
+        mockProvider.tokens.mockImplementation(async () => undefined);
         mockAuth.mockImplementation(async () => {
-            mockProvider.tokens.mockResolvedValue({ access_token: 'tok-1', token_type: 'DPoP' });
+            mockProvider.tokens.mockImplementation(async () => ({ access_token: 'tok-1', token_type: 'DPoP' }));
             return 'AUTHORIZED';
         });
         mockFetch

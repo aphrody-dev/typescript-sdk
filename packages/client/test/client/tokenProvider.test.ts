@@ -25,12 +25,16 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
         transport = new StreamableHTTPClientTransport(new URL('http://localhost:1234/mcp'), { authProvider });
         vi.spyOn(globalThis, 'fetch');
 
-        (globalThis.fetch as Mock).mockResolvedValueOnce({ ok: true, status: 202, headers: new Headers() });
+        (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mockResolvedValueOnce({
+            ok: true,
+            status: 202,
+            headers: new Headers()
+        });
 
         await transport.send(message);
 
         expect(authProvider.token).toHaveBeenCalled();
-        const [, init] = (globalThis.fetch as Mock).mock.calls[0]!;
+        const [, init] = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[0]!;
         expect(init.headers.get('Authorization')).toBe('Bearer my-bearer-token');
     });
 
@@ -39,11 +43,15 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
         transport = new StreamableHTTPClientTransport(new URL('http://localhost:1234/mcp'), { authProvider });
         vi.spyOn(globalThis, 'fetch');
 
-        (globalThis.fetch as Mock).mockResolvedValueOnce({ ok: true, status: 202, headers: new Headers() });
+        (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mockResolvedValueOnce({
+            ok: true,
+            status: 202,
+            headers: new Headers()
+        });
 
         await transport.send(message);
 
-        const [, init] = (globalThis.fetch as Mock).mock.calls[0]!;
+        const [, init] = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[0]!;
         expect(init.headers.has('Authorization')).toBe(false);
     });
 
@@ -52,7 +60,7 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
         transport = new StreamableHTTPClientTransport(new URL('http://localhost:1234/mcp'), { authProvider });
         vi.spyOn(globalThis, 'fetch');
 
-        (globalThis.fetch as Mock).mockResolvedValueOnce({
+        (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mockResolvedValueOnce({
             ok: false,
             status: 401,
             headers: new Headers(),
@@ -74,7 +82,7 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
         transport = new StreamableHTTPClientTransport(new URL('http://localhost:1234/mcp'), { authProvider });
         vi.spyOn(globalThis, 'fetch');
 
-        (globalThis.fetch as Mock)
+        (globalThis.fetch as unknown as Mock<(...args: any[]) => any>)
             .mockResolvedValueOnce({ ok: false, status: 401, headers: new Headers(), text: async () => 'unauthorized' })
             .mockResolvedValueOnce({ ok: true, status: 202, headers: new Headers() });
 
@@ -82,7 +90,7 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
 
         expect(authProvider.onUnauthorized).toHaveBeenCalledTimes(1);
         expect(authProvider.token).toHaveBeenCalledTimes(2);
-        const [, retryInit] = (globalThis.fetch as Mock).mock.calls[1]!;
+        const [, retryInit] = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[1]!;
         expect(retryInit.headers.get('Authorization')).toBe('Bearer new-token');
     });
 
@@ -94,7 +102,7 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
         transport = new StreamableHTTPClientTransport(new URL('http://localhost:1234/mcp'), { authProvider });
         vi.spyOn(globalThis, 'fetch');
 
-        (globalThis.fetch as Mock)
+        (globalThis.fetch as unknown as Mock<(...args: any[]) => any>)
             .mockResolvedValueOnce({
                 ok: false,
                 status: 401,
@@ -126,7 +134,7 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
         transport = new StreamableHTTPClientTransport(new URL('http://localhost:1234/mcp'), { authProvider });
         vi.spyOn(globalThis, 'fetch');
 
-        (globalThis.fetch as Mock)
+        (globalThis.fetch as unknown as Mock<(...args: any[]) => any>)
             .mockResolvedValueOnce({ ok: false, status: 401, headers: new Headers(), text: async () => 'unauthorized' })
             .mockResolvedValueOnce({ ok: false, status: 401, headers: new Headers(), text: async () => 'unauthorized' })
             .mockResolvedValueOnce({ ok: true, status: 202, headers: new Headers() });
@@ -144,11 +152,15 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
         transport = new StreamableHTTPClientTransport(new URL('http://localhost:1234/mcp'));
         vi.spyOn(globalThis, 'fetch');
 
-        (globalThis.fetch as Mock).mockResolvedValueOnce({ ok: true, status: 202, headers: new Headers() });
+        (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mockResolvedValueOnce({
+            ok: true,
+            status: 202,
+            headers: new Headers()
+        });
 
         await transport.send(message);
 
-        const [, init] = (globalThis.fetch as Mock).mock.calls[0]!;
+        const [, init] = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[0]!;
         expect(init.headers.has('Authorization')).toBe(false);
     });
 
@@ -164,7 +176,7 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
         transport = new StreamableHTTPClientTransport(new URL('http://localhost:1234/mcp'), { authProvider });
         vi.spyOn(globalThis, 'fetch');
 
-        (globalThis.fetch as Mock).mockResolvedValueOnce({
+        (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mockResolvedValueOnce({
             ok: false,
             status: 401,
             headers: new Headers(),
@@ -186,7 +198,7 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
         vi.spyOn(globalThis, 'fetch');
 
         // First GET: 401. Second GET (retry): 405 (server doesn't offer SSE — clean exit)
-        (globalThis.fetch as Mock)
+        (globalThis.fetch as unknown as Mock<(...args: any[]) => any>)
             .mockResolvedValueOnce({ ok: false, status: 401, headers: new Headers(), text: async () => 'unauthorized' })
             .mockResolvedValueOnce({ ok: false, status: 405, headers: new Headers(), text: async () => '' });
 
@@ -194,7 +206,7 @@ describe('StreamableHTTPClientTransport with AuthProvider', () => {
 
         expect(authProvider.onUnauthorized).toHaveBeenCalledTimes(1);
         expect(authProvider.token).toHaveBeenCalledTimes(2);
-        const [, retryInit] = (globalThis.fetch as Mock).mock.calls[1]!;
+        const [, retryInit] = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[1]!;
         expect(retryInit.headers.get('Authorization')).toBe('Bearer new-token');
     });
 });

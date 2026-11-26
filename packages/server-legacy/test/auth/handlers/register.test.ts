@@ -3,7 +3,7 @@ import { OAuthRegisteredClientsStore } from '../../../src/auth/clients';
 import { OAuthClientInformationFull, OAuthClientMetadata } from '@modelcontextprotocol/core-internal';
 import express from 'express';
 import supertest from 'supertest';
-import { MockInstance } from 'bun:test';
+import { type Mock } from 'bun:test';
 
 describe('Client Registration Handler', () => {
     // Mock client store with registration support
@@ -46,7 +46,7 @@ describe('Client Registration Handler', () => {
 
     describe('Request handling', () => {
         let app: express.Express;
-        let spyRegisterClient: MockInstance;
+        let spyRegisterClient: Mock<(...args: any[]) => any>;
 
         beforeEach(() => {
             // Setup express app with registration handler

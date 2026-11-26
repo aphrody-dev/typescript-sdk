@@ -37,7 +37,9 @@ async function overHttp(catalog: SkillCatalog, revision: string, onServer: () =>
     });
     const client = clientFor(revision);
     await client.connect(
-        new StreamableHTTPClientTransport(new URL('http://localhost/mcp'), { fetch: (url, init) => handler.fetch(new Request(url, init)) })
+        new StreamableHTTPClientTransport(new URL('http://localhost/mcp'), {
+            fetch: (url, init) => handler.fetch(new Request(String(url), init))
+        })
     );
     return client;
 }
@@ -175,7 +177,7 @@ describe('one catalog behind per-request HTTP servers', () => {
         const client = clientFor(MODERN);
         await client.connect(
             new StreamableHTTPClientTransport(new URL('http://localhost/mcp'), {
-                fetch: (url, init) => handler.fetch(new Request(url, init))
+                fetch: (url, init) => handler.fetch(new Request(String(url), init))
             })
         );
         const seen: string[] = [];

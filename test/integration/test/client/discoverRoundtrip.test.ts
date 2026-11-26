@@ -13,6 +13,7 @@
 import type { Server as HttpServer } from 'node:http';
 import { createServer } from 'node:http';
 
+import type { FetchLike } from '@modelcontextprotocol/client';
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import { SdkError, SdkErrorCode, setNegotiatedProtocolVersion, SUPPORTED_PROTOCOL_VERSIONS } from '@modelcontextprotocol/core-internal';
 import { NodeStreamableHTTPServerTransport } from '@modelcontextprotocol/node';
@@ -26,7 +27,7 @@ const DUAL_ERA_VERSIONS = [MODERN, ...SUPPORTED_PROTOCOL_VERSIONS];
 
 function recordingFetch() {
     const bodies: string[] = [];
-    const fetchFn: typeof fetch = async (input, init) => {
+    const fetchFn: FetchLike = async (input, init) => {
         if (typeof init?.body === 'string') bodies.push(init.body);
         return fetch(input, init);
     };
@@ -122,7 +123,7 @@ describe('server/discover round-trip against a modern server', () => {
         const { fetchFn } = recordingFetch();
 
         const responses: string[] = [];
-        const sniffingFetch: typeof fetch = async (input, init) => {
+        const sniffingFetch: FetchLike = async (input, init) => {
             const response = await fetchFn(input, init);
             responses.push(
                 await response

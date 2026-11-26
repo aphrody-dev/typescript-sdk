@@ -190,7 +190,7 @@ verifies('hosting:resume:event-ids', async (_args: TestArgs) => {
     const handle = hostResumable(makeServer, { eventStore });
 
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
 
     try {
         const { baseHeaders } = await completeHandshake(url, fetch, { logging: {} });
@@ -273,7 +273,7 @@ verifies('hosting:resume:replay', async (_args: TestArgs) => {
     const handle = hostResumable(makeServer, { eventStore });
 
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
 
     const client = new Client({ name: 'c', version: '0' });
     const transport = new StreamableHTTPClientTransport(url, { fetch });
@@ -343,7 +343,7 @@ verifies('hosting:resume:buffered-replay', async (_args: TestArgs) => {
     const handle = hostResumable(makeServer, { eventStore });
 
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
 
     try {
         const initRes = await fetch(url, {
@@ -464,7 +464,7 @@ verifies('typescript:hosting:resume:bad-event-id', async (_args: TestArgs) => {
     const handle = hostResumable(makeServer, { eventStore: scriptedEventStore });
 
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
 
     const client = new Client({ name: 'c', version: '0' });
     const transport = new StreamableHTTPClientTransport(url, { fetch });
@@ -509,7 +509,7 @@ verifies('hosting:resume:priming', async (_args: TestArgs) => {
     });
 
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
 
     try {
         const { baseHeaders } = await completeHandshake(url, fetch);
@@ -585,7 +585,7 @@ verifies('hosting:resume:stream-scoped', async (_args: TestArgs) => {
     const handle = hostResumable(makeServer, { eventStore });
 
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
 
     try {
         const initRes = await fetch(url, {
@@ -790,7 +790,7 @@ verifies('hosting:resume:close-stream', async (_args: TestArgs) => {
     const handle = hostResumable(makeServer, { eventStore });
 
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
 
     try {
         const { baseHeaders } = await completeHandshake(url, fetch);

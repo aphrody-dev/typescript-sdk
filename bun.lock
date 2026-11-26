@@ -156,7 +156,7 @@
       },
       "devDependencies": {
         "@modelcontextprotocol/tsconfig": "workspace:^",
-        "@types/node": "^24.10.1",
+        "bun-types": "catalog:devTools",
         "typescript": "catalog:devTools",
       },
     },
@@ -408,7 +408,7 @@
       },
       "devDependencies": {
         "@modelcontextprotocol/tsconfig": "workspace:^",
-        "@types/node": "^24.10.1",
+        "bun-types": "catalog:devTools",
         "typescript": "catalog:devTools",
       },
     },

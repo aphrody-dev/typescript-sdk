@@ -135,7 +135,7 @@ export async function wire(
         case 'streamableHttpStateless': {
             const handle = transport === 'streamableHttpStateless' ? hostStateless(makeServer) : hostPerSession(makeServer);
             const url = new URL('http://in-process/mcp');
-            const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+            const fetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
             await client.connect(sniffTransport(new StreamableHTTPClientTransport(url, { fetch }), 'client', sniff));
             return {
                 fetch,
@@ -164,7 +164,7 @@ export async function wire(
             const url = new URL('http://in-process/mcp');
             const httpLog: RecordedHttpExchange[] = [];
             const fetch = async (u: URL | string, init?: RequestInit) => {
-                const request = new Request(u, init);
+                const request = new Request(String(u), init);
                 const response = await handler.fetch(request);
                 httpLog.push({
                     method: request.method.toUpperCase(),

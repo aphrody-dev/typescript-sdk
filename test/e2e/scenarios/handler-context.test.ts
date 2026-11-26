@@ -151,7 +151,7 @@ verifies('hosting:context:web-request-headers', async (_args: TestArgs) => {
 
     const client = new Client({ name: 'c', version: '0' });
     const httpTransport = new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), {
-        fetch: (url, init) => mcpHost.handleRequest(new Request(url, init)),
+        fetch: (url, init) => mcpHost.handleRequest(new Request(String(url), init)),
         requestInit: { headers: { [PROBE_HEADER]: PROBE_VALUE } }
     });
 

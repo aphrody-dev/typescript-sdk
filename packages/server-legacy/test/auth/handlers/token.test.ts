@@ -111,9 +111,11 @@ describe('Token Handler', () => {
         };
 
         // Mock PKCE verification
-        (pkce.verifyPkceChallenge as Mock).mockImplementation(async (verifier: string, challenge: string) => {
-            return verifier === 'valid_verifier' && challenge === 'mock_challenge';
-        });
+        (pkce.verifyPkceChallenge as unknown as Mock<(...args: any[]) => any>).mockImplementation(
+            async (verifier: string, challenge: string) => {
+                return verifier === 'valid_verifier' && challenge === 'mock_challenge';
+            }
+        );
 
         // Setup express app with token handler
         app = express();
@@ -214,7 +216,7 @@ describe('Token Handler', () => {
 
         it('verifies code_verifier against challenge', async () => {
             // Setup invalid verifier
-            (pkce.verifyPkceChallenge as Mock).mockResolvedValueOnce(false);
+            (pkce.verifyPkceChallenge as unknown as Mock<(...args: any[]) => any>).mockResolvedValueOnce(false);
 
             const response = await supertest(app).post('/token').type('form').send({
                 client_id: 'valid-client',
@@ -297,7 +299,7 @@ describe('Token Handler', () => {
                 global.fetch = vi.fn().mockResolvedValue({
                     ok: true,
                     json: () => Promise.resolve(mockTokens)
-                });
+                }) as unknown as typeof fetch;
 
                 const proxyProvider = new ProxyOAuthServerProvider({
                     endpoints: {
@@ -340,7 +342,7 @@ describe('Token Handler', () => {
                     })
                 );
             } finally {
-                global.fetch = originalFetch;
+                global.fetch = originalFetch as unknown as typeof fetch;
             }
         });
 
@@ -351,7 +353,7 @@ describe('Token Handler', () => {
                 global.fetch = vi.fn().mockResolvedValue({
                     ok: true,
                     json: () => Promise.resolve(mockTokens)
-                });
+                }) as unknown as typeof fetch;
 
                 const proxyProvider = new ProxyOAuthServerProvider({
                     endpoints: {
@@ -395,7 +397,7 @@ describe('Token Handler', () => {
                     })
                 );
             } finally {
-                global.fetch = originalFetch;
+                global.fetch = originalFetch as unknown as typeof fetch;
             }
         });
     });

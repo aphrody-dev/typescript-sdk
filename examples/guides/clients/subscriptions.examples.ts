@@ -60,7 +60,7 @@ async function connect(client: Client, target: typeof handler): Promise<void> {
     client.setVersionNegotiation({ mode: 'auto' });
     await client.connect(
         new StreamableHTTPClientTransport(new URL('http://localhost/mcp'), {
-            fetch: (url, init) => target.fetch(new Request(url, init))
+            fetch: (url, init) => target.fetch(new Request(String(url), init))
         })
     );
 }

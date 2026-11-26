@@ -329,7 +329,7 @@ describe('OpenTelemetry over Streamable HTTP', () => {
         // Stands in for HTTP instrumentation: each POST gets a span, active while the server handles it.
         const fetchWithHttpSpan = (url: string | URL, init?: RequestInit) =>
             sdk.tracer.startActiveSpan('POST', { kind: SpanKind.SERVER }, span =>
-                handler.fetch(new Request(url, init)).finally(() => span.end())
+                handler.fetch(new Request(String(url), init)).finally(() => span.end())
             );
         const client = new Client({ name: 'agent', version: '1.0.0' }, { versionNegotiation: { mode: 'auto' } });
         await client.connect(new StreamableHTTPClientTransport(new URL('http://mcp.test/mcp'), { fetch: fetchWithHttpSpan }));

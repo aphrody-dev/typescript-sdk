@@ -59,7 +59,7 @@ Upgrade Node.js. Where you cannot, assign the polyfill from `node:crypto` before
 import { webcrypto } from 'node:crypto';
 
 if (typeof globalThis.crypto === 'undefined') {
-    globalThis.crypto = webcrypto;
+    globalThis.crypto = webcrypto as unknown as Crypto;
 }
 ```
 

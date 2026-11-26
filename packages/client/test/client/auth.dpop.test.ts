@@ -12,7 +12,7 @@ function decodeJwtPart(part: string): Record<string, unknown> {
 
 describe('executeTokenRequest — DPoP', () => {
     let session: DpopSession;
-    let fetchFn: Mock;
+    let fetchFn: Mock<(...args: any[]) => any>;
 
     beforeEach(async () => {
         session = await DpopSession.create();

@@ -176,7 +176,7 @@ verifies('errors:http:sdkhttperror-status', async (_: TestArgs) => {
         if (postFailureStatus !== undefined && init?.method === 'POST') {
             return new Response('Service Unavailable', { status: postFailureStatus, statusText: 'Service Unavailable' });
         }
-        return handle.handleRequest(new Request(url, init));
+        return handle.handleRequest(new Request(String(url), init));
     };
     const client = newClient();
     const clientTransport = new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), { fetch: flakyFetch });

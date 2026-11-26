@@ -1,10 +1,10 @@
-import type { MockInstance } from 'bun:test';
+import type { Mock } from 'bun:test';
 import { vi } from 'bun:test';
 
 import { issueToolNameWarning, validateAndWarnToolName, validateToolName } from '../../src/shared/toolNameValidation';
 
 // Spy on console.warn to capture output
-let warnSpy: MockInstance;
+let warnSpy: Mock<(...args: any[]) => any>;
 
 beforeEach(() => {
     warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});

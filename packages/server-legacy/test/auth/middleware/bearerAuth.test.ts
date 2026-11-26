@@ -15,7 +15,7 @@ const mockVerifier: OAuthTokenVerifier = {
 describe('requireBearerAuth middleware', () => {
     let mockRequest: Partial<Request>;
     let mockResponse: Partial<Response>;
-    let nextFunction: Mock;
+    let nextFunction: Mock<(...args: any[]) => any>;
 
     beforeEach(() => {
         mockRequest = {

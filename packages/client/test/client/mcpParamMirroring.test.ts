@@ -473,7 +473,7 @@ describe('SEP-2243 Streamable HTTP transport seams', () => {
             captured = new Headers((init as RequestInit).headers);
             return new Response(null, { status: 202, headers: { 'content-type': 'application/json' } });
         });
-        const tx = new StreamableHTTPClientTransport(new URL('http://example.test/mcp'), { fetch: fetch as typeof globalThis.fetch });
+        const tx = new StreamableHTTPClientTransport(new URL('http://example.test/mcp'), { fetch: fetch as unknown as typeof fetch });
         return { tx, sent: () => captured! };
     }
 
@@ -527,7 +527,7 @@ describe('SEP-2243 Streamable HTTP transport seams', () => {
         const fetch = vi.fn(
             async () => new Response(JSON.stringify(errorBody), { status: 400, headers: { 'content-type': 'application/json' } })
         );
-        const tx = new StreamableHTTPClientTransport(new URL('http://example.test/mcp'), { fetch: fetch as typeof globalThis.fetch });
+        const tx = new StreamableHTTPClientTransport(new URL('http://example.test/mcp'), { fetch: fetch as unknown as typeof fetch });
         const seen: JSONRPCMessage[] = [];
         tx.onmessage = m => seen.push(m);
         await tx.start();

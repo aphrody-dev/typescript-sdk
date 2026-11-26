@@ -792,7 +792,7 @@ verifies('hosting:http:second-sse-rejected', async (_args: TestArgs) => {
         expect(sse1.status).toBe(200);
         const reader1 = sse1.body!.getReader();
 
-        let reader2: ReadableStreamDefaultReader<Uint8Array> | null = null;
+        let reader2: { cancel(): Promise<void> } | null = null;
         try {
             const sse2 = await handleRequest(
                 new Request('http://in-process/mcp', {

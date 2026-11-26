@@ -70,7 +70,7 @@ function authWallFetch(onRegister: () => Promise<Response>): typeof fetch {
             return onRegister();
         }
         return new Response('Not Found', { status: 404 });
-    }) as typeof fetch;
+    }) as unknown as typeof fetch;
 }
 
 async function runProbe(transport: StreamableHTTPClientTransport, environment: 'node' | 'browser') {
@@ -138,7 +138,7 @@ describe('stamped-seam fault injection (identity-preserving auth outcomes, never
                 });
             }
             return new Response('Not Found', { status: 404 });
-        }) as typeof fetch;
+        }) as unknown as typeof fetch;
         const transport = new StreamableHTTPClientTransport(new URL(SERVER), { fetch: fetchMock });
         const out = await runProbe(transport, 'node');
         expect(out.settled).toBe('rejected');
@@ -186,7 +186,7 @@ describe('stamped-seam fault injection (identity-preserving auth outcomes, never
                 return Response.json({ error: 'invalid_scope', error_description: 'scope not granted' }, { status: 400 });
             }
             return new Response('Not Found', { status: 404 });
-        }) as typeof fetch;
+        }) as unknown as typeof fetch;
         const provider = freshProvider();
         provider.clientInformation = () => ({ client_id: 'abc', issuer: AS });
         provider.tokens = () => ({ access_token: 'tok', refresh_token: 'rt', token_type: 'Bearer', issuer: AS });
@@ -220,7 +220,7 @@ describe('stamped-seam fault injection (identity-preserving auth outcomes, never
         const fetchMock = (async (): Promise<Response> => {
             fetched++;
             return new Response(null, { status: 500 });
-        }) as typeof fetch;
+        }) as unknown as typeof fetch;
         const transport = new StreamableHTTPClientTransport(new URL(SERVER), { authProvider: provider, fetch: fetchMock });
         const out = await runProbe(transport, 'browser');
         expect(out.settled).toBe('rejected');
@@ -277,7 +277,7 @@ describe('stamped-seam fault injection (identity-preserving auth outcomes, never
         const netError = new Error('socket hang up');
         const fetchMock = (async (): Promise<Response> => {
             throw netError;
-        }) as typeof fetch;
+        }) as unknown as typeof fetch;
         const transport = new StreamableHTTPClientTransport(new URL(SERVER), { fetch: fetchMock });
         const out = await runProbe(transport, 'node');
         expect(out.settled).toBe('rejected');

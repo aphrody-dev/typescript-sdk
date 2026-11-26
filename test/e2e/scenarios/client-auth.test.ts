@@ -294,7 +294,7 @@ function createCombinedFetch(params: {
     return async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         if (requireAuth) {
             const h = new Headers(init?.headers);
@@ -308,7 +308,7 @@ function createCombinedFetch(params: {
                 return new Response(null, { status: 401 });
             }
         }
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 }
 
@@ -428,7 +428,7 @@ verifies('client-auth:401-after-auth-throws', async (_args: TestArgs) => {
     const combinedFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         if (init?.method === 'POST') {
             mcpPosts.push(urlObj.pathname);
@@ -474,7 +474,7 @@ verifies('client-auth:403-scope-upgrade', async (_args: TestArgs) => {
     const interactiveFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return interactiveAs.handleRequest(new Request(url, init));
+            return interactiveAs.handleRequest(new Request(String(url), init));
         }
         interactiveMcpRequests.push(urlObj.pathname);
         return new Response(null, { status: 403, headers: { 'WWW-Authenticate': insufficientScopeHeader } });
@@ -511,7 +511,7 @@ verifies('client-auth:403-scope-upgrade', async (_args: TestArgs) => {
     const refreshFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return refreshAs.handleRequest(new Request(url, init));
+            return refreshAs.handleRequest(new Request(String(url), init));
         }
         refreshMcpRequests.push(urlObj.pathname);
         return new Response(null, { status: 403, headers: { 'WWW-Authenticate': insufficientScopeHeader } });
@@ -553,7 +553,7 @@ verifies('client-auth:stepup:scope-union', async (_args: TestArgs) => {
     const combinedFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         return new Response(null, {
             status: 403,
@@ -586,7 +586,7 @@ verifies(['client-auth:stepup:retry-cap', 'client-auth:stepup:refresh-bypass-on-
         const combinedFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
             const urlObj = typeof url === 'string' ? new URL(url) : url;
             if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-                return as.handleRequest(new Request(url, init));
+                return as.handleRequest(new Request(String(url), init));
             }
             return new Response(null, {
                 status: 403,
@@ -624,7 +624,7 @@ verifies(['client-auth:stepup:retry-cap', 'client-auth:stepup:refresh-bypass-on-
         const combinedFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
             const urlObj = typeof url === 'string' ? new URL(url) : url;
             if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-                return as.handleRequest(new Request(url, init));
+                return as.handleRequest(new Request(String(url), init));
             }
             mcpPosts.push(urlObj.pathname);
             return new Response(null, {
@@ -658,7 +658,7 @@ verifies('client-auth:stepup:throw-mode', async (_args: TestArgs) => {
     const combinedFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         return new Response(null, {
             status: 403,
@@ -894,7 +894,7 @@ verifies('client-auth:iss:no-normalize', async (_args: TestArgs) => {
 verifies('client-auth:iss:opt-out', async (_args: TestArgs) => {
     // skipIssuerMetadataValidation suppresses AU-02 (metadata echo): mismatched-issuer metadata is accepted.
     const as = createMockAuthorizationServer({ asMetadata: { issuer: 'https://misconfigured.example.com' } });
-    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(url, init));
+    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(String(url), init));
     const provider = new RecordingOAuthClientProvider();
     await auth(provider, { serverUrl: MCP_URL, skipIssuerMetadataValidation: true, fetchFn });
     expect(provider.redirectedTo).toHaveLength(1);
@@ -965,7 +965,7 @@ verifies('client-auth:bearer-header:every-request', async (_args: TestArgs) => {
             headers[k] = v;
         }
         requests.push({ method: init?.method ?? 'GET', url: String(url), headers });
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -1362,16 +1362,16 @@ verifies('client-auth:prm-discovery:no-prm-fallback', async (_args: TestArgs) =>
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.pathname.includes('/.well-known/')) {
             wellKnownRequests.push(`${urlObj.origin}${urlObj.pathname}`);
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         if (urlObj.origin === ISSUER) {
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         const h = new Headers(init?.headers);
         if (h.get('authorization') !== `Bearer ${VALID}`) {
             return new Response(null, { status: 401, headers: { 'WWW-Authenticate': 'Bearer realm="mcp"' } });
         }
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -1509,12 +1509,12 @@ function createScopeRequiringWorld() {
             return Response.json({ access_token: accessToken, token_type: 'Bearer' });
         }
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         if (!liveTokens.has(new Headers(init?.headers).get('authorization')?.replace('Bearer ', '') ?? '')) {
             return new Response(null, { status: 401 });
         }
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
     const signedIn = {
         tokens: { access_token: 'access-0', token_type: 'Bearer', refresh_token: 'rt', scope: 'mcp:read mcp:write' },
@@ -1606,7 +1606,7 @@ verifies('client-auth:scope-selection:priority', async (_args: TestArgs) => {
     const combinedFetch = (url: URL | string, init?: RequestInit) => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER) {
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         const h = new Headers(init?.headers);
         if (!h.has('authorization')) {
@@ -1619,7 +1619,7 @@ verifies('client-auth:scope-selection:priority', async (_args: TestArgs) => {
                 })
             );
         }
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -1643,7 +1643,7 @@ verifies('typescript:client-auth:state:verify', async (_args: TestArgs) => {
     const combinedFetch = (url: URL | string, init?: RequestInit) => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER) {
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         const h = new Headers(init?.headers);
         if (!h.has('authorization')) {
@@ -1654,7 +1654,7 @@ verifies('typescript:client-auth:state:verify', async (_args: TestArgs) => {
                 })
             );
         }
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -1729,7 +1729,7 @@ verifies('client-auth:low-level:discover-and-exchange', async (_args: TestArgs) 
     const as = createMockAuthorizationServer({
         tokenResponses: [{ access_token: 'low-level-access-token', token_type: 'Bearer' }]
     });
-    const discoveryFetch = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(url, init));
+    const discoveryFetch = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(String(url), init));
 
     const clientInformation = { client_id: 'low-level-public-client' };
     const redirectUri = 'http://localhost:3000/callback';
@@ -1886,7 +1886,7 @@ verifies('client-middleware:compose', async (_args: TestArgs) => {
             headers[k] = v;
         }
         baseRequests.push({ method: init?.method ?? 'GET', headers });
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -1934,7 +1934,7 @@ verifies('client-middleware:with-logging', async (_args: TestArgs) => {
     const httpRequests: Array<{ method: string; url: string }> = [];
     const baseFetch = async (url: URL | string, init?: RequestInit) => {
         httpRequests.push({ method: init?.method ?? 'GET', url: String(url) });
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -1982,14 +1982,14 @@ verifies('client-auth:middleware:with-oauth', async (_args: TestArgs) => {
     const refreshBaseFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return refreshAs.handleRequest(new Request(url, init));
+            return refreshAs.handleRequest(new Request(String(url), init));
         }
         const authHeader = new Headers(init?.headers).get('authorization');
         mcpAuthHeaders.push(authHeader);
         if (authHeader !== `Bearer ${REFRESHED}`) {
             return new Response(null, { status: 401, headers: { 'WWW-Authenticate': wwwAuthenticate } });
         }
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -2025,7 +2025,7 @@ verifies('client-auth:middleware:with-oauth', async (_args: TestArgs) => {
     const redirectBaseFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return redirectAs.handleRequest(new Request(url, init));
+            return redirectAs.handleRequest(new Request(String(url), init));
         }
         return new Response(null, { status: 401, headers: { 'WWW-Authenticate': wwwAuthenticate } });
     };
@@ -2048,7 +2048,7 @@ verifies('client-auth:middleware:with-oauth', async (_args: TestArgs) => {
     const stubbornBaseFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return stubbornAs.handleRequest(new Request(url, init));
+            return stubbornAs.handleRequest(new Request(String(url), init));
         }
         stubbornMcpRequests++;
         return new Response(null, { status: 401, headers: { 'WWW-Authenticate': wwwAuthenticate } });
@@ -2071,7 +2071,7 @@ verifies('client-auth:oauth-error:consolidated-class', async (_args: TestArgs) =
 
     for (const { errorCode, description, expectedCode } of cases) {
         const as = createMockAuthorizationServer({ tokenErrorResponses: [{ error: errorCode, error_description: description }] });
-        const tokenFetch = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(url, init));
+        const tokenFetch = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(String(url), init));
 
         let failure: unknown;
         try {
@@ -2131,7 +2131,7 @@ verifies('client-auth:authprovider:token-attached', async (_args: TestArgs) => {
     const requests: Array<{ method: string; authorization: string | null }> = [];
     const recordingFetch = async (url: URL | string, init?: RequestInit) => {
         requests.push({ method: init?.method ?? 'GET', authorization: new Headers(init?.headers).get('authorization') });
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -2194,7 +2194,7 @@ verifies('client-auth:authprovider:token-overrides-requestinit', async (_args: T
             authorization: headers.get('authorization'),
             custom: headers.get('x-caller-header')
         });
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -2261,7 +2261,7 @@ verifies('client-auth:authprovider:onunauthorized-retry', async (_args: TestArgs
         if (authorization !== `Bearer ${FRESH}`) {
             return new Response(null, { status: 401 });
         }
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -2370,7 +2370,7 @@ verifies('client-auth:authprovider:oauth-provider-adapted', async (_args: TestAr
     const requests: Array<{ method: string; authorization: string | null }> = [];
     const recordingFetch = async (url: URL | string, init?: RequestInit) => {
         requests.push({ method: init?.method ?? 'GET', authorization: new Headers(init?.headers).get('authorization') });
-        return mcpHost.handleRequest(new Request(url, init));
+        return mcpHost.handleRequest(new Request(String(url), init));
     };
 
     const client = new Client({ name: 'c', version: '0' });
@@ -2405,7 +2405,7 @@ verifies('client-auth:auth-helper:result-values', async (_args: TestArgs) => {
         tokenResponses: [{ access_token: ISSUED, token_type: 'Bearer', refresh_token: 'auth-helper-refresh-token' }]
     });
     const provider = new RecordingOAuthClientProvider({ clientInformation: { client_id: 'auth-helper-client' } });
-    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(url, init));
+    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(String(url), init));
 
     // No tokens and no authorization code: the helper starts the redirect flow and reports it with the literal string.
     const redirectResult = await auth(provider, { serverUrl: MCP_URL, fetchFn });
@@ -2599,7 +2599,7 @@ verifies('client-transport:sse:401-unauthorized-code', async (_args: TestArgs) =
     const combinedFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
         const urlObj = typeof url === 'string' ? new URL(url) : url;
         if (urlObj.origin === ISSUER || urlObj.pathname.includes('/.well-known/')) {
-            return as.handleRequest(new Request(url, init));
+            return as.handleRequest(new Request(String(url), init));
         }
         return new Response(null, { status: 401, headers: { 'WWW-Authenticate': wwwAuthenticate } });
     };
@@ -2659,7 +2659,7 @@ verifies(
         // Heuristic 'web' branch: drive registerClient() with a resolveClientMetadata() result so the
         // test can use a non-loopback redirect URI without going through auth()'s redirectUrl plumbing.
         const as = createMockAuthorizationServer();
-        const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(url, init));
+        const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(String(url), init));
 
         await registerClient(ISSUER, {
             clientMetadata: resolveClientMetadata({
@@ -2700,7 +2700,7 @@ verifies('client-auth:dcr:app-type-override', async (_args: TestArgs) => {
 verifies('client-auth:dcr:grant-types-default', async (_args: TestArgs) => {
     // Consumer-set grant_types is never rewritten.
     const as = createMockAuthorizationServer();
-    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(url, init));
+    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(String(url), init));
 
     await registerClient(ISSUER, {
         clientMetadata: { client_name: 'm2m', redirect_uris: ['http://localhost:3000/cb'], grant_types: ['client_credentials'] },
@@ -2747,7 +2747,7 @@ verifies('client-auth:token-endpoint:https-guard', async (_args: TestArgs) => {
     const as = createMockAuthorizationServer({ asMetadata: { token_endpoint: 'http://auth.example.com/token' } });
     const provider = new RecordingOAuthClientProvider({ clientInformation: { client_id: 'https-guard-client' } });
     provider.saveCodeVerifier('verifier');
-    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(url, init));
+    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(String(url), init));
 
     // Exchange path through auth(): redeeming an authorization code is rejected before the request is sent.
     await expect(auth(provider, { serverUrl: MCP_URL, authorizationCode: 'code', fetchFn })).rejects.toThrow(InsecureTokenEndpointError);
@@ -2783,7 +2783,7 @@ verifies('client-auth:token-endpoint:https-guard', async (_args: TestArgs) => {
     // directly so a future tightening of the guard does not silently break local-dev / test setups.
     const loopbackAs = createMockAuthorizationServer({ asMetadata: { token_endpoint: 'http://127.0.0.1:9001/token' } });
     // Route the loopback token URL to the mock.
-    const loopbackFetch = (url: URL | string, init?: RequestInit) => loopbackAs.handleRequest(new Request(url, init));
+    const loopbackFetch = (url: URL | string, init?: RequestInit) => loopbackAs.handleRequest(new Request(String(url), init));
     await expect(
         refreshAuthorization(ISSUER, {
             metadata: {
@@ -2808,7 +2808,7 @@ verifies('client-auth:refresh:rotation-handling', async (_args: TestArgs) => {
             { access_token: 'a3', token_type: 'Bearer', refresh_token: 'rt-new' } // refresh: rotated
         ]
     });
-    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(url, init));
+    const fetchFn = (url: URL | string, init?: RequestInit) => as.handleRequest(new Request(String(url), init));
 
     // No-assume-issuance: token response without refresh_token parses cleanly.
     const t1 = await exchangeAuthorization(ISSUER, {

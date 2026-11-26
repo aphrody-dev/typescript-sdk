@@ -87,7 +87,7 @@ async function connectStreamableHttp(client: Client, toolCallBody: unknown): Pro
     const respondTo = makeResponder(toolCallBody);
     // A hand HTTP handler (no SDK server): JSON responses, 202 for notifications.
     const fetchHandler = async (input: URL | string, init?: RequestInit): Promise<Response> => {
-        const request = new Request(input, init);
+        const request = new Request(String(input), init);
         if (request.method !== 'POST') return new Response(null, { status: 405 });
         const body = (await request.json()) as JSONRPCRequest | JSONRPCRequest[];
         const message = Array.isArray(body) ? body[0] : body;

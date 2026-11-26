@@ -43,7 +43,7 @@ const handler = createMcpHandler(() => {
 
 const realFetch = globalThis.fetch;
 globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
-    const request = new Request(input, init);
+    const request = new Request(input as string, init);
     if (new URL(request.url).host === 'localhost:3000') return handler.fetch(request);
     return realFetch(input, init);
 }) as typeof fetch;

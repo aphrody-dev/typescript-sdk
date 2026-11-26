@@ -958,7 +958,9 @@ verifies('typescript:skills:catalog:reload-listen', async () => {
     const handler = createMcpHandler(serving(catalog), { legacy: 'reject', keepAliveMs: 0 });
     const client = new Client({ name: 'c', version: '0' }, { versionNegotiation: { mode: 'auto' } });
     await client.connect(
-        new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), { fetch: (url, init) => handler.fetch(new Request(url, init)) })
+        new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), {
+            fetch: (url, init) => handler.fetch(new Request(String(url), init))
+        })
     );
     await using _ = { [Symbol.asyncDispose]: () => Promise.all([client.close(), handler.close()]).then(() => {}) };
     expect(client.getNegotiatedProtocolVersion()).toBe('2026-07-28');

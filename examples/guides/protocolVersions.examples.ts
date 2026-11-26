@@ -49,7 +49,7 @@ const legacyOnly = legacyStatelessFallback(() => new McpServer({ name: 'forecast
 
 const realFetch = globalThis.fetch;
 globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
-    const request = new Request(input, init);
+    const request = new Request(input as string, init);
     const { host } = new URL(request.url);
     if (host === 'localhost:3000') return handler.fetch(request);
     if (host === 'localhost:4000') return legacyOnly(request);

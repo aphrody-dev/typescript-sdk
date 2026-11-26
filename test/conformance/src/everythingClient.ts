@@ -20,6 +20,7 @@ import {
     requestJwtAuthorizationGrant,
     StreamableHTTPClientTransport
 } from '@modelcontextprotocol/client';
+import type { FetchLike } from '@modelcontextprotocol/client';
 import { SkillsClient, SkillVerificationError } from '@modelcontextprotocol/client/ext/skills';
 import * as z from 'zod/v4';
 
@@ -352,7 +353,7 @@ registerScenario('http-invalid-tool-headers', runHttpInvalidToolHeadersClient);
  * calls, and not retrying complete results — is the SDK driver's behavior
  * against the real mock.
  */
-function withLocalDiscoverResponse(serverInfo: { name: string; version: string }): typeof fetch {
+function withLocalDiscoverResponse(serverInfo: { name: string; version: string }): FetchLike {
     return async (input, init) => {
         if (typeof init?.body === 'string') {
             try {

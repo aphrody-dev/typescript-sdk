@@ -7,6 +7,7 @@
 import type { Server as HttpServer } from 'node:http';
 import { createServer } from 'node:http';
 
+import type { FetchLike } from '@modelcontextprotocol/client';
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import {
     CLIENT_CAPABILITIES_META_KEY,
@@ -100,7 +101,7 @@ describe('createMcpHandler over HTTP (legacy postures end to end)', () => {
         const { baseUrl } = await startEndpoint({ legacy: 'stateless' });
 
         const bodies: string[] = [];
-        const recordingFetch: typeof fetch = async (input, init) => {
+        const recordingFetch: FetchLike = async (input, init) => {
             if (typeof init?.body === 'string') bodies.push(init.body);
             return fetch(input, init);
         };

@@ -130,7 +130,10 @@ describe('SSEClientTransport — DPoP', () => {
     it('wraps a caller-supplied eventSourceInit.fetch too (it still runs, and the stream request is DPoP-signed)', async () => {
         await transport.close();
         const esFetch = vi.fn<FetchLike>((url, init) => fetch(url, init));
-        const t = new SSEClientTransport(baseUrl, { authProvider: provider, eventSourceInit: { fetch: esFetch as typeof fetch } });
+        const t = new SSEClientTransport(baseUrl, {
+            authProvider: provider,
+            eventSourceInit: { fetch: esFetch as unknown as typeof fetch }
+        });
 
         await t.start();
 

@@ -67,7 +67,7 @@ const transport = new StreamableHTTPClientTransport(new URL('http://caching.exam
             const message = JSON.parse(init.body) as { method?: string };
             if (typeof message.method === 'string') reached.set(message.method, (reached.get(message.method) ?? 0) + 1);
         }
-        return handler.fetch(new Request(url, init));
+        return handler.fetch(new Request(String(url), init));
     }
 });
 

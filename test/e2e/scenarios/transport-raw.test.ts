@@ -200,7 +200,7 @@ async function rawRelayStreamableHttp(protocolVersion: string, stateless: boolea
 
     const transport = new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), {
         fetch: (url, init) => {
-            const request = new Request(url, init);
+            const request = new Request(String(url), init);
             records.push({ method: request.method });
             return handle.handleRequest(request);
         }

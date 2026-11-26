@@ -1,6 +1,6 @@
 import type { FetchLike } from '@modelcontextprotocol/core-internal';
 import { isJsonContentType } from '@modelcontextprotocol/core-internal';
-import type { Mocked, MockedFunction, MockInstance } from 'bun:test';
+import type { Mocked, Mock } from 'bun:test';
 
 import type { OAuthClientProvider } from '../../src/client/auth';
 import { applyMiddlewares, createMiddleware, withLogging, withOAuth } from '../../src/client/middleware';
@@ -16,12 +16,12 @@ vi.mock('../../src/client/auth', async () => {
 
 import { auth, extractWWWAuthenticateParams } from '../../src/client/auth';
 
-const mockAuth = auth as MockedFunction<typeof auth>;
-const mockExtractWWWAuthenticateParams = extractWWWAuthenticateParams as MockedFunction<typeof extractWWWAuthenticateParams>;
+const mockAuth = auth as Mock<typeof auth>;
+const mockExtractWWWAuthenticateParams = extractWWWAuthenticateParams as Mock<typeof extractWWWAuthenticateParams>;
 
 describe('withOAuth', () => {
     let mockProvider: Mocked<OAuthClientProvider>;
-    let mockFetch: MockedFunction<FetchLike>;
+    let mockFetch: Mock<FetchLike>;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -46,11 +46,11 @@ describe('withOAuth', () => {
     });
 
     it('should add Authorization header when tokens are available (with explicit baseUrl)', async () => {
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'test-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         mockFetch.mockResolvedValue(new Response('success', { status: 200 }));
 
@@ -71,11 +71,11 @@ describe('withOAuth', () => {
     });
 
     it('should add Authorization header when tokens are available (without baseUrl)', async () => {
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'test-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         mockFetch.mockResolvedValue(new Response('success', { status: 200 }));
 
@@ -97,7 +97,7 @@ describe('withOAuth', () => {
     });
 
     it('should handle requests without tokens (without baseUrl)', async () => {
-        mockProvider.tokens.mockResolvedValue(undefined);
+        mockProvider.tokens.mockImplementation(async () => undefined);
         mockFetch.mockResolvedValue(new Response('success', { status: 200 }));
 
         // Test without baseUrl
@@ -113,16 +113,16 @@ describe('withOAuth', () => {
 
     it('should retry request after successful auth on 401 response (with explicit baseUrl)', async () => {
         mockProvider.tokens
-            .mockResolvedValueOnce({
+            .mockImplementationOnce(async () => ({
                 access_token: 'old-token',
                 token_type: 'Bearer',
                 expires_in: 3600
-            })
-            .mockResolvedValueOnce({
+            }))
+            .mockImplementationOnce(async () => ({
                 access_token: 'new-token',
                 token_type: 'Bearer',
                 expires_in: 3600
-            });
+            }));
 
         const unauthorizedResponse = new Response('Unauthorized', {
             status: 401,
@@ -160,16 +160,16 @@ describe('withOAuth', () => {
 
     it('should retry request after successful auth on 401 response (without baseUrl)', async () => {
         mockProvider.tokens
-            .mockResolvedValueOnce({
+            .mockImplementationOnce(async () => ({
                 access_token: 'old-token',
                 token_type: 'Bearer',
                 expires_in: 3600
-            })
-            .mockResolvedValueOnce({
+            }))
+            .mockImplementationOnce(async () => ({
                 access_token: 'new-token',
                 token_type: 'Bearer',
                 expires_in: 3600
-            });
+            }));
 
         const unauthorizedResponse = new Response('Unauthorized', {
             status: 401,
@@ -207,11 +207,11 @@ describe('withOAuth', () => {
     });
 
     it('should throw UnauthorizedError when auth returns REDIRECT (without baseUrl)', async () => {
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'test-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         mockFetch.mockResolvedValue(new Response('Unauthorized', { status: 401 }));
         mockExtractWWWAuthenticateParams.mockReturnValue({});
@@ -226,11 +226,11 @@ describe('withOAuth', () => {
     });
 
     it('should throw UnauthorizedError when auth fails', async () => {
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'test-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         mockFetch.mockResolvedValue(new Response('Unauthorized', { status: 401 }));
         mockExtractWWWAuthenticateParams.mockReturnValue({});
@@ -242,11 +242,11 @@ describe('withOAuth', () => {
     });
 
     it('should handle persistent 401 responses after auth', async () => {
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'test-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         // Always return 401
         mockFetch.mockResolvedValue(new Response('Unauthorized', { status: 401 }));
@@ -265,11 +265,11 @@ describe('withOAuth', () => {
     });
 
     it('should preserve original request method and body', async () => {
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'test-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         mockFetch.mockResolvedValue(new Response('success', { status: 200 }));
 
@@ -298,11 +298,11 @@ describe('withOAuth', () => {
     });
 
     it('should handle non-401 errors normally', async () => {
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'test-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         const serverErrorResponse = new Response('Server Error', { status: 500 });
         mockFetch.mockResolvedValue(serverErrorResponse);
@@ -317,11 +317,11 @@ describe('withOAuth', () => {
     });
 
     it('should handle URL object as input (without baseUrl)', async () => {
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'test-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         mockFetch.mockResolvedValue(new Response('success', { status: 200 }));
 
@@ -340,16 +340,16 @@ describe('withOAuth', () => {
 
     it('should handle URL object in auth retry (without baseUrl)', async () => {
         mockProvider.tokens
-            .mockResolvedValueOnce({
+            .mockImplementationOnce(async () => ({
                 access_token: 'old-token',
                 token_type: 'Bearer',
                 expires_in: 3600
-            })
-            .mockResolvedValueOnce({
+            }))
+            .mockImplementationOnce(async () => ({
                 access_token: 'new-token',
                 token_type: 'Bearer',
                 expires_in: 3600
-            });
+            }));
 
         const unauthorizedResponse = new Response('Unauthorized', { status: 401 });
         const successResponse = new Response('success', { status: 200 });
@@ -374,8 +374,8 @@ describe('withOAuth', () => {
 });
 
 describe('withLogging', () => {
-    let mockFetch: MockedFunction<FetchLike>;
-    let mockLogger: MockedFunction<
+    let mockFetch: Mock<FetchLike>;
+    let mockLogger: Mock<
         (input: {
             method: string;
             url: string | URL;
@@ -387,8 +387,8 @@ describe('withLogging', () => {
             error?: Error;
         }) => void
     >;
-    let consoleErrorSpy: MockInstance;
-    let consoleLogSpy: MockInstance;
+    let consoleErrorSpy: Mock<(...args: any[]) => any>;
+    let consoleLogSpy: Mock<(...args: any[]) => any>;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -617,7 +617,7 @@ describe('withLogging', () => {
 });
 
 describe('applyMiddleware', () => {
-    let mockFetch: MockedFunction<FetchLike>;
+    let mockFetch: Mock<FetchLike>;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -747,7 +747,7 @@ describe('applyMiddleware', () => {
 
 describe('Integration Tests', () => {
     let mockProvider: Mocked<OAuthClientProvider>;
-    let mockFetch: MockedFunction<FetchLike>;
+    let mockFetch: Mock<FetchLike>;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -773,11 +773,11 @@ describe('Integration Tests', () => {
 
     it('should work with SSE transport pattern', async () => {
         // Simulate how SSE transport might use the middleware
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'sse-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         const response = new Response('{"jsonrpc":"2.0","id":1,"result":{}}', {
             status: 200,
@@ -820,11 +820,11 @@ describe('Integration Tests', () => {
 
     it('should work with StreamableHTTP transport pattern', async () => {
         // Simulate how StreamableHTTP transport might use the middleware
-        mockProvider.tokens.mockResolvedValue({
+        mockProvider.tokens.mockImplementation(async () => ({
             access_token: 'streamable-token',
             token_type: 'Bearer',
             expires_in: 3600
-        });
+        }));
 
         const response = new Response(null, {
             status: 202,
@@ -866,16 +866,16 @@ describe('Integration Tests', () => {
 
     it('should handle auth retry in transport-like scenario', async () => {
         mockProvider.tokens
-            .mockResolvedValueOnce({
+            .mockImplementationOnce(async () => ({
                 access_token: 'expired-token',
                 token_type: 'Bearer',
                 expires_in: 3600
-            })
-            .mockResolvedValueOnce({
+            }))
+            .mockImplementationOnce(async () => ({
                 access_token: 'fresh-token',
                 token_type: 'Bearer',
                 expires_in: 3600
-            });
+            }));
 
         const unauthorizedResponse = new Response('{"error":"invalid_token"}', {
             status: 401,
@@ -917,7 +917,7 @@ describe('Integration Tests', () => {
 });
 
 describe('createMiddleware', () => {
-    let mockFetch: MockedFunction<FetchLike>;
+    let mockFetch: Mock<FetchLike>;
 
     beforeEach(() => {
         vi.clearAllMocks();

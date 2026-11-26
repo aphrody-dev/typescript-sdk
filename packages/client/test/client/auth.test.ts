@@ -59,7 +59,7 @@ vi.mock('../../../core-internal/src/shared/pkce', () => ({
 
 // Mock fetch globally
 const mockFetch = vi.fn();
-globalThis.fetch = mockFetch;
+globalThis.fetch = mockFetch as unknown as typeof fetch;
 
 /**
  * fetchWithCorsRetry gates its CORS-swallowing heuristic on the `CORS_IS_POSSIBLE` shim constant.
@@ -2839,8 +2839,8 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods
-            (mockProvider.clientInformation as Mock).mockResolvedValue(undefined);
-            (mockProvider.tokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
             mockProvider.saveClientInformation = vi.fn();
 
             // Call the auth function
@@ -2911,8 +2911,8 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods
-            (mockProvider.clientInformation as Mock).mockResolvedValue(undefined);
-            (mockProvider.tokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
             mockProvider.saveClientInformation = vi.fn();
 
             // Call the auth function with a server URL that has a path
@@ -2962,13 +2962,13 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods for authorization flow
-            (mockProvider.clientInformation as Mock).mockResolvedValue({
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (mockProvider.tokens as Mock).mockResolvedValue(undefined);
-            (mockProvider.saveCodeVerifier as Mock).mockResolvedValue(undefined);
-            (mockProvider.redirectToAuthorization as Mock).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.saveCodeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth without authorization code (should trigger redirect)
             const result = await auth(mockProvider, {
@@ -2984,7 +2984,7 @@ describe('OAuth Authorization', () => {
                 })
             );
 
-            const redirectCall = (mockProvider.redirectToAuthorization as Mock).mock.calls[0]!;
+            const redirectCall = (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mock.calls[0]!;
             const authUrl: URL = redirectCall[0];
             expect(authUrl.searchParams.get('resource')).toBe('https://api.example.com/mcp-server');
         });
@@ -3032,12 +3032,12 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods for token exchange
-            (mockProvider.clientInformation as Mock).mockResolvedValue({
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (mockProvider.codeVerifier as Mock).mockResolvedValue('test-verifier');
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.codeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue('test-verifier');
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth with authorization code
             const result = await auth(mockProvider, {
@@ -3098,15 +3098,15 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods for token refresh
-            (mockProvider.clientInformation as Mock).mockResolvedValue({
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (mockProvider.tokens as Mock).mockResolvedValue({
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue({
                 access_token: 'old-access',
                 refresh_token: 'refresh123'
             });
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth with existing tokens (should trigger refresh)
             const result = await auth(mockProvider, {
@@ -3176,9 +3176,9 @@ describe('OAuth Authorization', () => {
 
         it('sends no scope on refresh by default, even when the stored tokens record one', async () => {
             mockDiscoveryWithTokenEndpoint(refreshedWithoutScope);
-            (mockProvider.clientInformation as Mock).mockResolvedValue({ client_id: 'test-client' });
-            (mockProvider.tokens as Mock).mockResolvedValue({ ...storedTokens, scope: 'read write' });
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({ client_id: 'test-client' });
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue({ ...storedTokens, scope: 'read write' });
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             await expect(auth(mockProvider, { serverUrl: 'https://api.example.com/mcp-server', scope: 'read write' })).resolves.toBe(
                 'AUTHORIZED'
@@ -3198,9 +3198,9 @@ describe('OAuth Authorization', () => {
             const stored = { ...storedTokens, scope: 'read write' };
             const scopeForRefresh = vi.fn(async (tokens: StoredOAuthTokens) => tokens.scope);
             const provider: OAuthClientProvider = { ...mockProvider, scopeForRefresh };
-            (mockProvider.clientInformation as Mock).mockResolvedValue({ client_id: 'test-client' });
-            (mockProvider.tokens as Mock).mockResolvedValue(stored);
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({ client_id: 'test-client' });
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(stored);
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             await expect(auth(provider, { serverUrl: 'https://api.example.com/mcp-server' })).resolves.toBe('AUTHORIZED');
 
@@ -3217,8 +3217,8 @@ describe('OAuth Authorization', () => {
                     throw new Error('boom');
                 }
             };
-            (mockProvider.clientInformation as Mock).mockResolvedValue({ client_id: 'test-client' });
-            (mockProvider.tokens as Mock).mockResolvedValue(storedTokens);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({ client_id: 'test-client' });
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(storedTokens);
 
             await expect(auth(provider, { serverUrl: 'https://api.example.com/mcp-server' })).rejects.toThrow('boom');
 
@@ -3244,14 +3244,17 @@ describe('OAuth Authorization', () => {
                 })
             }));
 
-            (mockProvider.clientInformation as Mock).mockResolvedValue({ client_id: 'test-client', client_secret: 'test-secret' });
-            (mockProvider.tokens as Mock).mockResolvedValue(storedTokens);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
+                client_id: 'test-client',
+                client_secret: 'test-secret'
+            });
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(storedTokens);
             const persistError = new Error('disk full');
             // `mockRejectedValueOnce`, not `mockRejectedValue`: `mockProvider` is shared by
             // the whole describe and its beforeEach only calls `vi.clearAllMocks()`, which
             // clears call history but keeps implementations. A persistent rejection would
             // leak 'disk full' into every later test that reaches saveTokens.
-            (mockProvider.saveTokens as Mock).mockRejectedValueOnce(persistError);
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockRejectedValueOnce(persistError);
 
             await expect(auth(mockProvider, { serverUrl: 'https://api.example.com/mcp-server' })).rejects.toBe(persistError);
 
@@ -3267,9 +3270,12 @@ describe('OAuth Authorization', () => {
         it('warns when a server-side refresh failure falls back to a new authorization request (#2034)', async () => {
             mockDiscoveryWithTokenEndpoint(() => oauthErrorResponse(OAuthErrorCode.ServerError, 'AS is having a bad day'));
 
-            (mockProvider.clientInformation as Mock).mockResolvedValue({ client_id: 'test-client', client_secret: 'test-secret' });
-            (mockProvider.tokens as Mock).mockResolvedValue(storedTokens);
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
+                client_id: 'test-client',
+                client_secret: 'test-secret'
+            });
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(storedTokens);
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
             await expect(auth(mockProvider, { serverUrl: 'https://api.example.com/mcp-server' })).resolves.toBe('REDIRECT');
@@ -3282,9 +3288,12 @@ describe('OAuth Authorization', () => {
         it("routes auth() warnings to the provider's sdkLogger instead of console", async () => {
             mockDiscoveryWithTokenEndpoint(() => oauthErrorResponse(OAuthErrorCode.ServerError, 'AS is having a bad day'));
 
-            (mockProvider.clientInformation as Mock).mockResolvedValue({ client_id: 'test-client', client_secret: 'test-secret' });
-            (mockProvider.tokens as Mock).mockResolvedValue(storedTokens);
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
+                client_id: 'test-client',
+                client_secret: 'test-secret'
+            });
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(storedTokens);
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
             const warn = vi.fn();
             const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const provider: OAuthClientProvider = Object.create(mockProvider, { sdkLogger: { value: { warn } } });
@@ -3299,9 +3308,12 @@ describe('OAuth Authorization', () => {
         it('auth() still completes when the provider sdkLogger throws', async () => {
             mockDiscoveryWithTokenEndpoint(() => oauthErrorResponse(OAuthErrorCode.ServerError, 'AS is having a bad day'));
 
-            (mockProvider.clientInformation as Mock).mockResolvedValue({ client_id: 'test-client', client_secret: 'test-secret' });
-            (mockProvider.tokens as Mock).mockResolvedValue(storedTokens);
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
+                client_id: 'test-client',
+                client_secret: 'test-secret'
+            });
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(storedTokens);
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
             const warn = vi.fn(() => {
                 throw new Error('log sink closed');
             });
@@ -3318,11 +3330,14 @@ describe('OAuth Authorization', () => {
                 return oauthErrorResponse(OAuthErrorCode.InvalidGrant, 'Refresh token expired');
             });
 
-            (mockProvider.clientInformation as Mock).mockResolvedValue({ client_id: 'test-client', client_secret: 'test-secret' });
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
+                client_id: 'test-client',
+                client_secret: 'test-secret'
+            });
             // This provider implements no invalidateCredentials(), so storage is never
             // cleared and every read returns the same dead refresh token.
-            (mockProvider.tokens as Mock).mockResolvedValue(storedTokens);
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(storedTokens);
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
             // invalid_grant is rethrown out of the refresh block into auth()'s outer catch,
@@ -3343,7 +3358,7 @@ describe('OAuth Authorization', () => {
 
         // A local provider — adding invalidateCredentials to the shared mockProvider would
         // leak into every later test in this describe.
-        const providerWithInvalidation = (invalidateCredentials: Mock): OAuthClientProvider => ({
+        const providerWithInvalidation = (invalidateCredentials: Mock<(...args: any[]) => any>): OAuthClientProvider => ({
             ...mockProvider,
             invalidateCredentials,
             clientInformation: vi.fn().mockResolvedValue({ client_id: 'test-client', client_secret: 'test-secret' }),
@@ -3451,13 +3466,13 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods
-            (providerWithCustomValidation.clientInformation as Mock).mockResolvedValue({
+            (providerWithCustomValidation.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (providerWithCustomValidation.tokens as Mock).mockResolvedValue(undefined);
-            (providerWithCustomValidation.saveCodeVerifier as Mock).mockResolvedValue(undefined);
-            (providerWithCustomValidation.redirectToAuthorization as Mock).mockResolvedValue(undefined);
+            (providerWithCustomValidation.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (providerWithCustomValidation.saveCodeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (providerWithCustomValidation.redirectToAuthorization as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth - should succeed despite resource mismatch because custom validation overrides default
             const result = await auth(providerWithCustomValidation, {
@@ -3506,13 +3521,13 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods
-            (mockProvider.clientInformation as Mock).mockResolvedValue({
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (mockProvider.tokens as Mock).mockResolvedValue(undefined);
-            (mockProvider.saveCodeVerifier as Mock).mockResolvedValue(undefined);
-            (mockProvider.redirectToAuthorization as Mock).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.saveCodeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth with a URL that has the resource as prefix
             const result = await auth(mockProvider, {
@@ -3528,7 +3543,7 @@ describe('OAuth Authorization', () => {
                 })
             );
 
-            const redirectCall = (mockProvider.redirectToAuthorization as Mock).mock.calls[0]!;
+            const redirectCall = (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mock.calls[0]!;
             const authUrl: URL = redirectCall[0];
             // Should use the PRM's resource value, not the full requested URL
             expect(authUrl.searchParams.get('resource')).toBe('https://api.example.com/');
@@ -3575,20 +3590,20 @@ describe('OAuth Authorization', () => {
                 return Promise.resolve({ ok: false, status: 404 });
             });
 
-            (mockProvider.clientInformation as Mock).mockResolvedValue({
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (mockProvider.tokens as Mock).mockResolvedValue(undefined);
-            (mockProvider.saveCodeVerifier as Mock).mockResolvedValue(undefined);
-            (mockProvider.redirectToAuthorization as Mock).mockResolvedValue(undefined);
-            (mockProvider.codeVerifier as Mock).mockResolvedValue('verifier123');
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.saveCodeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.codeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue('verifier123');
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Authorization request: the redirect carries the metadata value byte for byte.
             const redirectResult = await auth(mockProvider, { serverUrl: 'https://example.com/mcp' });
             expect(redirectResult).toBe('REDIRECT');
-            const authUrl: URL = (mockProvider.redirectToAuthorization as Mock).mock.calls[0]![0];
+            const authUrl: URL = (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mock.calls[0]![0];
             expect(authUrl.searchParams.get('resource')).toBe('https://example.com');
 
             // Token request: the authorization-code exchange sends the same value.
@@ -3633,13 +3648,13 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods
-            (mockProvider.clientInformation as Mock).mockResolvedValue({
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (mockProvider.tokens as Mock).mockResolvedValue(undefined);
-            (mockProvider.saveCodeVerifier as Mock).mockResolvedValue(undefined);
-            (mockProvider.redirectToAuthorization as Mock).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.saveCodeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth - should not include resource parameter
             const result = await auth(mockProvider, {
@@ -3655,7 +3670,7 @@ describe('OAuth Authorization', () => {
                 })
             );
 
-            const redirectCall = (mockProvider.redirectToAuthorization as Mock).mock.calls[0]!;
+            const redirectCall = (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mock.calls[0]!;
             const authUrl: URL = redirectCall[0];
             // Resource parameter should not be present when PRM is not available
             expect(authUrl.searchParams.has('resource')).toBe(false);
@@ -3700,12 +3715,12 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods for token exchange
-            (mockProvider.clientInformation as Mock).mockResolvedValue({
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (mockProvider.codeVerifier as Mock).mockResolvedValue('test-verifier');
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.codeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue('test-verifier');
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth with authorization code
             const result = await auth(mockProvider, {
@@ -3763,15 +3778,15 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods for token refresh
-            (mockProvider.clientInformation as Mock).mockResolvedValue({
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (mockProvider.tokens as Mock).mockResolvedValue({
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue({
                 access_token: 'old-access',
                 refresh_token: 'refresh123'
             });
-            (mockProvider.saveTokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.saveTokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth with existing tokens (should trigger refresh)
             const result = await auth(mockProvider, {
@@ -3836,11 +3851,11 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods - no scope in clientMetadata
-            (mockProvider.clientInformation as Mock).mockResolvedValue(undefined);
-            (mockProvider.tokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
             mockProvider.saveClientInformation = vi.fn();
-            (mockProvider.saveCodeVerifier as Mock).mockResolvedValue(undefined);
-            (mockProvider.redirectToAuthorization as Mock).mockResolvedValue(undefined);
+            (mockProvider.saveCodeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth without scope parameter
             const result = await auth(mockProvider, {
@@ -3850,7 +3865,7 @@ describe('OAuth Authorization', () => {
             expect(result).toBe('REDIRECT');
 
             // Verify the authorization URL includes the scopes from PRM
-            const redirectCall = (mockProvider.redirectToAuthorization as Mock).mock.calls[0]!;
+            const redirectCall = (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mock.calls[0]!;
             const authUrl: URL = redirectCall[0];
             expect(authUrl?.searchParams.get('scope')).toBe('mcp:read mcp:write mcp:admin');
 
@@ -3906,11 +3921,11 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods
-            (mockProvider.clientInformation as Mock).mockResolvedValue(undefined);
-            (mockProvider.tokens as Mock).mockResolvedValue(undefined);
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
             mockProvider.saveClientInformation = vi.fn();
-            (mockProvider.saveCodeVerifier as Mock).mockResolvedValue(undefined);
-            (mockProvider.redirectToAuthorization as Mock).mockResolvedValue(undefined);
+            (mockProvider.saveCodeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth with explicit scope parameter
             const result = await auth(mockProvider, {
@@ -3921,7 +3936,7 @@ describe('OAuth Authorization', () => {
             expect(result).toBe('REDIRECT');
 
             // Verify the authorization URL uses the explicit scope, not scopes_supported
-            const redirectCall = (mockProvider.redirectToAuthorization as Mock).mock.calls[0]!;
+            const redirectCall = (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mock.calls[0]!;
             const authUrl: URL = redirectCall[0];
             expect(authUrl.searchParams.get('scope')).toBe('mcp:read');
         });
@@ -3959,13 +3974,13 @@ describe('OAuth Authorization', () => {
             });
 
             // Mock provider methods
-            (mockProvider.clientInformation as Mock).mockResolvedValue({
+            (mockProvider.clientInformation as Mock<(...args: any[]) => any>).mockResolvedValue({
                 client_id: 'test-client',
                 client_secret: 'test-secret'
             });
-            (mockProvider.tokens as Mock).mockResolvedValue(undefined);
-            (mockProvider.saveCodeVerifier as Mock).mockResolvedValue(undefined);
-            (mockProvider.redirectToAuthorization as Mock).mockResolvedValue(undefined);
+            (mockProvider.tokens as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.saveCodeVerifier as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
+            (mockProvider.redirectToAuthorization as Mock<(...args: any[]) => any>).mockResolvedValue(undefined);
 
             // Call auth with serverUrl that has a path
             const result = await auth(mockProvider, {

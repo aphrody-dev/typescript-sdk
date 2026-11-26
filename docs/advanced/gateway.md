@@ -1,6 +1,7 @@
 ---
 shape: how-to
 ---
+
 # Gateways and worker fleets
 
 A **gateway** — a proxy, a worker pool, any process that fronts one MCP server with many short-lived clients — probes the server once and reuses the answer for every connection after it.
@@ -58,7 +59,7 @@ A client on a modern-era connection can re-probe at any time: `await client.disc
 The value is plain JSON. Write the string to Redis, a config map, or a process-local cache; parse it back and wrap it as the modern verdict wherever a client needs it.
 
 ```ts source="../../examples/guides/advanced/gateway.examples.ts#persist_advertisement"
-import type { DiscoverResult, PriorDiscovery } from '@modelcontextprotocol/client';
+import type { DiscoverResult, FetchLike, PriorDiscovery } from '@modelcontextprotocol/client';
 
 const discover = JSON.parse(persisted) as DiscoverResult;
 const prior: PriorDiscovery = { kind: 'modern', discover };
@@ -177,7 +178,7 @@ The pieces above compose into the full host-side loop: probe once, cache the ver
 
 The first connect under `mode: 'auto'` pays one probe. Afterwards the outcome is readable on the client: `getDiscoverResult()` returns the `DiscoverResult` on a modern server, and on a connected client its absence means the era is legacy. Store that verdict together with when you stored it — the `Map` below keeps `storedAt` explicitly; in a real deployment the store does the dating for you (a Redis key TTL, where an expired read simply comes back empty, or a database row's `created_at` column).
 
-Before each connect, supply the cached verdict only while your own policy says it is fresh — a fixed horizon here, any predicate in practice. Supplying `undefined` under `mode: 'auto'` *is* the re-probe, and the fresh outcome re-populates the cache. The timestamp matters most for the legacy branch: a stale legacy verdict succeeds silently forever (an upgraded server still answers `initialize`), so only the timestamp ever retires it; a stale modern verdict fails loudly at the first request.
+Before each connect, supply the cached verdict only while your own policy says it is fresh — a fixed horizon here, any predicate in practice. Supplying `undefined` under `mode: 'auto'` _is_ the re-probe, and the fresh outcome re-populates the cache. The timestamp matters most for the legacy branch: a stale legacy verdict succeeds silently forever (an upgraded server still answers `initialize`), so only the timestamp ever retires it; a stale modern verdict fails loudly at the first request.
 
 ```ts source="../../examples/guides/advanced/gateway.examples.ts#prior_cache"
 // Host-side verdict cache. A real deployment keeps this in Redis (a key TTL
@@ -189,7 +190,7 @@ const fresh = (entry: { storedAt: number }): boolean => Date.now() - entry.store
 
 // Count server/discover probes at the fetch layer (the wire trace).
 let probes = 0;
-const tracingFetch: typeof fetch = async (input, init) => {
+const tracingFetch: FetchLike = async (input, init) => {
     if (typeof init?.body === 'string' && init.body.includes('"server/discover"')) probes++;
     return fetch(input, init);
 };

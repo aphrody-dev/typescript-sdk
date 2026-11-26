@@ -238,7 +238,7 @@ export function setupAuthServer(options: SetupAuthServerOptions): void {
     // above makes that claim true).
     const discoveryHandler = oAuthDiscoveryMetadata(auth);
     authApp.get('/.well-known/oauth-authorization-server', cors(), async (req: Request, res: ExpressResponse) => {
-        const upstream = await discoveryHandler(new Request(new URL(req.originalUrl, issuer)));
+        const upstream = await discoveryHandler(new Request(new URL(req.originalUrl, issuer).href));
         const body = (await upstream.json()) as Record<string, unknown>;
         body.authorization_response_iss_parameter_supported = true;
         res.status(upstream.status).json(body);

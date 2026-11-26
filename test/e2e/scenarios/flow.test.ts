@@ -44,7 +44,7 @@ verifies('flow:compat:dual-transport-server', async (_args: TestArgs) => {
     const sseHost = await startLegacySseHost(makeServer);
     try {
         const httpClient = new Client({ name: 'streamable-client', version: '1.0.0' });
-        const fetch = (u: URL | string, init?: RequestInit) => streamableHost.handleRequest(new Request(u, init));
+        const fetch = (u: URL | string, init?: RequestInit) => streamableHost.handleRequest(new Request(String(u), init));
         await httpClient.connect(new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), { fetch }));
 
         const sseClient = new Client({ name: 'sse-client', version: '1.0.0' });
@@ -240,7 +240,7 @@ verifies('flow:elicitation:url-at-session-init', async (_args: TestArgs) => {
 
     const handle = hostPerSession(makeServer);
     const url = new URL('http://in-process/mcp');
-    const customFetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const customFetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
     const transport = new StreamableHTTPClientTransport(url, { fetch: customFetch });
 
     // Tap wire before connecting
@@ -361,7 +361,7 @@ verifies('flow:multi-client:stateful-isolation', async (_args: TestArgs) => {
     // Three clients connect to the same per-session host, each with distinct step counts
     const handle = hostPerSession(makeServer);
     const url = new URL('http://in-process/mcp');
-    const customFetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const customFetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
 
     interface SessionUnderTest {
         client: Client;
@@ -434,7 +434,7 @@ verifies('flow:oauth:authorization-code-roundtrip', async (_args: TestArgs) => {
     const registerRequests: Array<Record<string, unknown>> = [];
     const tokenRequests: URLSearchParams[] = [];
     const mockASFetch = async (url: URL | string, init?: RequestInit): Promise<Response> => {
-        const req = new Request(url, init);
+        const req = new Request(String(url), init);
         const u = new URL(req.url);
         if (u.pathname === '/.well-known/oauth-authorization-server') {
             return Response.json(
@@ -510,7 +510,7 @@ verifies('flow:oauth:authorization-code-roundtrip', async (_args: TestArgs) => {
     const handle = hostPerSession(makeServer);
     const url = new URL('http://in-process/mcp');
     const serverFetch = async (u: URL | string, init?: RequestInit): Promise<Response> => {
-        const req = new Request(u, init);
+        const req = new Request(String(u), init);
         const requestUrl = new URL(req.url);
         if (requestUrl.pathname.startsWith(PRM_PATH)) {
             return Response.json({ resource: url.toString(), authorization_servers: [AS_ORIGIN] }, { status: 200 });
@@ -648,7 +648,7 @@ verifies('flow:resume:tool-call-resumption-token', async (_args: TestArgs) => {
     });
 
     const customFetch = async (u: URL | string, init?: RequestInit): Promise<Response> => {
-        const request = new Request(u, init);
+        const request = new Request(String(u), init);
         const lastEventId = request.headers.get('last-event-id') ?? undefined;
         const body = typeof init?.body === 'string' ? init.body : undefined;
         requests.push({ method: request.method, lastEventId, sessionId: request.headers.get('mcp-session-id') ?? undefined, body });
@@ -777,7 +777,7 @@ verifies('flow:session:terminate-then-reconnect', async (_args: TestArgs) => {
 
     const handle = hostPerSession(makeServer);
     const url = new URL('http://in-process/mcp');
-    const customFetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(u, init));
+    const customFetch = (u: URL | string, init?: RequestInit) => handle.handleRequest(new Request(String(u), init));
 
     const client1 = new Client({ name: 'c', version: '0' });
     const transport1 = new StreamableHTTPClientTransport(url, { fetch: customFetch });

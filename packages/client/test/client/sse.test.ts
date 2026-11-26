@@ -2,10 +2,10 @@ import type { IncomingMessage, Server, ServerResponse } from 'node:http';
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
 
-import type { JSONRPCMessage, OAuthTokens } from '@modelcontextprotocol/core-internal';
+import type { FetchLike, JSONRPCMessage, OAuthTokens } from '@modelcontextprotocol/core-internal';
 import { OAuthError, OAuthErrorCode, SdkErrorCode, SdkHttpError } from '@modelcontextprotocol/core-internal';
 import { listenOnRandomPort } from '@modelcontextprotocol/test-helpers';
-import type { Mock, Mocked, MockedFunction, MockInstance } from 'bun:test';
+import type { Mock, Mocked } from 'bun:test';
 
 import type { AuthProvider, OAuthClientProvider } from '../../src/client/auth';
 import { UnauthorizedError } from '../../src/client/auth';
@@ -339,7 +339,7 @@ describe('SSEClientTransport', () => {
 
             const originalFetch = globalThis.fetch;
             try {
-                globalThis.fetch = vi.fn().mockResolvedValue({ ok: true });
+                globalThis.fetch = vi.fn().mockResolvedValue({ ok: true }) as unknown as typeof fetch;
 
                 const message: JSONRPCMessage = {
                     jsonrpc: '2.0',
@@ -350,7 +350,7 @@ describe('SSEClientTransport', () => {
 
                 await transport.send(message);
 
-                const calledHeaders = (globalThis.fetch as Mock).mock.calls[0]![1].headers;
+                const calledHeaders = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[0]![1].headers;
                 expect(calledHeaders.get('Authorization')).toBe('Bearer test-token');
                 expect(calledHeaders.get('X-Custom-Header')).toBe('custom-value');
                 expect(calledHeaders.get('content-type')).toBe('application/json');
@@ -359,10 +359,10 @@ describe('SSEClientTransport', () => {
 
                 await transport.send(message);
 
-                const updatedHeaders = (globalThis.fetch as Mock).mock.calls[1]![1].headers;
+                const updatedHeaders = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[1]![1].headers;
                 expect(updatedHeaders.get('X-Custom-Header')).toBe('updated-value');
             } finally {
-                globalThis.fetch = originalFetch;
+                globalThis.fetch = originalFetch as unknown as typeof fetch;
             }
         });
 
@@ -382,7 +382,7 @@ describe('SSEClientTransport', () => {
 
             const originalFetch = globalThis.fetch;
             try {
-                globalThis.fetch = vi.fn().mockResolvedValue({ ok: true });
+                globalThis.fetch = vi.fn().mockResolvedValue({ ok: true }) as unknown as typeof fetch;
 
                 const message: JSONRPCMessage = {
                     jsonrpc: '2.0',
@@ -393,7 +393,7 @@ describe('SSEClientTransport', () => {
 
                 await transport.send(message);
 
-                const calledHeaders = (globalThis.fetch as Mock).mock.calls[0]![1].headers;
+                const calledHeaders = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[0]![1].headers;
                 expect(calledHeaders.get('Authorization')).toBe('Bearer test-token');
                 expect(calledHeaders.get('X-Custom-Header')).toBe('custom-value');
                 expect(calledHeaders.get('content-type')).toBe('application/json');
@@ -402,10 +402,10 @@ describe('SSEClientTransport', () => {
 
                 await transport.send(message);
 
-                const updatedHeaders = (globalThis.fetch as Mock).mock.calls[1]![1].headers;
+                const updatedHeaders = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[1]![1].headers;
                 expect(updatedHeaders.get('X-Custom-Header')).toBe('updated-value');
             } finally {
-                globalThis.fetch = originalFetch;
+                globalThis.fetch = originalFetch as unknown as typeof fetch;
             }
         });
 
@@ -423,16 +423,16 @@ describe('SSEClientTransport', () => {
 
             const originalFetch = globalThis.fetch;
             try {
-                globalThis.fetch = vi.fn().mockResolvedValue({ ok: true });
+                globalThis.fetch = vi.fn().mockResolvedValue({ ok: true }) as unknown as typeof fetch;
 
                 await transport.send({ jsonrpc: '2.0', id: '1', method: 'test', params: {} });
 
-                const calledHeaders = (globalThis.fetch as Mock).mock.calls[0]![1].headers;
+                const calledHeaders = (globalThis.fetch as unknown as Mock<(...args: any[]) => any>).mock.calls[0]![1].headers;
                 expect(calledHeaders.get('Authorization')).toBe('Bearer test-token');
                 expect(calledHeaders.get('X-Custom-Header')).toBe('custom-value');
                 expect(calledHeaders.get('content-type')).toBe('application/json');
             } finally {
-                globalThis.fetch = originalFetch;
+                globalThis.fetch = originalFetch as unknown as typeof fetch;
             }
         });
     });
@@ -461,10 +461,10 @@ describe('SSEClientTransport', () => {
         });
 
         it('attaches auth header from provider on SSE connection', async () => {
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'test-token',
                 token_type: 'Bearer'
-            });
+            }));
 
             transport = new SSEClientTransport(resourceBaseUrl, {
                 authProvider: mockAuthProvider
@@ -477,10 +477,10 @@ describe('SSEClientTransport', () => {
         });
 
         it('attaches custom header from provider on initial SSE connection', async () => {
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'test-token',
                 token_type: 'Bearer'
-            });
+            }));
             const customHeaders = {
                 'X-Custom-Header': 'custom-value'
             };
@@ -500,10 +500,10 @@ describe('SSEClientTransport', () => {
         });
 
         it('attaches auth header from provider on POST requests', async () => {
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'test-token',
                 token_type: 'Bearer'
-            });
+            }));
 
             transport = new SSEClientTransport(resourceBaseUrl, {
                 authProvider: mockAuthProvider
@@ -649,10 +649,10 @@ describe('SSEClientTransport', () => {
         });
 
         it('respects custom headers when using auth provider', async () => {
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'test-token',
                 token_type: 'Bearer'
-            });
+            }));
 
             const customHeaders = {
                 'X-Custom-Header': 'custom-value'
@@ -684,10 +684,10 @@ describe('SSEClientTransport', () => {
             // Regression test for #2208: transport-managed headers are merged on top of
             // requestInit.headers, so a static Authorization placeholder (e.g. an env-var
             // API key) gives way to the provider's token on both the SSE GET and POSTs.
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'fresh-token',
                 token_type: 'Bearer'
-            });
+            }));
 
             transport = new SSEClientTransport(resourceBaseUrl, {
                 authProvider: mockAuthProvider,
@@ -722,10 +722,10 @@ describe('SSEClientTransport', () => {
         it('replaces a caller-supplied Authorization header regardless of name casing (Headers instance)', async () => {
             // #2208 follow-up: `Headers` normalizes names to lowercase; the transport must
             // still send exactly its own token, not a combined two-token value.
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'fresh-token',
                 token_type: 'Bearer'
-            });
+            }));
 
             transport = new SSEClientTransport(resourceBaseUrl, {
                 authProvider: mockAuthProvider,
@@ -762,10 +762,10 @@ describe('SSEClientTransport', () => {
             // a caller-supplied repeated name is combined exactly as a direct `fetch` would, while
             // a repeated *transport-managed* name is still replaced outright by the transport's
             // own value rather than combined with it.
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'fresh-token',
                 token_type: 'Bearer'
-            });
+            }));
 
             transport = new SSEClientTransport(resourceBaseUrl, {
                 authProvider: mockAuthProvider,
@@ -1165,11 +1165,11 @@ describe('SSEClientTransport', () => {
 
         it('invalidates client+tokens (not discovery) on OAuthErrorCode.InvalidClient during token refresh', async () => {
             // Mock tokens() to return token with refresh token
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'expired-token',
                 token_type: 'Bearer',
                 refresh_token: 'refresh-token'
-            });
+            }));
 
             const expectedError = new OAuthError(OAuthErrorCode.InvalidClient, 'Client authentication failed');
             let baseUrl = resourceBaseUrl;
@@ -1221,11 +1221,11 @@ describe('SSEClientTransport', () => {
 
         it('invalidates client+tokens (not discovery) on OAuthErrorCode.UnauthorizedClient during token refresh', async () => {
             // Mock tokens() to return token with refresh token
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'expired-token',
                 token_type: 'Bearer',
                 refresh_token: 'refresh-token'
-            });
+            }));
 
             const expectedError = new OAuthError(OAuthErrorCode.UnauthorizedClient, 'Client not authorized');
             let baseUrl = resourceBaseUrl;
@@ -1276,11 +1276,11 @@ describe('SSEClientTransport', () => {
 
         it('invalidates tokens on OAuthErrorCode.InvalidGrant during token refresh', async () => {
             // Mock tokens() to return token with refresh token
-            mockAuthProvider.tokens.mockResolvedValue({
+            mockAuthProvider.tokens.mockImplementation(async () => ({
                 access_token: 'expired-token',
                 token_type: 'Bearer',
                 refresh_token: 'refresh-token'
-            });
+            }));
 
             const expectedError = new OAuthError(OAuthErrorCode.InvalidGrant, 'Invalid refresh token');
             let baseUrl = resourceBaseUrl;
@@ -1327,10 +1327,10 @@ describe('SSEClientTransport', () => {
     });
 
     describe('custom fetch in auth code paths', () => {
-        let customFetch: MockedFunction<typeof fetch>;
-        let globalFetchSpy: MockInstance;
+        let customFetch: Mock<FetchLike>;
+        let globalFetchSpy: Mock<(...args: any[]) => any>;
         let mockAuthProvider: Mocked<OAuthClientProvider>;
-        let resourceServerHandler: Mock;
+        let resourceServerHandler: Mock<(...args: any[]) => any>;
 
         /**
          * Helper function to create a mock auth provider with configurable behavior
@@ -1477,7 +1477,7 @@ describe('SSEClientTransport', () => {
             const originalFetch = fetch;
 
             // Create custom fetch spy that delegates to real fetch
-            customFetch = vi.fn((url, init) => {
+            customFetch = vi.fn<FetchLike>((url, init) => {
                 return originalFetch(url.toString(), init);
             });
 

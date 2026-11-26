@@ -67,7 +67,7 @@ function recordingFetch(
 ): (url: URL | string, init?: RequestInit) => Promise<Response> {
     return async (url, init) => {
         const u = typeof url === 'string' ? url : url.toString();
-        const req = new Request(u, init);
+        const req = new Request(String(u), init);
         const body = init?.body ? String(init.body) : undefined;
         records.push({ method: req.method, url: u, headers: headersToRecord(req.headers), body });
         return baseHandler(req);
@@ -327,7 +327,7 @@ verifies('client-transport:http:json-response-parsed', async (_args: TestArgs) =
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
             fetch: async (u, init) => {
-                const response = await handleRequest(new Request(u, init));
+                const response = await handleRequest(new Request(String(u), init));
                 if (init?.body && String(init.body).includes('"tools/call"')) {
                     callResponseContentTypes.push(response.headers.get('content-type'));
                 }
@@ -358,7 +358,7 @@ verifies('client-transport:http:404-surfaces', async (_args: TestArgs) => {
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
             fetch: async (u, init) => {
-                const req = new Request(u, init);
+                const req = new Request(String(u), init);
                 const sid = req.headers.get('mcp-session-id');
                 if (sid && sid === sessionIdToBreak) {
                     return Response.json({ error: 'Session not found' }, { status: 404 });
@@ -387,7 +387,7 @@ verifies('client-transport:http:terminate-405-ok', async (_args: TestArgs) => {
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
             fetch: async (u, init) => {
-                const req = new Request(u, init);
+                const req = new Request(String(u), init);
                 if (req.method === 'DELETE') {
                     return new Response(null, { status: 405 });
                 }
@@ -414,7 +414,7 @@ verifies('client-transport:http:sse-405-tolerated', async (_args: TestArgs) => {
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
             fetch: async (u, init) => {
-                const req = new Request(u, init);
+                const req = new Request(String(u), init);
                 if (req.method === 'GET') {
                     return new Response(null, { status: 405 });
                 }
@@ -524,7 +524,7 @@ verifies('client-transport:http:concurrent-streams', async (_args: TestArgs) => 
     try {
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
-            fetch: (u, init) => handle.handleRequest(new Request(u, init))
+            fetch: (u, init) => handle.handleRequest(new Request(String(u), init))
         });
         const client = newClient();
 
@@ -569,7 +569,7 @@ verifies('client-transport:http:no-reconnect-after-response', async (_args: Test
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
             fetch: async (u, init) => {
-                const req = new Request(u, init);
+                const req = new Request(String(u), init);
                 const body = init?.body ? String(init.body) : undefined;
                 records.push({ method: req.method, url: u.toString(), headers: headersToRecord(req.headers), body });
 
@@ -648,7 +648,7 @@ verifies('client-transport:http:reconnect-retry-value', async (_args: TestArgs) 
 
             const transport = new StreamableHTTPClientTransport(url, {
                 fetch: async (u, init) => {
-                    const req = new Request(u, init);
+                    const req = new Request(String(u), init);
                     const body = init?.body ? String(init.body) : undefined;
 
                     if (req.method === 'GET') {
@@ -727,7 +727,7 @@ verifies('client-transport:http:reconnect-retry-value', async (_args: TestArgs) 
 
             const transport = new StreamableHTTPClientTransport(url, {
                 fetch: async (u, init) => {
-                    const req = new Request(u, init);
+                    const req = new Request(String(u), init);
                     if (req.method === 'GET') {
                         getRecords.push({ at: Date.now() });
                         if (getRecords.length === 1) {
@@ -799,7 +799,7 @@ verifies('client-transport:http:reconnect-get', async (_args: TestArgs) => {
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
             fetch: async (u, init) => {
-                const req = new Request(u, init);
+                const req = new Request(String(u), init);
                 records.push({
                     method: req.method,
                     url: u.toString(),
@@ -880,7 +880,7 @@ verifies('client-transport:http:reconnect-post-priming', async (_args: TestArgs)
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
             fetch: async (u, init) => {
-                const req = new Request(u, init);
+                const req = new Request(String(u), init);
                 const headers = headersToRecord(req.headers);
                 const body = init?.body ? String(init.body) : undefined;
                 records.push({ method: req.method, url: u.toString(), headers, body });
@@ -1066,7 +1066,7 @@ verifies('client-transport:http:body-stream-error-preserved', async (_args: Test
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
             fetch: async (u, init) => {
-                const req = new Request(u, init);
+                const req = new Request(String(u), init);
                 if (req.method === 'GET') {
                     const encoder = new TextEncoder();
                     const stream = new ReadableStream({
@@ -1317,7 +1317,7 @@ verifies('client-transport:http:error-status-code', async (_args: TestArgs) => {
                     if (failToolCalls && body?.includes('"tools/call"')) {
                         return new Response('Internal Server Error', { status: 500 });
                     }
-                    return handle.handleRequest(new Request(u, init));
+                    return handle.handleRequest(new Request(String(u), init));
                 }
             });
             const client = newClient();
@@ -1348,7 +1348,7 @@ verifies('typescript:client-transport:http:session-id-property', async (_args: T
         const url = new URL('http://in-process/mcp');
         const transport = new StreamableHTTPClientTransport(url, {
             fetch: async (u, init) => {
-                const response = await handle.handleRequest(new Request(u, init));
+                const response = await handle.handleRequest(new Request(String(u), init));
                 if (init?.body && String(init.body).includes('"method":"initialize"')) {
                     serverAssignedIds.push(response.headers.get('mcp-session-id'));
                 }
@@ -1371,7 +1371,7 @@ verifies('typescript:client-transport:http:session-id-property', async (_args: T
 
         // Stateless hosting assigns no Mcp-Session-Id, so the property stays undefined after connect
         const statelessTransport = new StreamableHTTPClientTransport(url, {
-            fetch: (u, init) => statelessHandle.handleRequest(new Request(u, init))
+            fetch: (u, init) => statelessHandle.handleRequest(new Request(String(u), init))
         });
         const statelessClient = newClient();
 
@@ -1398,7 +1398,7 @@ verifies('typescript:client-transport:http:session-id-option', async (_args: Tes
 
         // Establish a real session first so the configured sessionId refers to a live server session
         const firstTransport = new StreamableHTTPClientTransport(url, {
-            fetch: (u, init) => handle.handleRequest(new Request(u, init))
+            fetch: (u, init) => handle.handleRequest(new Request(String(u), init))
         });
         const firstClient = newClient();
         await firstClient.connect(firstTransport);

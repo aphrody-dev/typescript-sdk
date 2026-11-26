@@ -32,7 +32,7 @@ function recordingTransport(): Transport & { sent: JSONRPCMessage[] } {
 
 describe('plain client with a modern-only supported-versions list', () => {
     test.each([
-        { label: "['2026-07-28']", supportedProtocolVersions: ['2026-07-28'] },
+        { label: "['2026-07-28']", supportedProtocolVersions: ['2026-07-28'] as string[] },
         { label: '[] (empty list)', supportedProtocolVersions: [] as string[] }
     ])('connect() rejects with the typed negotiation error and never sends initialize — $label', async ({ supportedProtocolVersions }) => {
         const transport = recordingTransport();

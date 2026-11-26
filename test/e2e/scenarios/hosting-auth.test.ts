@@ -116,7 +116,7 @@ verifies('hosting:auth:authinfo-propagates', async (_args: TestArgs) => {
 
     await client.connect(
         new StreamableHTTPClientTransport(new URL('http://in-process/mcp'), {
-            fetch: (url, init) => handleRequest(new Request(url, init)),
+            fetch: (url, init) => handleRequest(new Request(String(url), init)),
             requestInit: { headers: { Authorization: `Bearer ${VALID_TOKEN}` } }
         })
     );

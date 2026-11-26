@@ -111,7 +111,7 @@ const handler = createMcpHandler(() => {
     return server;
 });
 type AnyFetch = (url: string | URL, init?: RequestInit) => Promise<Response>;
-const serverFetch: AnyFetch = (url, init) => handler.fetch(new Request(url, init));
+const serverFetch: AnyFetch = (url, init) => handler.fetch(new Request(String(url), init));
 
 async function drive(fetchImpl: AnyFetch): Promise<void> {
     const client = new Client({ name: 'middleware-docs-harness', version: '1.0.0' });

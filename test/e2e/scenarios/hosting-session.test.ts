@@ -48,7 +48,7 @@ verifies('hosting:session:create', async (_args: TestArgs) => {
 
     try {
         const res = await tx.handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers: {
                     'mcp-protocol-version': LATEST_PROTOCOL_VERSION,
@@ -125,7 +125,7 @@ verifies('hosting:session:cors-expose', async (_args: TestArgs) => {
 verifies('hosting:session:reuse', async (_args: TestArgs) => {
     const host = hostPerSession(() => echoServer());
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => host.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => host.handleRequest(new Request(String(u), init));
 
     const client = newClient();
     const clientTx = new StreamableHTTPClientTransport(url, { fetch });
@@ -207,7 +207,7 @@ verifies('hosting:session:missing-id', async (_args: TestArgs) => {
 
     try {
         const initRes = await tx.handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
@@ -222,7 +222,7 @@ verifies('hosting:session:missing-id', async (_args: TestArgs) => {
         expect(initRes.headers.get('mcp-session-id')).not.toBeNull();
 
         const res = await tx.handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} })
@@ -275,7 +275,7 @@ verifies('hosting:session:delete', async (_args: TestArgs) => {
 
     try {
         const initRes = await handle(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
@@ -292,7 +292,7 @@ verifies('hosting:session:delete', async (_args: TestArgs) => {
         expect([...sessions.keys()]).toEqual([sessionId]);
 
         const listRes = await handle(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers: { ...headers, 'mcp-session-id': sessionId },
                 body: JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} })
@@ -302,7 +302,7 @@ verifies('hosting:session:delete', async (_args: TestArgs) => {
         expect(closedSessions).toEqual([]);
 
         const deleteRes = await handle(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'DELETE',
                 headers: { 'mcp-protocol-version': LATEST_PROTOCOL_VERSION, 'mcp-session-id': sessionId }
             })
@@ -313,7 +313,7 @@ verifies('hosting:session:delete', async (_args: TestArgs) => {
 
         // The old id no longer routes to a live transport once onsessionclosed removed it from the map.
         const reuseRes = await handle(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers: { ...headers, 'mcp-session-id': sessionId },
                 body: JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/list', params: {} })
@@ -337,7 +337,7 @@ verifies('hosting:session:post-termination-404', async (_args: TestArgs) => {
 
     try {
         const initRes = await handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
@@ -354,7 +354,7 @@ verifies('hosting:session:post-termination-404', async (_args: TestArgs) => {
 
         // The session answers a request before termination, so any later 404 is attributable to the DELETE alone.
         const liveRes = await handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers: { ...headers, 'mcp-session-id': sessionId },
                 body: JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} })
@@ -363,7 +363,7 @@ verifies('hosting:session:post-termination-404', async (_args: TestArgs) => {
         expect(liveRes.status).toBe(200);
 
         const deleteRes = await handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'DELETE',
                 headers: { 'mcp-protocol-version': LATEST_PROTOCOL_VERSION, 'mcp-session-id': sessionId }
             })
@@ -372,7 +372,7 @@ verifies('hosting:session:post-termination-404', async (_args: TestArgs) => {
 
         const staleHeaders = { ...headers, 'mcp-session-id': sessionId };
         const stalePost = await handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers: staleHeaders,
                 body: JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/list', params: {} })
@@ -380,10 +380,10 @@ verifies('hosting:session:post-termination-404', async (_args: TestArgs) => {
         );
         expect(stalePost.status).toBe(404);
 
-        const staleGet = await handleRequest(new Request(url, { method: 'GET', headers: staleHeaders }));
+        const staleGet = await handleRequest(new Request(String(url), { method: 'GET', headers: staleHeaders }));
         expect(staleGet.status).toBe(404);
 
-        const staleDelete = await handleRequest(new Request(url, { method: 'DELETE', headers: staleHeaders }));
+        const staleDelete = await handleRequest(new Request(String(url), { method: 'DELETE', headers: staleHeaders }));
         expect(staleDelete.status).toBe(404);
     } finally {
         await close();
@@ -402,7 +402,7 @@ verifies('hosting:session:id-charset', async (_args: TestArgs) => {
 
         try {
             const res = await tx.handleRequest(
-                new Request(url, {
+                new Request(String(url), {
                     method: 'POST',
                     headers: {
                         'mcp-protocol-version': LATEST_PROTOCOL_VERSION,
@@ -439,7 +439,7 @@ verifies('hosting:session:reinitialize', async (_args: TestArgs) => {
     const host = hostPerSession(() => echoServer());
     const url = new URL('http://in-process/mcp');
 
-    const initReq = new Request(url, {
+    const initReq = new Request(String(url), {
         method: 'POST',
         headers: {
             'mcp-protocol-version': LATEST_PROTOCOL_VERSION,
@@ -460,7 +460,7 @@ verifies('hosting:session:reinitialize', async (_args: TestArgs) => {
         const sessionId = initRes.headers.get('mcp-session-id');
         if (sessionId === null) throw new Error('initialize response is missing the mcp-session-id header');
 
-        const reinitReq = new Request(url, {
+        const reinitReq = new Request(String(url), {
             method: 'POST',
             headers: {
                 'mcp-session-id': sessionId,
@@ -500,7 +500,7 @@ verifies('hosting:session:isolation', async (_args: TestArgs) => {
 
     const host = hostPerSession(makeServer);
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => host.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => host.handleRequest(new Request(String(u), init));
 
     const clientA = newClient();
     const txA = new StreamableHTTPClientTransport(url, { fetch });
@@ -528,7 +528,7 @@ verifies('hosting:session:isolation', async (_args: TestArgs) => {
         await clientB.close();
 
         const deleteRes = await host.handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'DELETE',
                 headers: { 'mcp-protocol-version': LATEST_PROTOCOL_VERSION, 'mcp-session-id': sessionIdB }
             })
@@ -539,7 +539,7 @@ verifies('hosting:session:isolation', async (_args: TestArgs) => {
         expect(a3.content).toEqual([{ type: 'text', text: 'visits:3' }]);
 
         const reuseRes = await host.handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers: {
                     'mcp-session-id': sessionIdB,
@@ -561,7 +561,7 @@ verifies('hosting:stateless:no-session-id', async (_args: TestArgs) => {
     const host = hostStateless(() => echoServer());
     const url = new URL('http://in-process/mcp');
 
-    const req = new Request(url, {
+    const req = new Request(String(url), {
         method: 'POST',
         headers: {
             'mcp-protocol-version': LATEST_PROTOCOL_VERSION,
@@ -590,7 +590,7 @@ verifies('hosting:stateless:no-session-id', async (_args: TestArgs) => {
 verifies('hosting:stateless:concurrent-clients', async (_args: TestArgs) => {
     const host = hostStateless(() => echoServer());
     const url = new URL('http://in-process/mcp');
-    const fetch = (u: URL | string, init?: RequestInit) => host.handleRequest(new Request(u, init));
+    const fetch = (u: URL | string, init?: RequestInit) => host.handleRequest(new Request(String(u), init));
 
     const client1 = new Client({ name: 'c1', version: '0' });
     const client2 = new Client({ name: 'c2', version: '0' });
@@ -630,7 +630,7 @@ verifies('hosting:stateless:get-delete-405', async (_args: TestArgs) => {
     };
 
     const getRes = await handleStateless(
-        new Request(url, {
+        new Request(String(url), {
             method: 'GET',
             headers: { 'mcp-protocol-version': LATEST_PROTOCOL_VERSION, accept: 'text/event-stream' }
         })
@@ -638,7 +638,7 @@ verifies('hosting:stateless:get-delete-405', async (_args: TestArgs) => {
     expect(getRes.status).toBe(405);
 
     const deleteRes = await handleStateless(
-        new Request(url, { method: 'DELETE', headers: { 'mcp-protocol-version': LATEST_PROTOCOL_VERSION } })
+        new Request(String(url), { method: 'DELETE', headers: { 'mcp-protocol-version': LATEST_PROTOCOL_VERSION } })
     );
     expect(deleteRes.status).toBe(405);
 });
@@ -695,7 +695,7 @@ verifies('hosting:stateless:no-reuse', async (_args: TestArgs) => {
 
     try {
         const initRes = await tx.handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers: {
                     'mcp-protocol-version': LATEST_PROTOCOL_VERSION,
@@ -712,7 +712,7 @@ verifies('hosting:stateless:no-reuse', async (_args: TestArgs) => {
         );
         expect(initRes.status).toBe(200);
 
-        const secondReq = new Request(url, {
+        const secondReq = new Request(String(url), {
             method: 'POST',
             headers: {
                 'mcp-protocol-version': LATEST_PROTOCOL_VERSION,
@@ -761,7 +761,9 @@ verifies('transport:streamable-http:stateless-restrictions', async (_args: TestA
     }));
 
     try {
-        await client.connect(new StreamableHTTPClientTransport(url, { fetch: (u, init) => host.handleRequest(new Request(u, init)) }));
+        await client.connect(
+            new StreamableHTTPClientTransport(url, { fetch: (u, init) => host.handleRequest(new Request(String(u), init)) })
+        );
 
         let timer: NodeJS.Timeout | undefined;
         const settled = client.callTool({ name: 'needs-sampling', arguments: {} }).then(
@@ -838,7 +840,7 @@ verifies('hosting:session:delete-cancels-inflight', async (_args: TestArgs) => {
 
     try {
         const initRes = await host.handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
@@ -855,7 +857,7 @@ verifies('hosting:session:delete-cancels-inflight', async (_args: TestArgs) => {
 
         const callRequest = (id: number, repository: string) =>
             host.handleRequest(
-                new Request(url, {
+                new Request(String(url), {
                     method: 'POST',
                     headers: { ...headers, 'mcp-session-id': sessionId },
                     body: JSON.stringify({
@@ -878,7 +880,7 @@ verifies('hosting:session:delete-cancels-inflight', async (_args: TestArgs) => {
         expect(aborted).toEqual([]);
 
         const deleteRes = await host.handleRequest(
-            new Request(url, {
+            new Request(String(url), {
                 method: 'DELETE',
                 headers: { 'mcp-protocol-version': LATEST_PROTOCOL_VERSION, 'mcp-session-id': sessionId }
             })

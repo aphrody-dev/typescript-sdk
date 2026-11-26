@@ -41,7 +41,7 @@ function toWebRequest(request: FastifyRequest): Request {
         if (typeof value === 'string') headers.set(name, value);
         else if (Array.isArray(value)) for (const item of value) headers.append(name, item);
     }
-    return new Request(new URL(request.url, `http://${request.headers.host ?? '127.0.0.1'}`), {
+    return new Request(new URL(request.url, `http://${request.headers.host ?? '127.0.0.1'}`).href, {
         method: request.method,
         headers,
         body: request.body === undefined ? undefined : JSON.stringify(request.body)

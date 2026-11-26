@@ -102,7 +102,7 @@ verifies('typescript:hosting:entry:byo-sessionful-legacy', async () => {
         return modern.fetch(request);
     };
     const url = new URL('http://in-process/mcp');
-    const fetchViaRouter = (input: URL | string, init?: RequestInit) => route(new Request(input, init));
+    const fetchViaRouter = (input: URL | string, init?: RequestInit) => route(new Request(String(input), init));
 
     const client = new Client({ name: 'plain-2025-client', version: '1.0.0' });
     try {

@@ -22,6 +22,7 @@ import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
+import type { FetchLike } from '@modelcontextprotocol/client';
 import { Client, StreamableHTTPClientTransport, UnauthorizedError } from '@modelcontextprotocol/client';
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
 import { SdkError, SdkErrorCode, SdkHttpError } from '@modelcontextprotocol/core-internal';
@@ -40,7 +41,7 @@ function recordingFetch() {
         status: number;
         responseBody: string;
     }> = [];
-    const fetchFn: typeof fetch = async (input, init) => {
+    const fetchFn: FetchLike = async (input, init) => {
         const headers: Record<string, string> = {};
         for (const [key, value] of new Headers(init?.headers).entries()) {
             headers[key.toLowerCase()] = value;

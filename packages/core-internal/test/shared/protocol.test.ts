@@ -1,4 +1,4 @@
-import type { MockInstance } from 'bun:test';
+import type { Mock } from 'bun:test';
 import { vi } from 'bun:test';
 import * as z from 'zod/v4';
 import type { ZodType } from 'zod/v4';
@@ -71,7 +71,7 @@ function testRequest(proto: Protocol<BaseContext>, request: Request, resultSchem
 describe('protocol tests', () => {
     let protocol: Protocol<BaseContext>;
     let transport: MockTransport;
-    let sendSpy: MockInstance;
+    let sendSpy: Mock<(...args: any[]) => any>;
 
     beforeEach(() => {
         transport = new MockTransport();

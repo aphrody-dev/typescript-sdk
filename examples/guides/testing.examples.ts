@@ -46,7 +46,7 @@ function createServer() {
 const handler = createMcpHandler(createServer);
 
 const transport = new StreamableHTTPClientTransport(new URL('http://test.local/mcp'), {
-    fetch: (url, init) => handler.fetch(new Request(url, init))
+    fetch: (url, init) => handler.fetch(new Request(String(url), init))
 });
 //#endregion inProcessHandler
 
