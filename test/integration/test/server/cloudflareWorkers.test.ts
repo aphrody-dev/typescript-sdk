@@ -68,8 +68,8 @@ function packWorkspacePackage(tempDir: string, packageDirName: string): string {
     fs.mkdirSync(stagingDir, { recursive: true });
 
     // Build the publishable bundle with its output redirected away from the workspace's
-    // own dist/ (the CLI flag overrides `outDir` from tsdown.config.ts).
-    execSync(`pnpm exec tsdown --out-dir "${path.join(stagingDir, 'dist')}"`, {
+    // own dist/ (the flag overrides `outDir` from tsdown.config.ts).
+    execSync(`bun ../../scripts/build.ts --out-dir "${path.join(stagingDir, 'dist')}"`, {
         cwd: pkgPath,
         stdio: 'pipe',
         timeout: 60_000

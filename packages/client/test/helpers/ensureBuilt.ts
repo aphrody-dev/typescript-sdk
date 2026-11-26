@@ -42,11 +42,11 @@ const WAIT_DEADLINE_MS = 90_000;
 const STALE_LOCK_MS = 120_000;
 
 /**
- * Build a package's dist on demand, safely across parallel vitest workers.
+ * Build a package's dist on demand, safely across parallel test workers.
  *
- * Vitest runs test files in separate worker processes, so two files that each
+ * `bun test --parallel` runs test files in separate worker processes, so two files that each
  * "build if dist is missing" can race on a cold checkout: both see no dist,
- * both spawn `pnpm build`, and tsdown's clean step deletes files out from
+ * both spawn `bun run build`, and tsdown's clean step deletes files out from
  * under whichever worker is already reading them. This helper makes the build
  * single-flight with an atomic mkdir lock: the first worker builds, everyone
  * else waits for the sentinel files to appear and the lock to clear, and once
@@ -93,14 +93,14 @@ export async function ensureBuilt(pkgDir: string): Promise<void> {
         try {
             if (!haveAll()) {
                 try {
-                    await execFileAsync('pnpm', ['build'], {
+                    await execFileAsync('bun', ['run', 'build'], {
                         cwd: pkgDir,
                         timeout: BUILD_TIMEOUT_MS,
                         maxBuffer: 16 * 1024 * 1024
                     });
                 } catch (err) {
                     const stderr = (err as { stderr?: string }).stderr ?? '';
-                    throw new Error(`pnpm build failed in ${pkgDir}: ${(err as Error).message}\n${stderr.slice(-2000)}`);
+                    throw new Error(`bun run build failed in ${pkgDir}: ${(err as Error).message}\n${stderr.slice(-2000)}`);
                 }
             }
             return;

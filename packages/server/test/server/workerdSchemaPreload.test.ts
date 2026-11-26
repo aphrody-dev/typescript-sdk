@@ -38,15 +38,15 @@ const distDir = join(pkgDir, 'dist');
  * inside function bodies are indented, so a call that merely sits in some
  * bundled helper body cannot satisfy (or trip) this pin. The CJS build calls
  * through the required chunk's namespace (`require_src.preloadSchemas();`),
- * so an optional receiver is allowed.
+ * so an optional receiver is allowed; Bun.build may suffix a deduplicated name (`preloadSchemas2`).
  */
-const MODULE_SCOPE_PRELOAD_CALL = /^(?:[\w$]+\.)?preloadSchemas\(\);/m;
+const MODULE_SCOPE_PRELOAD_CALL = /^(?:[\w$]+\.)?preloadSchemas\d*\(\);/m;
 
 /**
  * An entry-level `import { …, X as preloadSchemas, … } from "./chunk"` (or
  * the un-aliased `{ preloadSchemas }` form), capturing the chunk specifier.
  */
-const PRELOAD_IMPORT = /import\s*\{[^}]*\bpreloadSchemas\b[^}]*\}\s*from\s*"(\.\/[^"]+)"/;
+const PRELOAD_IMPORT = /import\s*\{[^}]*\bpreloadSchemas\d*\b[^}]*\}\s*from\s*"(\.\/[^"]+)"/;
 
 function dist(file: string): string {
     return readFileSync(join(distDir, file), 'utf8');
@@ -77,7 +77,7 @@ describe('workerd schema warm-up (built dist)', () => {
     test('the workerd shim warms the same chunk the root entry uses (no duplicated schema graph)', () => {
         const entries = ['index.mjs', 'shimsWorkerd.mjs', 'shimsNode.mjs', 'shimsBrowser.mjs', 'stdio.mjs'];
         for (const entry of entries) {
-            expect(dist(entry), `${entry} must not carry its own preloadSchemas definition`).not.toMatch(/function preloadSchemas\b/);
+            expect(dist(entry), `${entry} must not carry its own preloadSchemas definition`).not.toMatch(/function preloadSchemas\d*\b/);
         }
 
         const shimSource = dist('shimsWorkerd.mjs').match(PRELOAD_IMPORT)?.[1];
@@ -85,6 +85,6 @@ describe('workerd schema warm-up (built dist)', () => {
         expect(shimSource).toBeDefined();
         expect(indexSource).toBeDefined();
         expect(shimSource).toBe(indexSource);
-        expect(dist(shimSource!.replace('./', ''))).toMatch(/function preloadSchemas\b/);
+        expect(dist(shimSource!.replace('./', ''))).toMatch(/function preloadSchemas\d*\b/);
     });
 });

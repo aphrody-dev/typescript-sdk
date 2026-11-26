@@ -73,8 +73,8 @@
     ],
     "scripts": {
         "typecheck": "tsgo -p tsconfig.json --noEmit",
-        "build": "tsdown",
-        "build:watch": "tsdown --watch",
+        "build": "bun ../../scripts/build.ts",
+        "build:watch": "bun --watch ../../scripts/build.ts",
         "prepack": "bun run build",
         "lint": "eslint src/ && prettier --ignore-path ../../.prettierignore --check .",
         "lint:fix": "eslint src/ --fix && prettier --ignore-path ../../.prettierignore --write .",
