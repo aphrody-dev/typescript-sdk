@@ -27,11 +27,11 @@ import {
     OAuthProtectedResourceMetadataSchema,
     OAuthTokensSchema,
     OpenIdProviderDiscoveryMetadataSchema,
+    pkceChallenge,
     resourceUrlFromServerUrl,
     stampErrorBrands,
     withoutIssuer
 } from '@modelcontextprotocol/core-internal';
-import pkceChallenge from 'pkce-challenge';
 
 import { AuthorizationServerMismatchError, InsecureTokenEndpointError, IssuerMismatchError, RegistrationRejectedError } from './authErrors';
 import type { DpopSession } from './dpop';

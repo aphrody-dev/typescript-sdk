@@ -5,7 +5,7 @@ import type { AddressInfo } from 'node:net';
 import type { JSONRPCMessage, OAuthTokens } from '@modelcontextprotocol/core-internal';
 import { OAuthError, OAuthErrorCode, SdkErrorCode, SdkHttpError } from '@modelcontextprotocol/core-internal';
 import { listenOnRandomPort } from '@modelcontextprotocol/test-helpers';
-import type { Mock, Mocked, MockedFunction, MockInstance } from 'vitest';
+import type { Mock, Mocked, MockedFunction, MockInstance } from 'bun:test';
 
 import type { AuthProvider, OAuthClientProvider } from '../../src/client/auth';
 import { UnauthorizedError } from '../../src/client/auth';
@@ -1873,7 +1873,8 @@ describe('SSEClientTransport', () => {
                 getAttempt++;
                 // 1: opens then drops, 2: 401, 3: connection reset right after the refresh, 4: 401 again, 5: opens and stays.
                 if (getAttempt === 2 || getAttempt === 4) {
-                    res.writeHead(401).end();
+                    // Connection: close keeps attempt 3 off a pooled socket, which some fetch implementations (Bun) silently retry on reset.
+                    res.writeHead(401, { Connection: 'close' }).end();
                     return;
                 }
                 if (getAttempt === 3) {

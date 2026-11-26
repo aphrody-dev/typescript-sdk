@@ -18,7 +18,7 @@ Only the part a reader is _not_ here to learn — argv parsing — is shared, vi
 workspace package, so it reads as scaffolding, not part of the example). The
 demo OAuth provider and `InMemoryEventStore` live at the
 `@mcp-examples/shared/auth` subpath so the args-only root barrel does not pull
-better-auth/express/better-sqlite3 into every story.
+better-auth/express/bun:sqlite into every story.
 
 Most stories follow the skeleton below; deviate freely when the story calls for
 it (HTTP-only auth, sessionful transports, framework adapters, etc.).

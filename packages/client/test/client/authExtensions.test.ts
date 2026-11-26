@@ -1,6 +1,6 @@
 import type { SdkLogger } from '@modelcontextprotocol/core-internal';
 import { createMockOAuthFetch } from '@modelcontextprotocol/test-helpers';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import type { OAuthClientProvider } from '../../src/client/auth';
 import { auth } from '../../src/client/auth';
@@ -452,7 +452,7 @@ describe('createPrivateKeyJwtAuth', () => {
 
         const params = new URLSearchParams();
         await expect(addClientAuth(new Headers(), params, 'https://auth.example.com/token', undefined)).rejects.toThrow(
-            /cannot be part of a valid base64|Invalid character/
+            /cannot be part of a valid base64|Invalid character|requires a valid base64/
         );
     });
 

@@ -1,4 +1,47 @@
-import contentType from 'content-type';
+// RFC 9110 media-type grammar (token "/" token *( OWS ";" OWS parameter )), as in the `content-type` package.
+const TYPE_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+\/[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+const PARAM_REGEXP =
+    /; *([!#$%&'*+.^_`|~0-9A-Za-z-]+) *= *("(?:[\u000B\u0020\u0021\u0023-\u005B\u005D-\u007E\u0080-\u00FF]|\\[\u000B\u0020-\u00FF])*"|[!#$%&'*+.^_`|~0-9A-Za-z-]+) */g;
+const QUOTED_PAIR_REGEXP = /\\([\u000B\u0020-\u00FF])/g;
+
+/** A parsed `Content-Type` value: the lowercased media type and its lowercased-name parameters. */
+export interface ParsedContentType {
+    type: string;
+    parameters: Record<string, string>;
+}
+
+/**
+ * Strictly parses a `Content-Type` header value per RFC 9110. Throws `TypeError` on any
+ * malformed type or parameter section.
+ */
+export function parseContentType(header: string): ParsedContentType {
+    let index = header.indexOf(';');
+    const type = (index === -1 ? header : header.slice(0, index)).trim();
+    if (!TYPE_REGEXP.test(type)) {
+        throw new TypeError('invalid media type');
+    }
+    const parameters: Record<string, string> = Object.create(null);
+    if (index !== -1) {
+        PARAM_REGEXP.lastIndex = index;
+        let match: RegExpExecArray | null;
+        while ((match = PARAM_REGEXP.exec(header))) {
+            if (match.index !== index) {
+                throw new TypeError('invalid parameter format');
+            }
+            index += match[0].length;
+            let value = match[2]!;
+            if (value.charCodeAt(0) === 0x22) {
+                value = value.slice(1, -1);
+                if (value.includes('\\')) value = value.replace(QUOTED_PAIR_REGEXP, '$1');
+            }
+            parameters[match[1]!.toLowerCase()] = value;
+        }
+        if (index !== header.length) {
+            throw new TypeError('invalid parameter format');
+        }
+    }
+    return { type: type.toLowerCase(), parameters };
+}
 
 /**
  * Extracts the media type (the lowercased `type/subtype` pair, without
@@ -16,7 +59,7 @@ import contentType from 'content-type';
  * the Fetch standard's request classification is defined against it
  * (https://fetch.spec.whatwg.org/#cors-safelisted-request-header).
  *
- * Parsing is RFC 9110 (`content-type` package) first. When the parameter
+ * Parsing is RFC 9110 ({@link parseContentType}) first. When the parameter
  * section is malformed (`application/json;`, `application/json; charset=`),
  * browsers and most HTTP stacks still derive the media type from the segment
  * before the first `;` — the fallback matches that widely-implemented
@@ -28,7 +71,7 @@ export function mediaTypeEssence(header: string | null | undefined): string | un
         return undefined;
     }
     try {
-        return contentType.parse(header).type;
+        return parseContentType(header).type;
     } catch {
         const essence = (header.split(';', 1)[0] ?? '').trim().toLowerCase();
         // A comma in the parameter tail of an unparseable value indicates

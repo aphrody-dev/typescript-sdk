@@ -3,11 +3,36 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { TLSSocket } from 'node:tls';
 
 import type { AuthInfo, JSONRPCMessage, MessageExtraInfo, Transport, TransportSendOptions } from '@modelcontextprotocol/core-internal';
-import { JSONRPCMessageSchema } from '@modelcontextprotocol/core-internal';
-import contentType from 'content-type';
-import getRawBody from 'raw-body';
+import { JSONRPCMessageSchema, parseContentType } from '@modelcontextprotocol/core-internal';
 
-const MAXIMUM_MESSAGE_SIZE = '4mb';
+const MAXIMUM_MESSAGE_SIZE = 4 * 1024 * 1024;
+
+/** Reads the whole request body (at most `limit` bytes) and decodes it as `charset`. */
+async function readBody(req: IncomingMessage, limit: number, charset: string): Promise<string> {
+    const decoder = new TextDecoder(charset as ConstructorParameters<typeof TextDecoder>[0]);
+    const declared = Number(req.headers['content-length']);
+    if (declared > limit) throw new Error('request entity too large');
+    return new Promise((resolve, reject) => {
+        const chunks: Uint8Array[] = [];
+        let size = 0;
+        let settled = false;
+        const settle = (error?: Error) => {
+            if (settled) return;
+            settled = true;
+            req.removeListener('data', onData);
+            if (error) reject(error);
+            else resolve(decoder.decode(Buffer.concat(chunks)));
+        };
+        const onData = (chunk: Uint8Array) => {
+            size += chunk.byteLength;
+            if (size > limit) settle(new Error('request entity too large'));
+            else chunks.push(chunk);
+        };
+        req.on('data', onData);
+        req.on('end', () => settle());
+        req.on('error', settle);
+    });
+}
 
 /**
  * Configuration options for SSEServerTransport.
@@ -136,17 +161,12 @@ export class SSEServerTransport implements Transport {
 
         let body: string | unknown;
         try {
-            const ct = contentType.parse(req.headers['content-type'] ?? '');
+            const ct = parseContentType(req.headers['content-type'] ?? '');
             if (ct.type !== 'application/json') {
                 throw new Error(`Unsupported content-type: ${ct.type}`);
             }
 
-            body =
-                parsedBody ??
-                (await getRawBody(req, {
-                    limit: MAXIMUM_MESSAGE_SIZE,
-                    encoding: ct.parameters.charset ?? 'utf8'
-                }));
+            body = parsedBody ?? (await readBody(req, MAXIMUM_MESSAGE_SIZE, ct.parameters.charset ?? 'utf-8'));
         } catch (error) {
             res.writeHead(400).end(String(error));
             this.onerror?.(error as Error);

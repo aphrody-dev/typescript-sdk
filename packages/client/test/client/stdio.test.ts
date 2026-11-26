@@ -83,7 +83,7 @@ test('should return child process pid', async () => {
 
 test('should respect custom maxBufferSize option', async () => {
     const client = new StdioClientTransport({
-        command: 'node',
+        command: process.execPath,
         args: ['-e', 'process.stdout.write(Buffer.alloc(200, 0x41))'],
         maxBufferSize: 100
     });
@@ -104,7 +104,7 @@ test('should respect custom maxBufferSize option', async () => {
 
 test('should fire onerror and close when ReadBuffer overflows', async () => {
     const client = new StdioClientTransport({
-        command: 'node',
+        command: process.execPath,
         args: ['-e', 'process.stdout.write(Buffer.alloc(11 * 1024 * 1024, 0x41))']
     });
 
@@ -137,18 +137,25 @@ test('_dispose releases the parent-side pipe handles even when a helper process 
         process.stdin.resume();
     `;
     const transport = new StdioClientTransport({ command: process.execPath, args: ['-e', HOLDING_SCRIPT] });
+    let closedAt: number | undefined;
+    const closed = new Promise<void>(resolve => {
+        transport.onclose = () => {
+            closedAt = Date.now();
+            resolve();
+        };
+    });
     await transport.start();
     // Wait until the grandchild actually exists and holds the inherited pipes
     // — disposing earlier would kill the child before its script even runs.
     while (!existsSync(readyFile)) await new Promise(resolve => setTimeout(resolve, 25));
-    const proc = (transport as unknown as { _process: import('node:child_process').ChildProcess })._process;
 
     await (transport as unknown as { _dispose: () => Promise<void> })._dispose();
+    const disposedAt = Date.now();
 
-    // The child is confirmed gone AND the parent-side handles are released —
-    // destroyed flags are the deterministic proxy for "nothing pins the loop".
-    expect(proc.stdout?.destroyed).toBe(true);
-    expect(proc.stdin?.destroyed).toBe(true);
+    // The parent-side pipes are released, so the transport closes while the helper (alive 3 s) still holds them.
+    await closed;
+    expect(closedAt! - disposedAt).toBeLessThan(1000);
+    expect(transport.pid).toBeNull();
 }, 10_000);
 
 test('DEFAULT_INHERITED_ENV_VARS matches the host platform', () => {

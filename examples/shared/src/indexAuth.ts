@@ -1,7 +1,7 @@
 // Auth + resumability scaffolding for the handful of stories that need it
 // (`oauth`, `oauth-client-credentials`, `sse-polling`, `repl`). Kept off the
 // root barrel so the other ~25 stories do not eagerly evaluate
-// better-auth/express/cors/better-sqlite3 via `parseExampleArgs`.
+// better-auth/express/cors/bun:sqlite via `parseExampleArgs`.
 
 // Auth configuration
 export type { CreateDemoAuthOptions, DemoAuth } from './auth';

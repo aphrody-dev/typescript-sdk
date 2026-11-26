@@ -13,8 +13,8 @@ import {
     OAuthErrorCode,
     OAuthTokensSchema
 } from '@modelcontextprotocol/core-internal';
-import type { Mock } from 'vitest';
-import { expect, vi } from 'vitest';
+import type { Mock } from 'bun:test';
+import { expect, vi } from 'bun:test';
 
 import type { OAuthClientProvider } from '../../src/client/auth';
 import {
@@ -50,9 +50,8 @@ import {
 import type { OAuthClientInformationContext, OAuthDiscoveryState } from '../../src/client/auth';
 import { ClientCredentialsProvider, createPrivateKeyJwtAuth } from '../../src/client/authExtensions';
 
-// Mock pkce-challenge
-vi.mock('pkce-challenge', () => ({
-    default: () => ({
+vi.mock('../../../core-internal/src/shared/pkce', () => ({
+    pkceChallenge: async () => ({
         code_verifier: 'test_verifier',
         code_challenge: 'test_challenge'
     })

@@ -15,6 +15,8 @@ export * from './shared/instrumentation';
 export * from './shared/logger';
 export * from './shared/mcpParamHeaders';
 export * from './shared/mediaType';
+export * from './shared/pkce';
+export * from './shared/serverSentEvents';
 export * from './shared/metadataUtils';
 export * from './shared/openTelemetry';
 export * from './shared/protocol';

@@ -1,5 +1,3 @@
-import type { ReadableWritablePair } from 'node:stream/web';
-
 import type { FetchLike, JSONRPCMessage, Transport } from '@modelcontextprotocol/core-internal';
 import {
     createFetchWithInit,
@@ -19,9 +17,9 @@ import {
     SdkError,
     SdkErrorCode,
     SdkHttpError,
+    ServerSentEventStream,
     unfollowedRedirect
 } from '@modelcontextprotocol/core-internal';
-import { EventSourceParserStream } from 'eventsource-parser/stream';
 
 import type { AuthProvider, OAuthClientProvider } from './auth';
 import {
@@ -790,9 +788,9 @@ export class StreamableHTTPClientTransport implements Transport {
             try {
                 // Create a pipeline: binary stream -> text decoder -> SSE parser
                 const reader = stream
-                    .pipeThrough(new TextDecoderStream() as ReadableWritablePair<string, Uint8Array>)
+                    .pipeThrough(new TextDecoderStream())
                     .pipeThrough(
-                        new EventSourceParserStream({
+                        new ServerSentEventStream({
                             onRetry: (retryMs: number) => {
                                 // Capture server-provided retry value for reconnection timing
                                 this._serverRetryMs = retryMs;

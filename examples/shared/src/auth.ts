@@ -12,7 +12,7 @@ import { randomBytes } from 'node:crypto';
 import type { BetterAuthOptions } from 'better-auth';
 import { betterAuth } from 'better-auth';
 import { mcp } from 'better-auth/plugins';
-import Database from 'better-sqlite3';
+import { Database } from 'bun:sqlite';
 
 // Generate a random password for the demo user (new each time the server starts)
 const DEMO_PASSWORD = randomBytes(16).toString('base64url');
@@ -215,7 +215,7 @@ export function createDemoAuth(options: CreateDemoAuthOptions) {
     return betterAuth({
         baseURL,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        database: db as any, // Type cast to avoid exposing better-sqlite3 in exported types
+        database: db as any, // Type cast to avoid exposing bun:sqlite in exported types
         trustedOrigins: [baseURL.toString()],
         // Basic email+password for demo
         emailAndPassword: {

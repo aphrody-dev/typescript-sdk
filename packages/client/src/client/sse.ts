@@ -11,8 +11,6 @@ import {
     stampErrorBrands,
     unfollowedRedirect
 } from '@modelcontextprotocol/core-internal';
-import type { ErrorEvent, EventSourceInit } from 'eventsource';
-import { EventSource } from 'eventsource';
 
 import type { AuthProvider, OAuthClientProvider } from './auth';
 import {
@@ -26,6 +24,8 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc {@linkcode}
 import type { IssuerMismatchError } from './authErrors';
 import { markAuthSeamEscape } from './authSeam';
+import type { ErrorEvent, EventSourceInit } from './eventSource';
+import { EventSource } from './eventSource';
 import type { Middleware } from './middleware';
 import { withDpopFromProvider } from './middleware';
 
@@ -255,7 +255,7 @@ export class SSEClientTransport implements Transport {
         );
         let redirect: string | undefined;
         return new Promise((resolve, reject) => {
-            this._eventSource = new EventSource(this._url.href, {
+            this._eventSource = new EventSource(this._url, {
                 ...this._eventSourceInit,
                 fetch: async (url, init) => {
                     const headers = await this._commonHeaders();

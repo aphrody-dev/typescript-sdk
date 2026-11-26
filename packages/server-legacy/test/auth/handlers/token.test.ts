@@ -4,15 +4,14 @@ import { OAuthRegisteredClientsStore } from '../../../src/auth/clients';
 import { OAuthClientInformationFull, OAuthTokenRevocationRequest, OAuthTokens } from '@modelcontextprotocol/core-internal';
 import express, { Response } from 'express';
 import supertest from 'supertest';
-import * as pkceChallenge from 'pkce-challenge';
+import * as pkce from '../../../../core-internal/src/shared/pkce';
 import { InvalidGrantError, InvalidTokenError } from '../../../src/auth/errors';
 import { AuthInfo } from '../../../src/auth/types';
 import { ProxyOAuthServerProvider } from '../../../src/auth/providers/proxyProvider';
-import { type Mock } from 'vitest';
+import { type Mock } from 'bun:test';
 
-// Mock pkce-challenge
-vi.mock('pkce-challenge', () => ({
-    verifyChallenge: vi.fn().mockImplementation(async (verifier, challenge) => {
+vi.mock('../../../../core-internal/src/shared/pkce', () => ({
+    verifyPkceChallenge: vi.fn().mockImplementation(async (verifier, challenge) => {
         return verifier === 'valid_verifier' && challenge === 'mock_challenge';
     })
 }));
@@ -112,7 +111,7 @@ describe('Token Handler', () => {
         };
 
         // Mock PKCE verification
-        (pkceChallenge.verifyChallenge as Mock).mockImplementation(async (verifier: string, challenge: string) => {
+        (pkce.verifyPkceChallenge as Mock).mockImplementation(async (verifier: string, challenge: string) => {
             return verifier === 'valid_verifier' && challenge === 'mock_challenge';
         });
 
@@ -215,7 +214,7 @@ describe('Token Handler', () => {
 
         it('verifies code_verifier against challenge', async () => {
             // Setup invalid verifier
-            (pkceChallenge.verifyChallenge as Mock).mockResolvedValueOnce(false);
+            (pkce.verifyPkceChallenge as Mock).mockResolvedValueOnce(false);
 
             const response = await supertest(app).post('/token').type('form').send({
                 client_id: 'valid-client',

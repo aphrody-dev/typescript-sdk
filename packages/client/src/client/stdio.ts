@@ -1,11 +1,13 @@
-import type { ChildProcess, IOType } from 'node:child_process';
+import type { IOType } from 'node:child_process';
 import process from 'node:process';
-import type { Stream } from 'node:stream';
+import type { Stream, Writable } from 'node:stream';
 import { PassThrough } from 'node:stream';
 
 import type { JSONRPCMessage, Transport } from '@modelcontextprotocol/core-internal';
 import { ReadBuffer, SdkError, SdkErrorCode, serializeMessage } from '@modelcontextprotocol/core-internal';
-import spawn from 'cross-spawn';
+import type { FileSink, Subprocess } from 'bun';
+
+type PipeReader = { read(): Promise<{ done: true; value?: unknown } | { done: false; value: Uint8Array }>; cancel(): Promise<void> };
 
 export type StdioServerParameters = {
     /**
@@ -26,7 +28,7 @@ export type StdioServerParameters = {
     env?: Record<string, string>;
 
     /**
-     * How to handle stderr of the child process. This matches the semantics of Node's `child_process.spawn`.
+     * How to handle stderr of the child process, as with Node's `child_process.spawn`: `"inherit"`, `"ignore"`, a file descriptor, `"pipe"`/`"overlapped"` (read it from {@linkcode StdioClientTransport.stderr}), or a writable Node stream that receives the output.
      *
      * The default is `"inherit"`, meaning messages to stderr will be printed to the parent process's stderr.
      */
@@ -102,10 +104,13 @@ export function getDefaultEnvironment(): Record<string, string> {
 /**
  * Client transport for stdio: this will connect to a server by spawning a process and communicating with it over stdin/stdout.
  *
- * This transport is only available in Node.js environments.
+ * The process is spawned with `Bun.spawn`, so this transport requires the Bun runtime.
  */
 export class StdioClientTransport implements Transport {
-    private _process?: ChildProcess;
+    private _process?: Subprocess<'pipe', 'pipe', Bun.Spawn.Readable>;
+    private _closed?: Promise<void>;
+    private _stdoutReader?: PipeReader;
+    private _stderrReader?: PipeReader;
     private _readBuffer: ReadBuffer;
     private _serverParams: StdioServerParameters;
     private _stderrStream: PassThrough | null = null;
@@ -132,55 +137,60 @@ export class StdioClientTransport implements Transport {
             );
         }
 
-        return new Promise((resolve, reject) => {
-            this._process = spawn(this._serverParams.command, this._serverParams.args ?? [], {
+        const stderr = this._serverParams.stderr ?? 'inherit';
+        // A Node stream (or 'pipe'/'overlapped') is fed from a piped stderr; the rest map onto Bun's stdio options.
+        const stderrTarget: Writable | null = this._stderrStream ?? (typeof stderr === 'object' ? (stderr as Writable) : null);
+        let proc: Subprocess<'pipe', 'pipe', Bun.Spawn.Readable>;
+        try {
+            proc = Bun.spawn([this._serverParams.command, ...(this._serverParams.args ?? [])], {
                 // merge default env with server env because mcp server needs some env vars
                 env: {
                     ...getDefaultEnvironment(),
                     ...this._serverParams.env
                 },
-                stdio: ['pipe', 'pipe', this._serverParams.stderr ?? 'inherit'],
-                shell: false,
+                stdin: 'pipe',
+                stdout: 'pipe',
+                stderr: stderrTarget ? 'pipe' : (stderr as 'inherit' | 'ignore' | number),
                 windowsHide: process.platform === 'win32',
                 cwd: this._serverParams.cwd
             });
+        } catch (error) {
+            this.onerror?.(error as Error);
+            throw error;
+        }
+        this._process = proc;
 
-            this._process.on('error', error => {
-                reject(error);
-                this.onerror?.(error);
-            });
+        const stdoutDone = this._readStdout(proc.stdout.getReader());
+        let stderrDone: Promise<void> = Promise.resolve();
+        if (stderrTarget && proc.stderr instanceof ReadableStream) {
+            const reader: PipeReader = proc.stderr.getReader();
+            this._stderrReader = reader;
+            stderrDone = pump(reader, stderrTarget, stderrTarget === this._stderrStream);
+        }
+        // Node's 'close' semantics: the process has exited and its stdio pipes are drained.
+        this._closed = Promise.all([proc.exited, stdoutDone, stderrDone]).then(() => {
+            if (this._process === proc) this._process = undefined;
+            this.onclose?.();
+        });
+    }
 
-            this._process.on('spawn', () => {
-                resolve();
-            });
-
-            this._process.on('close', _code => {
-                this._process = undefined;
-                this.onclose?.();
-            });
-
-            this._process.stdin?.on('error', error => {
-                this.onerror?.(error);
-            });
-
-            this._process.stdout?.on('data', chunk => {
+    private async _readStdout(reader: PipeReader): Promise<void> {
+        this._stdoutReader = reader;
+        try {
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) return;
                 try {
-                    this._readBuffer.append(chunk);
+                    this._readBuffer.append(Buffer.from(value.buffer, value.byteOffset, value.byteLength));
                     this.processReadBuffer();
                 } catch (error) {
                     this.onerror?.(error as Error);
                     this.close().catch(() => {});
                 }
-            });
-
-            this._process.stdout?.on('error', error => {
-                this.onerror?.(error);
-            });
-
-            if (this._stderrStream && this._process.stderr) {
-                this._process.stderr.pipe(this._stderrStream);
             }
-        });
+        } catch (error) {
+            if (this._stdoutReader === reader) this.onerror?.(error as Error);
+        }
     }
 
     /**
@@ -191,11 +201,7 @@ export class StdioClientTransport implements Transport {
      * error output emitted by the child process.
      */
     get stderr(): Stream | null {
-        if (this._stderrStream) {
-            return this._stderrStream;
-        }
-
-        return this._process?.stderr ?? null;
+        return this._stderrStream;
     }
 
     /**
@@ -222,10 +228,20 @@ export class StdioClientTransport implements Transport {
         }
     }
 
+    /** Cancels the parent-side pipe readers so a helper process holding the child's stdio cannot pin the event loop. */
+    private _releasePipes(): void {
+        const stdout = this._stdoutReader;
+        const stderr = this._stderrReader;
+        this._stdoutReader = undefined;
+        this._stderrReader = undefined;
+        stdout?.cancel().catch(() => {});
+        stderr?.cancel().catch(() => {});
+    }
+
     /**
      * Reap a disposable probe sibling (see the version-negotiation sibling
-     * flow): signal-first teardown awaiting process `exit` — never the `close`
-     * event, so a helper process holding the child's stdio pipes can never
+     * flow): signal-first teardown awaiting process exit — never the drained
+     * pipes, so a helper process holding the child's stdio pipes can never
      * block disposal. Not part of the public transport lifecycle.
      *
      * @internal
@@ -234,102 +250,85 @@ export class StdioClientTransport implements Transport {
         const proc = this._process;
         this._process = undefined;
         if (proc && proc.exitCode === null && proc.signalCode === null) {
-            const exited = new Promise<void>(resolve => proc.once('exit', () => resolve()));
-            try {
-                proc.stdin?.end();
-            } catch {
-                // ignore
-            }
-            try {
-                proc.kill('SIGTERM');
-            } catch {
-                // ignore
-            }
-            await Promise.race([exited, new Promise(resolve => setTimeout(resolve, 1000).unref())]);
+            endQuietly(proc.stdin);
+            killQuietly(proc, 'SIGTERM');
+            await Promise.race([proc.exited, delay(1000)]);
             if (proc.exitCode === null && proc.signalCode === null) {
-                try {
-                    proc.kill('SIGKILL');
-                } catch {
-                    // ignore
-                }
+                killQuietly(proc, 'SIGKILL');
             }
-            await exited;
+            await proc.exited;
         }
-        // The child is gone — release the PARENT-side pipe handles too. A helper
-        // process holding the inherited write ends would otherwise keep them (and
-        // with them the host's event loop: stdout carries a flowing 'data'
-        // listener from start()) alive until the helper exits.
-        try {
-            proc?.stdout?.destroy();
-        } catch {
-            // ignore
-        }
-        try {
-            proc?.stdin?.destroy();
-        } catch {
-            // ignore
-        }
-        try {
-            proc?.stderr?.destroy();
-        } catch {
-            // ignore
-        }
+        this._releasePipes();
         this._readBuffer.clear();
     }
 
     async close(): Promise<void> {
-        if (this._process) {
-            const processToClose = this._process;
+        const proc = this._process;
+        if (proc) {
             this._process = undefined;
+            const closed = this._closed ?? proc.exited;
 
-            const closePromise = new Promise<void>(resolve => {
-                processToClose.once('close', () => {
-                    resolve();
-                });
-            });
+            endQuietly(proc.stdin);
+            await Promise.race([closed, delay(2000)]);
 
-            try {
-                processToClose.stdin?.end();
-            } catch {
-                // ignore
+            if (proc.exitCode === null && proc.signalCode === null) {
+                killQuietly(proc, 'SIGTERM');
+                await Promise.race([closed, delay(2000)]);
             }
 
-            await Promise.race([closePromise, new Promise(resolve => setTimeout(resolve, 2000).unref())]);
-
-            if (processToClose.exitCode === null) {
-                try {
-                    processToClose.kill('SIGTERM');
-                } catch {
-                    // ignore
-                }
-
-                await Promise.race([closePromise, new Promise(resolve => setTimeout(resolve, 2000).unref())]);
-            }
-
-            if (processToClose.exitCode === null) {
-                try {
-                    processToClose.kill('SIGKILL');
-                } catch {
-                    // ignore
-                }
+            if (proc.exitCode === null && proc.signalCode === null) {
+                killQuietly(proc, 'SIGKILL');
             }
         }
 
         this._readBuffer.clear();
     }
 
-    send(message: JSONRPCMessage): Promise<void> {
-        return new Promise(resolve => {
-            if (!this._process?.stdin) {
-                throw new SdkError(SdkErrorCode.NotConnected, 'Not connected');
-            }
-
-            const json = serializeMessage(message);
-            if (this._process.stdin.write(json)) {
-                resolve();
-            } else {
-                this._process.stdin.once('drain', resolve);
-            }
-        });
+    async send(message: JSONRPCMessage): Promise<void> {
+        const stdin = this._process?.stdin;
+        if (!stdin) {
+            throw new SdkError(SdkErrorCode.NotConnected, 'Not connected');
+        }
+        try {
+            await stdin.write(serializeMessage(message));
+            await stdin.flush();
+        } catch (error) {
+            this.onerror?.(error as Error);
+        }
     }
+}
+
+function delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms).unref());
+}
+
+function endQuietly(stdin: FileSink): void {
+    try {
+        const ended = stdin.end();
+        if (ended instanceof Promise) ended.catch(() => {});
+    } catch {
+        // ignore
+    }
+}
+
+function killQuietly(proc: Subprocess, signal: NodeJS.Signals): void {
+    try {
+        proc.kill(signal);
+    } catch {
+        // ignore
+    }
+}
+
+/** Copies `reader` into the Node stream `target`, ending it at EOF when `end` is set (as `stream.pipe` does). */
+async function pump(reader: PipeReader, target: Writable, end: boolean): Promise<void> {
+    try {
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            target.write(Buffer.from(value.buffer, value.byteOffset, value.byteLength));
+        }
+    } catch {
+        // cancelled by _dispose
+    }
+    if (end) target.end();
 }

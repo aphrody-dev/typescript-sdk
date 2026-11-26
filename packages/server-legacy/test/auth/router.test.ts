@@ -317,8 +317,8 @@ describe('MCP Auth Router', () => {
 
         it('routes to token endpoint', async () => {
             // Setup verifyChallenge mock for token handler
-            vi.mock('pkce-challenge', () => ({
-                verifyChallenge: vi.fn().mockResolvedValue(true)
+            vi.mock('../../../core-internal/src/shared/pkce', () => ({
+                verifyPkceChallenge: vi.fn().mockResolvedValue(true)
             }));
 
             const response = await supertest(app).post('/token').type('form').send({

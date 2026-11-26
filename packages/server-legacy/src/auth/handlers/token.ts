@@ -3,7 +3,7 @@ import type { RequestHandler } from 'express';
 import express from 'express';
 import type { Options as RateLimitOptions } from 'express-rate-limit';
 import { rateLimit } from 'express-rate-limit';
-import { verifyChallenge } from 'pkce-challenge';
+import { verifyPkceChallenge } from '@modelcontextprotocol/core-internal';
 import * as z from 'zod/v4';
 
 import {
@@ -103,7 +103,7 @@ export function tokenHandler({ provider, rateLimit: rateLimitConfig }: TokenHand
                     // (e.g. to validate code_verifier in upstream server)
                     if (!skipLocalPkceValidation) {
                         const codeChallenge = await provider.challengeForAuthorizationCode(client, code);
-                        if (!(await verifyChallenge(code_verifier, codeChallenge))) {
+                        if (!(await verifyPkceChallenge(code_verifier, codeChallenge))) {
                             throw new InvalidGrantError('code_verifier does not match the challenge');
                         }
                     }
