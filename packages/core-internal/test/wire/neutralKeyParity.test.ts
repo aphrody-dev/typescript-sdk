@@ -19,7 +19,7 @@
  * below subtracts them explicitly; when M3.2 models them neutrally, the
  * subtraction breaks the build and the entry burns.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import type * as z4 from 'zod/v4';
 
 import type * as SDK from '../../src/types/index';

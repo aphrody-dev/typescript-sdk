@@ -10,7 +10,7 @@
  *
  * See docs/behavior-surface-pins.md for the maintenance protocol.
  */
-import { afterEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, describe, expect, test, vi } from 'bun:test';
 
 import { DEFAULT_INHERITED_ENV_VARS, getDefaultEnvironment } from '../../src/client/stdio';
 

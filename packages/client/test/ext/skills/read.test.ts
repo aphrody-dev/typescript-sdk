@@ -1,7 +1,7 @@
 import type { Skill, SkillResourceEntry } from '@modelcontextprotocol/core/ext/skills';
 import { SdkErrorCode } from '@modelcontextprotocol/core-internal';
 import { buildSkillEntry, encodeUtf8, joinUri, sha256Digest } from '@modelcontextprotocol/core-internal/ext/skills';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import type { SkillsClientOptions } from '../../../src/ext/skills/index';
 import { SkillsClient, SkillVerificationError } from '../../../src/ext/skills/index';

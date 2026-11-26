@@ -57,7 +57,6 @@
     "dependencies": {
         "@modelcontextprotocol/core": "workspace:*",
         "@opentelemetry/api": "catalog:otel",
-        "content-type": "catalog:runtimeShared",
         "json-schema-typed": "catalog:runtimeShared",
         "zod": "catalog:runtimeShared"
     },
@@ -83,16 +82,12 @@
     },
     "devDependencies": {
         "@modelcontextprotocol/tsconfig": "workspace:^",
-        "@modelcontextprotocol/vitest-config": "workspace:^",
         "@modelcontextprotocol/eslint-config": "workspace:^",
         "@cfworker/json-schema": "catalog:runtimeShared",
         "ajv": "catalog:runtimeShared",
         "ajv-formats": "catalog:runtimeShared",
         "@eslint/js": "catalog:devTools",
-        "@types/content-type": "catalog:devTools",
         "@types/cors": "catalog:devTools",
-        "@types/cross-spawn": "catalog:devTools",
-        "@types/eventsource": "catalog:devTools",
         "@types/express": "catalog:devTools",
         "@types/express-serve-static-core": "catalog:devTools",
         "@typescript/native-preview": "catalog:devTools",
@@ -102,7 +97,7 @@
         "prettier": "catalog:devTools",
         "typescript": "catalog:devTools",
         "typescript-eslint": "catalog:devTools",
-        "vitest": "catalog:devTools",
-        "yaml": "^2.8.3"
+        "yaml": "^2.8.3",
+        "bun-types": "catalog:devTools"
     }
 }

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { ProtocolErrorCode } from '../../src/types/enums';
 import { ProtocolError, UnsupportedProtocolVersionError } from '../../src/types/errors';

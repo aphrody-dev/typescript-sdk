@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'bun:test';
 import { Project } from 'ts-morph';
 
 import { IMPORT_MAP } from '../../../src/migrations/v1-to-v2/mappings/importMap';

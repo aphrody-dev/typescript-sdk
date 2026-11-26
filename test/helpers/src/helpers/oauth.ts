@@ -1,5 +1,5 @@
 import type { FetchLike } from '@modelcontextprotocol/core-internal';
-import { vi } from 'vitest';
+import { vi } from 'bun:test';
 
 export interface MockOAuthFetchOptions {
     resourceServerUrl: string;

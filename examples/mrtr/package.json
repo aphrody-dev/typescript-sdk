@@ -14,9 +14,7 @@
         "@modelcontextprotocol/server": "workspace:*",
         "zod": "catalog:runtimeShared"
     },
-    "devDependencies": {
-        "tsx": "catalog:devTools"
-    },
+    "devDependencies": {},
     "example": {
         "era": "modern",
         "//": "Multi-round-trip inputRequired is a 2026-07-28 protocol feature."

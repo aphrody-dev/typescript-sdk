@@ -21,7 +21,7 @@ import {
     SdkHttpError,
     Server
 } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { hostPerSession, tapWire, wire } from '../helpers/index';

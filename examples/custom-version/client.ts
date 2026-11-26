@@ -13,7 +13,7 @@ const { transport, url } = parseExampleArgs();
 const client = new Client({ name: 'custom-version-example-client', version: '1.0.0' }, { versionNegotiation: { mode: 'legacy' } });
 
 await (transport === 'stdio'
-    ? client.connect(new StdioClientTransport({ command: 'npx', args: ['-y', 'tsx', siblingPath(import.meta.url, 'server.ts')] }))
+    ? client.connect(new StdioClientTransport({ command: 'bun', args: [siblingPath(import.meta.url, 'server.ts')] }))
     : client.connect(new StreamableHTTPClientTransport(new URL(url))));
 
 // The server should advertise its supportedProtocolVersions in its

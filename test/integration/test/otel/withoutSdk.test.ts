@@ -6,7 +6,7 @@ import { toNodeHandler } from '@modelcontextprotocol/node';
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import { listenOnRandomPort } from '@modelcontextprotocol/test-helpers';
 import { trace } from '@opentelemetry/api';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 const cleanups: Array<() => Promise<unknown> | unknown> = [];

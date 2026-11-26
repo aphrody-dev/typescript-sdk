@@ -23,7 +23,7 @@
 import { Client, InsufficientScopeError, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import type { AuthInfo, McpRequestContext } from '@modelcontextprotocol/server';
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { verifies } from '../helpers/verifies';

@@ -1,7 +1,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import { InMemoryTransport, ProtocolErrorCode } from '@modelcontextprotocol/core-internal';
 import { McpServer } from '@modelcontextprotocol/server';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import * as z from 'zod/v4';
 
 async function connect(mcpServer: McpServer): Promise<Client> {

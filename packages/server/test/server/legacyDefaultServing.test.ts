@@ -14,7 +14,7 @@ import {
     isJSONRPCResultResponse,
     LATEST_PROTOCOL_VERSION
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { McpServer } from '../../src/server/mcp';

@@ -59,7 +59,6 @@
     },
     "devDependencies": {
         "@modelcontextprotocol/tsconfig": "workspace:^",
-        "@modelcontextprotocol/vitest-config": "workspace:^",
         "@modelcontextprotocol/eslint-config": "workspace:^",
         "@eslint/js": "catalog:devTools",
         "@typescript/native-preview": "catalog:devTools",
@@ -68,9 +67,8 @@
         "eslint-plugin-n": "catalog:devTools",
         "prettier": "catalog:devTools",
         "tsdown": "catalog:devTools",
-        "tsx": "catalog:devTools",
         "typescript": "catalog:devTools",
         "typescript-eslint": "catalog:devTools",
-        "vitest": "catalog:devTools"
+        "bun-types": "catalog:devTools"
     }
 }

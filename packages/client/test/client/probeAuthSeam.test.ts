@@ -11,7 +11,7 @@
  * thrown outside the stamped seams keep their pre-existing behavior.
  */
 import { OAuthError, SdkError, SdkErrorCode, SdkHttpError } from '@modelcontextprotocol/core-internal';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import type { AuthProvider, OAuthClientProvider } from '../../src/client/auth';
 import { UnauthorizedError } from '../../src/client/auth';

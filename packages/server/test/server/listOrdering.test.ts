@@ -7,7 +7,7 @@
  * insertion order; this test pins that ordering at the wire so a registry
  * refactor cannot quietly change it.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { invoke } from '../../src/server/invoke';

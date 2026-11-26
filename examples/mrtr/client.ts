@@ -30,7 +30,7 @@ const connect = async (options: ClientOptions): Promise<Client> => {
         { versionNegotiation: { mode: era === 'modern' ? 'auto' : 'legacy' }, ...options }
     );
     await (transport === 'stdio'
-        ? client.connect(new StdioClientTransport({ command: 'npx', args: ['-y', 'tsx', siblingPath(import.meta.url, 'server.ts')] }))
+        ? client.connect(new StdioClientTransport({ command: 'bun', args: [siblingPath(import.meta.url, 'server.ts')] }))
         : client.connect(new StreamableHTTPClientTransport(new URL(url))));
     return client;
 };

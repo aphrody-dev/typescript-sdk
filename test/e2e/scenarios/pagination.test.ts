@@ -7,7 +7,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import type { Tool } from '@modelcontextprotocol/server';
 import { isJSONRPCRequest, McpServer, ProtocolError, ProtocolErrorCode, ResourceTemplate, Server } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { tapWire, wire } from '../helpers/index';

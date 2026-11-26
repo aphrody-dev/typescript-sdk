@@ -7,7 +7,7 @@
  * workerd as `unhandledrejection` + `rejectionhandled`, #2864).
  */
 import { SdkError, SdkErrorCode } from '@modelcontextprotocol/core-internal';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { Server } from '../../src/server/server';
 

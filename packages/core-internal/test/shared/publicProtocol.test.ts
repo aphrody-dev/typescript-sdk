@@ -3,7 +3,7 @@
  * (consumed by subclassing SDKs such as ext-apps), and that a bare `Protocol`
  * subclass pair exchanges custom methods with no MCP handshake on the wire.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import * as z from 'zod/v4';
 
 import type { BaseContext } from '../../src/exports/public/index';

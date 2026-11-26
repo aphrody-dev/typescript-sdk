@@ -1,5 +1,5 @@
 import { LATEST_PROTOCOL_VERSION } from '@modelcontextprotocol/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { assertWireMessage } from './wire-sniffer';
 

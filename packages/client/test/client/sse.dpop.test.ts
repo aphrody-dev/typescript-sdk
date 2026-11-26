@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
 
 import type { FetchLike } from '@modelcontextprotocol/core-internal';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'bun:test';
 
 import type { AuthProvider, OAuthClientProvider } from '../../src/client/auth';
 import { DpopSession } from '../../src/client/dpop';

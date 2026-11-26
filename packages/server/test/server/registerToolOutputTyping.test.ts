@@ -9,7 +9,7 @@ import type { StandardSchemaWithJSON } from '@modelcontextprotocol/core-internal
 import { toStandardJsonSchema } from '@valibot/to-json-schema';
 import { type } from 'arktype';
 import * as v from 'valibot';
-import { describe, expectTypeOf, it } from 'vitest';
+import { describe, expectTypeOf, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import type { CallToolResult, ServerContext, ToolCallback, ToolResultFor, ToolStructuredContent } from '../../src/index';

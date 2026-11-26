@@ -1,3 +1,2 @@
 [test]
-globals = "vitest"
 pathIgnorePatterns = ["**/node_modules/**", "**/dist/**", "packages/codemod/batch-test/**"]

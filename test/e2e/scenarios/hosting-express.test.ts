@@ -29,7 +29,7 @@ import type { AuthorizationParams, OAuthServerProvider } from '@modelcontextprot
 import { mcpAuthRouter } from '@modelcontextprotocol/server-legacy';
 import type { Express, RequestHandler } from 'express';
 import express from 'express';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { startExpressMinimal, startExpressWithHostValidation } from '../helpers/express';

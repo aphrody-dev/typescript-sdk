@@ -18,7 +18,7 @@ import {
     SdkHttpError,
     UnsupportedProtocolVersionError
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { UnauthorizedError } from '../../src/client/auth';
 import { InsufficientScopeError } from '../../src/client/authErrors';

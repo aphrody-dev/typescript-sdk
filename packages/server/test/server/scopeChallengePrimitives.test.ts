@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import type { AuthInfo, JSONRPCMessage, JSONRPCRequest } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import { McpServer, ResourceTemplate } from '../../src/server/mcp';
 import type { ScopeChallengeHandler } from '../../src/server/scopeChallenge';

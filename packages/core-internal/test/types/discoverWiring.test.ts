@@ -6,7 +6,7 @@
  * truth): the 2026-era registry serves the method, the 2025-era registry does
  * not — there is no neutral runtime schema map to keep in sync.
  */
-import { describe, expect, expectTypeOf, test } from 'vitest';
+import { describe, expect, expectTypeOf, test } from 'bun:test';
 
 import { ClientRequestSchema, DiscoverResultSchema, ServerResultSchema } from '../../src/types/index';
 import type { DiscoverResult, RequestMethod, RequestTypeMap, ResultTypeMap } from '../../src/types/index';

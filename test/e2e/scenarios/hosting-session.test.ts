@@ -16,7 +16,7 @@ import { NodeStreamableHTTPServerTransport } from '@modelcontextprotocol/node';
 import { LATEST_PROTOCOL_VERSION, McpServer, WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/server';
 import cors from 'cors';
 import express from 'express';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { startExpressMinimal } from '../helpers/express';

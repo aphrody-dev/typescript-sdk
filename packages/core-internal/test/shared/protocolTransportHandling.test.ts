@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'bun:test';
 
 import type { BaseContext } from '../../src/shared/protocol';
 import { Protocol } from '../../src/shared/protocol';

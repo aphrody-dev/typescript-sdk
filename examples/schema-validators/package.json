@@ -17,7 +17,5 @@
         "valibot": "catalog:devTools",
         "zod": "catalog:runtimeShared"
     },
-    "devDependencies": {
-        "tsx": "catalog:devTools"
-    }
+    "devDependencies": {}
 }

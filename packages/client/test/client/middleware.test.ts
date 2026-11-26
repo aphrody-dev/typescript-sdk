@@ -1,6 +1,6 @@
 import type { FetchLike } from '@modelcontextprotocol/core-internal';
 import { isJsonContentType } from '@modelcontextprotocol/core-internal';
-import type { Mocked, MockedFunction, MockInstance } from 'vitest';
+import type { Mocked, MockedFunction, MockInstance } from 'bun:test';
 
 import type { OAuthClientProvider } from '../../src/client/auth';
 import { applyMiddlewares, createMiddleware, withLogging, withOAuth } from '../../src/client/middleware';

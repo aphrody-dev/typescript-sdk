@@ -17,8 +17,7 @@
         "zod": "catalog:runtimeShared"
     },
     "devDependencies": {
-        "@types/express": "catalog:devTools",
-        "tsx": "catalog:devTools"
+        "@types/express": "catalog:devTools"
     },
     "example": {
         "excluded": "interactive REPL — run manually"

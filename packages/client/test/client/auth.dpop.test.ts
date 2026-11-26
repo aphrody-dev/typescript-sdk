@@ -1,5 +1,5 @@
-import type { Mock } from 'vitest';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Mock } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'bun:test';
 
 import type { OAuthClientProvider } from '../../src/client/auth';
 import { auth, executeTokenRequest, extractWWWAuthenticateParams } from '../../src/client/auth';

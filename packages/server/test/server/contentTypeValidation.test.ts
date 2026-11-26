@@ -9,7 +9,7 @@
  * is `application/json` keep working regardless of parameters or case.
  */
 import { CLIENT_CAPABILITIES_META_KEY, CLIENT_INFO_META_KEY, PROTOCOL_VERSION_META_KEY } from '@modelcontextprotocol/core-internal';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { createMcpHandler } from '../../src/server/createMcpHandler';

@@ -5,7 +5,7 @@
  * Each pin proves the FROZEN copy still rejects the SEP-2106 vocabulary on
  * the 2025 wire.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import {
     CallToolResultSchema,

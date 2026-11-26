@@ -37,7 +37,7 @@
  * onerror), and unclassified traffic on a legacy instance behaves exactly as
  * before the codec split (the B-2 rule).
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { SdkError, SdkErrorCode } from '../../src/errors/sdkErrors';
 import type { BaseContext } from '../../src/shared/protocol';

@@ -32,7 +32,7 @@ import {
     Server,
     specTypeSchemas
 } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { modernEnvelopeMeta, modernStandardHeaders, tapWire, wire } from '../helpers/index';

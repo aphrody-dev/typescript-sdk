@@ -10,7 +10,7 @@ import { completable, fromJsonSchema as serverFromJsonSchema, inputRequired, Mcp
 import { toStandardJsonSchema } from '@valibot/to-json-schema';
 import { type } from 'arktype';
 import * as v from 'valibot';
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'bun:test';
 import * as z from 'zod/v4';
 
 describe('Standard Schema Support', () => {

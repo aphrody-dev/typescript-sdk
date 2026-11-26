@@ -13,9 +13,7 @@
         "@modelcontextprotocol/server": "workspace:*",
         "zod": "catalog:runtimeShared"
     },
-    "devDependencies": {
-        "tsx": "catalog:devTools"
-    },
+    "devDependencies": {},
     "example": {
         "era": "dual",
         "//": "2025-era push-style runs over the sessionful legacy arm inlined in server.ts; 2026-07-28 inputRequired runs over the per-request modern arm. All four transport/era legs."

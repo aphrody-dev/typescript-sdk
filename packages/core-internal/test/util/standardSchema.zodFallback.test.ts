@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 import * as z from 'zod/v4';
 import { standardSchemaToJsonSchema } from '../../src/util/standardSchema';
 

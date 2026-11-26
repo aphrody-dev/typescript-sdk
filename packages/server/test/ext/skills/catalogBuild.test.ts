@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import type { CatalogBuildOptions } from '../../../src/ext/skills/catalogBuild';
 import { buildCatalogSnapshot } from '../../../src/ext/skills/catalogBuild';

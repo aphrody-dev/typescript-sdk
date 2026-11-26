@@ -38,7 +38,7 @@ import {
     setNegotiatedProtocolVersion,
     UrlElicitationRequiredError
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { McpServer } from '../../src/server/mcp';

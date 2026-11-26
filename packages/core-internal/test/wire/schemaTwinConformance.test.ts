@@ -26,7 +26,7 @@ import { join } from 'node:path';
 
 import { Ajv2020 as Ajv } from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 const FIXTURES_ROOT = join(__dirname, '../corpus/fixtures');
 const TWINS_ROOT = join(__dirname, '../corpus/schema-twins');

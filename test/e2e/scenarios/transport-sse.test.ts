@@ -6,7 +6,7 @@
  * per-cell matrix behaviors.
  */
 
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 
 import { verifies } from '../helpers/verifies';
 import type { TestArgs } from '../types';

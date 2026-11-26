@@ -16,7 +16,7 @@ import path from 'node:path';
 
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import { SkillsClient } from '@modelcontextprotocol/client/ext/skills';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 
 const READINESS_TIMEOUT_MS = 60_000;
 const READINESS_POLL_INTERVAL_MS = 100;

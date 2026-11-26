@@ -16,7 +16,7 @@ import type { EventId, EventStore, StreamId } from '@modelcontextprotocol/server
 import { McpServer } from '@modelcontextprotocol/server';
 import { listenOnRandomPort } from '@modelcontextprotocol/test-helpers';
 import * as z from 'zod/v4';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
 
 import { NodeStreamableHTTPServerTransport } from '../src/streamableHttp';
 
@@ -472,7 +472,6 @@ describe('Zod v4', () => {
                     accept: 'application/json, text/event-stream',
                     connection: 'keep-alive',
                     'mcp-session-id': sessionId,
-                    'accept-language': '*',
                     'user-agent': expect.any(String),
                     'accept-encoding': expect.any(String),
                     'content-length': expect.any(String)
@@ -738,9 +737,14 @@ describe('Zod v4', () => {
 
             const reader = response.body?.getReader();
 
-            // The responses may come in any order or together in one chunk
-            const { value } = await reader!.read();
-            const text = new TextDecoder().decode(value);
+            // The responses may come in any order, together or in separate chunks
+            const decoder = new TextDecoder();
+            let text = '';
+            while (!(text.includes('"id":"req-1"') && text.includes('"id":"req-2"'))) {
+                const { value, done } = await reader!.read();
+                if (done) break;
+                text += decoder.decode(value, { stream: true });
+            }
 
             // Check that both responses were sent on the same stream
             expect(text).toContain('"id":"req-1"');

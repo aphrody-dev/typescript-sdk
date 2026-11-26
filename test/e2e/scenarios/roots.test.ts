@@ -9,7 +9,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import type { ListRootsResult } from '@modelcontextprotocol/server';
 import { McpServer, ProtocolError, ProtocolErrorCode } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { wire } from '../helpers/index';

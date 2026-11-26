@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import * as core from '../src/index';
 import { CursorSchema, InitializeRequestSchema, OAuthTokensSchema } from '../src/index';

@@ -3,7 +3,7 @@
  * (`ctx.mcpReq.inputResponses`): the schema-aware `acceptedContent` overload
  * and the discriminated `inputResponse` view.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { acceptedContent, inputResponse } from '../../src/shared/inputRequired';

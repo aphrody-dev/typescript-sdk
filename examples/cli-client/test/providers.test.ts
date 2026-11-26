@@ -1,7 +1,7 @@
 import type Anthropic from '@anthropic-ai/sdk';
 import type { GenerateContentResponse } from '@google/genai';
 import type OpenAI from 'openai';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { fromAnthropicResponse, toAnthropicRequest } from '../providers/anthropic';
 import { fromGeminiResponse, toGeminiRequest } from '../providers/gemini';

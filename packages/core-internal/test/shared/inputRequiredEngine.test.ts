@@ -4,7 +4,7 @@
  * whitelist, the input-responses partition, and the synthesized embedded
  * dispatch context.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { buildRetryLegRequestOptions, partitionInputResponses, synthesizeInputRequestContext } from '../../src/shared/inputRequiredEngine';
 

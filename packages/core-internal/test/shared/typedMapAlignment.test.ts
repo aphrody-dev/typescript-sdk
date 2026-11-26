@@ -16,7 +16,7 @@
  * cannot drive tasks; a typed error is the correct surface, not a result
  * whose static type lies.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { SdkError, SdkErrorCode } from '../../src/errors/sdkErrors';
 import type { BaseContext } from '../../src/shared/protocol';

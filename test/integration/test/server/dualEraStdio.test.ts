@@ -28,7 +28,7 @@ import {
     LATEST_PROTOCOL_VERSION,
     PROTOCOL_VERSION_META_KEY
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 const FIXTURES_DIR = path.resolve(__dirname, '../__fixtures__');
 const MODERN = '2026-07-28';
@@ -44,7 +44,7 @@ const modernEnvelope = (clientName: string) => ({
 function spawnFixtureTransport(): StdioClientTransport {
     return new StdioClientTransport({
         command: process.execPath,
-        args: ['--import', 'tsx', 'dualEraStdioServer.ts'],
+        args: ['dualEraStdioServer.ts'],
         cwd: FIXTURES_DIR
     });
 }

@@ -7,7 +7,7 @@
  * round-trip requests, and the legacy-session pre-check; the per-method
  * requirement table feeds the entry gate only.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import {
     missingClientCapabilities,

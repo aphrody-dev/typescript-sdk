@@ -147,11 +147,7 @@
     },
     "dependencies": {
         "@modelcontextprotocol/core": "workspace:*",
-        "cross-spawn": "catalog:runtimeClientOnly",
-        "eventsource": "catalog:runtimeClientOnly",
-        "eventsource-parser": "catalog:runtimeClientOnly",
         "jose": "catalog:runtimeClientOnly",
-        "pkce-challenge": "catalog:runtimeShared",
         "zod": "catalog:runtimeShared"
     },
     "peerDependencies": {
@@ -161,15 +157,11 @@
         "@opentelemetry/api": "catalog:otel",
         "@modelcontextprotocol/core-internal": "workspace:^",
         "@modelcontextprotocol/tsconfig": "workspace:^",
-        "@modelcontextprotocol/vitest-config": "workspace:^",
         "@modelcontextprotocol/eslint-config": "workspace:^",
         "@modelcontextprotocol/test-helpers": "workspace:^",
         "@cfworker/json-schema": "catalog:runtimeShared",
         "ajv": "catalog:runtimeShared",
         "ajv-formats": "catalog:runtimeShared",
-        "@types/content-type": "catalog:devTools",
-        "@types/cross-spawn": "catalog:devTools",
-        "@types/eventsource": "catalog:devTools",
         "@typescript/native-preview": "catalog:devTools",
         "@eslint/js": "catalog:devTools",
         "eslint": "catalog:devTools",
@@ -178,7 +170,7 @@
         "prettier": "catalog:devTools",
         "typescript": "catalog:devTools",
         "typescript-eslint": "catalog:devTools",
-        "vitest": "catalog:devTools",
-        "tsdown": "catalog:devTools"
+        "tsdown": "catalog:devTools",
+        "bun-types": "catalog:devTools"
     }
 }

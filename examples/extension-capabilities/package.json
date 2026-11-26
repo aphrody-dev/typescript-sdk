@@ -13,9 +13,7 @@
         "@modelcontextprotocol/hono": "workspace:*",
         "@modelcontextprotocol/server": "workspace:*"
     },
-    "devDependencies": {
-        "tsx": "catalog:devTools"
-    },
+    "devDependencies": {},
     "example": {
         "era": "dual",
         "//": "Both legs assert the extension entry and its settings are advertised."

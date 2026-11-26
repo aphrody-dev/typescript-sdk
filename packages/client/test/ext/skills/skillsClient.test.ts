@@ -1,7 +1,7 @@
 import type { Skill } from '@modelcontextprotocol/core/ext/skills';
 import { SKILLS_EXTENSION_ID } from '@modelcontextprotocol/core/ext/skills';
 import { SdkError, SdkErrorCode } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import { Client } from '../../../src/client/client';
 import { SkillsClient } from '../../../src/ext/skills/index';

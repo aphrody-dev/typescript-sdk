@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { z } from 'zod/v4';
 
 import type { BaseContext, JSONRPCMessage } from '../../src/exports/public/index';

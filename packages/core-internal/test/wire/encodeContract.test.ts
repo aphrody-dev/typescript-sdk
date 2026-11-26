@@ -19,7 +19,7 @@
  * The ordering (stamp before fill, `input_required` excluded from the fill)
  * is pinned here.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import {
     attachCacheHintFallback,

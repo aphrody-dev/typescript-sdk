@@ -5,7 +5,7 @@ import { OAuthClientInformationFull, OAuthTokens } from '@modelcontextprotocol/c
 import { ServerError } from '../../../src/auth/errors';
 import { InvalidTokenError } from '../../../src/auth/errors';
 import { InsufficientScopeError } from '../../../src/auth/errors';
-import { type Mock } from 'vitest';
+import { type Mock } from 'bun:test';
 
 describe('Proxy OAuth Server Provider', () => {
     // Mock client data

@@ -10,7 +10,7 @@
  * params naming the missing key(s)) — the assignments asserted by the
  * published conformance suite.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { hasEnvelopeClaim, validateEnvelopeMeta } from '../../src/shared/envelope';
 import type { InboundHttpRequest, InboundLegacyRoute } from '../../src/shared/inboundClassification';

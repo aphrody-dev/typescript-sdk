@@ -18,7 +18,7 @@ import { toNodeHandler } from '@modelcontextprotocol/node';
 import type { CreateMcpHandlerOptions, McpHttpHandler, McpRequestContext } from '@modelcontextprotocol/server';
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import { listenOnRandomPort } from '@modelcontextprotocol/test-helpers';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 const MODERN = '2026-07-28';

@@ -6,7 +6,7 @@
  */
 import type { StandardSchemaWithJSON } from '@modelcontextprotocol/core-internal';
 import { scanXMcpHeaderDeclarations, standardSchemaToJsonSchema } from '@modelcontextprotocol/core-internal';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { fromJsonSchema } from '../../src/fromJsonSchema';

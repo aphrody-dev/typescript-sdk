@@ -12,7 +12,7 @@
  *
  * See docs/behavior-surface-pins.md for the maintenance protocol.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import {
     CallToolRequestSchema,

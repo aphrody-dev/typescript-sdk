@@ -1,4 +1,4 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'bun:test';
 
 import type { OAuthMetadata, OAuthTokens } from '../../src/shared/auth';
 import * as schemas from '../../src/types/schemas';

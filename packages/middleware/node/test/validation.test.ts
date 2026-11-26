@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import { vi } from 'vitest';
+import { vi } from 'bun:test';
 
 import { hostHeaderValidation, localhostHostValidation } from '../src/middleware/hostHeaderValidation';
 import { localhostOriginValidation, originValidation } from '../src/middleware/originValidation';

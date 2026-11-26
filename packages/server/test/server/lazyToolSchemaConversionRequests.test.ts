@@ -6,7 +6,7 @@ import {
     InMemoryTransport,
     PROTOCOL_VERSION_META_KEY
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { createMcpHandler } from '../../src/server/createMcpHandler';
 import { McpServer } from '../../src/server/mcp';

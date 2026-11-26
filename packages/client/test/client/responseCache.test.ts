@@ -9,7 +9,7 @@
  */
 import type { JSONRPCMessage, JSONRPCRequest, Tool } from '@modelcontextprotocol/core-internal';
 import { InMemoryTransport, SdkError, SdkErrorCode } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { Client } from '../../src/client/client';
 import type { CacheEntry, ResponseCacheStore } from '../../src/client/responseCache';

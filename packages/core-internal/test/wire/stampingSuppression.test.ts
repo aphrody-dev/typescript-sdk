@@ -21,7 +21,7 @@
  * Together with the 2025 codec identity pin, this suite is the evidence that
  * this change produces zero 2025-era wire deltas.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import type { BaseContext } from '../../src/shared/protocol';
 import { Protocol, setNegotiatedProtocolVersion } from '../../src/shared/protocol';

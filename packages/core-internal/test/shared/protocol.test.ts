@@ -1,5 +1,5 @@
-import type { MockInstance } from 'vitest';
-import { vi } from 'vitest';
+import type { MockInstance } from 'bun:test';
+import { vi } from 'bun:test';
 import * as z from 'zod/v4';
 import type { ZodType } from 'zod/v4';
 

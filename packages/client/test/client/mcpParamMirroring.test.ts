@@ -14,7 +14,7 @@ import {
     InMemoryTransport,
     PROTOCOL_VERSION_META_KEY
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import { Client } from '../../src/client/client';
 import { InMemoryResponseCacheStore, type ResponseCacheStore } from '../../src/client/responseCache';

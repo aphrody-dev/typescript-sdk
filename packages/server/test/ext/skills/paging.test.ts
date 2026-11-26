@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { decodeCursor, encodeCursor, paginate, resolvePageSize } from '../../../src/ext/skills/paging';
 

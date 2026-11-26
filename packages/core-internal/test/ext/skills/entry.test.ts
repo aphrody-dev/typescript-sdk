@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 
 import type { Skill } from '@modelcontextprotocol/core/ext/skills';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { encodeUtf8 } from '../../../src/ext/skills/bytes';
 import { buildSkillEntry, skillEntryProblems, validateSkillEntry } from '../../../src/ext/skills/entry';

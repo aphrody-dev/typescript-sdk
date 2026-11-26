@@ -2,7 +2,7 @@ import type { JSONRPCMessage } from '@modelcontextprotocol/client';
 import { Client, InMemoryTransport } from '@modelcontextprotocol/client';
 import { McpServer, Server } from '@modelcontextprotocol/server';
 import { SpanKind } from '@opentelemetry/api';
-import { afterAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { registerTestSdk } from './sdk';

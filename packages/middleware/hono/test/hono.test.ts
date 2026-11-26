@@ -1,6 +1,6 @@
 import type { Context } from 'hono';
 import { Hono } from 'hono';
-import { vi } from 'vitest';
+import { vi } from 'bun:test';
 
 import { createMcpHonoApp } from '../src/hono';
 import { hostHeaderValidation } from '../src/middleware/hostHeaderValidation';

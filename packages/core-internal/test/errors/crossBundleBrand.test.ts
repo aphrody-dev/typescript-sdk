@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import { OAuthError, OAuthErrorCode } from '../../src/auth/errors';
 import { SdkError, SdkErrorCode, SdkHttpError } from '../../src/errors/sdkErrors';

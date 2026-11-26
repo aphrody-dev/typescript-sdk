@@ -1,6 +1,6 @@
 import type { JSONRPCRequest, Tool } from '@modelcontextprotocol/core-internal';
 import { InMemoryTransport, LATEST_PROTOCOL_VERSION } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 import { Client } from '../../src/client/client';
 import { SkillsClient } from '../../src/ext/skills/index';
 

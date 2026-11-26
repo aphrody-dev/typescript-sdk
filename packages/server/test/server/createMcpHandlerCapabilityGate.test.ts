@@ -16,7 +16,7 @@ import {
     PROTOCOL_VERSION_META_KEY,
     REQUIRED_CLIENT_CAPABILITIES_BY_METHOD
 } from '@modelcontextprotocol/core-internal';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { createMcpHandler } from '../../src/server/createMcpHandler';

@@ -58,8 +58,8 @@ describe('Process cleanup', () => {
         });
 
         const transport = new StdioClientTransport({
-            command: 'node',
-            args: ['--import', 'tsx', 'testServer.ts'],
+            command: process.execPath,
+            args: ['testServer.ts'],
             cwd: FIXTURES_DIR
         });
 
@@ -83,7 +83,7 @@ describe('Process cleanup', () => {
         // the pipe (window closed, session restarted) without sending any signal, the
         // server must notice stdin EOF, close its transport, and fire `onclose` so the
         // server can release its keep-alive handles and the process exits naturally.
-        const child = spawn('node', ['--import', 'tsx', 'serverWithKeepAlive.ts'], {
+        const child = spawn(process.execPath, ['serverWithKeepAlive.ts'], {
             cwd: FIXTURES_DIR,
             stdio: ['pipe', 'pipe', 'inherit']
         });
@@ -129,8 +129,8 @@ describe('Process cleanup', () => {
         });
 
         const transport = new StdioClientTransport({
-            command: 'node',
-            args: ['--import', 'tsx', 'serverThatHangs.ts'],
+            command: process.execPath,
+            args: ['serverThatHangs.ts'],
             cwd: FIXTURES_DIR
         });
 

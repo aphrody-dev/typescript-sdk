@@ -19,7 +19,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import type { CallToolResult, McpRequestContext } from '@modelcontextprotocol/server';
 import { McpServer } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import type { Wired } from '../helpers/index';

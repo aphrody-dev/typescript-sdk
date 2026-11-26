@@ -12,7 +12,7 @@
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import type { CreateMessageRequest, ElicitRequest, ElicitRequestFormParams, LoggingLevel } from '@modelcontextprotocol/server';
 import { McpServer } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { hostPerSession, wire } from '../helpers/index';

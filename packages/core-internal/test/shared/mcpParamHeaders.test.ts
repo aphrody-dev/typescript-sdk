@@ -8,7 +8,7 @@
  * two checks the conformance manifest leaves globally untested
  * (`sep-2243-server-not-expect-null`, `sep-2243-server-reject-missing-required`).
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { HEADER_MISMATCH_ERROR_CODE } from '../../src/shared/inboundClassification';
 import {

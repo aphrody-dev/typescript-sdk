@@ -3,8 +3,8 @@ import { OAuthError, OAuthErrorCode } from '@modelcontextprotocol/server';
 import type { Request, Response } from 'express';
 import express from 'express';
 import supertest from 'supertest';
-import type { Mock } from 'vitest';
-import { vi } from 'vitest';
+import type { Mock } from 'bun:test';
+import { vi } from 'bun:test';
 
 import type { OAuthTokenVerifier } from '../../src/auth/types';
 import { requireBearerAuth } from '../../src/auth/bearerAuth';

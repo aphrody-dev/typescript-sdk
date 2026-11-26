@@ -15,7 +15,7 @@
  * applies to the body registered with that exact title.
  */
 
-import { describe, test } from 'vitest';
+import { describe, test } from 'bun:test';
 
 import { REQUIREMENTS } from '../requirements';
 import type { Requirement, SpecVersion, TestArgs, Transport } from '../types';

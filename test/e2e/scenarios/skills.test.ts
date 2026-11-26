@@ -12,7 +12,7 @@ import { SkillsClient, SkillVerificationError } from '@modelcontextprotocol/clie
 import { createMcpHandler, McpServer, ProtocolErrorCode } from '@modelcontextprotocol/server';
 import type { Skill, SkillCatalog, SkillCatalogOptions, SkillSource, SkillWarning } from '@modelcontextprotocol/server/ext/skills';
 import { memorySkillFiles, SkillCatalogError, skillEntry, SkillsExtension } from '@modelcontextprotocol/server/ext/skills';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import * as z from 'zod/v4';
 
 import type { Wired } from '../helpers/index';

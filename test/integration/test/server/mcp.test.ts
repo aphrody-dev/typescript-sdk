@@ -8,7 +8,7 @@ import {
     UrlElicitationRequiredError
 } from '@modelcontextprotocol/core-internal';
 import { completable, McpServer, ResourceTemplate } from '@modelcontextprotocol/server';
-import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import * as z from 'zod/v4';
 
 describe('Zod v4', () => {

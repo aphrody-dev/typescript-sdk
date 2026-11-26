@@ -28,7 +28,7 @@ const host = new McpHost({ ui, provider, roots: [process.cwd()], legacy: era ===
 
 const config: CliClientConfig =
     transport === 'stdio'
-        ? { mcpServers: { todos: { command: 'npx', args: ['-y', 'tsx', siblingPath(import.meta.url, '../todos-server/server.ts')] } } }
+        ? { mcpServers: { todos: { command: 'bun', args: [siblingPath(import.meta.url, '../todos-server/server.ts')] } } }
         : { mcpServers: { todos: { url } } };
 
 await host.connect(config);

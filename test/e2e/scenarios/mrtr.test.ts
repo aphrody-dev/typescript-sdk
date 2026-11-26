@@ -13,7 +13,7 @@
  */
 import { Client, SdkError, SdkErrorCode } from '@modelcontextprotocol/client';
 import { acceptedContent, inputRequired, McpServer, ProtocolError, UrlElicitationRequiredError } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import type { Wired } from '../helpers/index';

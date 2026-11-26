@@ -28,10 +28,9 @@
     "devDependencies": {
         "@modelcontextprotocol/core-internal": "workspace:^",
         "zod": "catalog:runtimeShared",
-        "vitest": "catalog:devTools",
         "@modelcontextprotocol/tsconfig": "workspace:^",
-        "@modelcontextprotocol/vitest-config": "workspace:^",
         "@modelcontextprotocol/eslint-config": "workspace:^",
-        "@typescript/native-preview": "catalog:devTools"
+        "@typescript/native-preview": "catalog:devTools",
+        "bun-types": "catalog:devTools"
     }
 }

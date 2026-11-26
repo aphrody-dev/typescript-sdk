@@ -1,6 +1,6 @@
 // Pins the types of registerPrompt() without argsSchema: the callback's one parameter is the server context.
 import type { ServerContext } from '@modelcontextprotocol/core-internal';
-import { describe, expect, expectTypeOf, test } from 'vitest';
+import { describe, expect, expectTypeOf, test } from 'bun:test';
 
 import { McpServer } from '../../src/server/mcp';
 

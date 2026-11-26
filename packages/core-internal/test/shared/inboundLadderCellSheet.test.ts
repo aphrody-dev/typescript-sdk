@@ -17,7 +17,7 @@
  * only; their end-to-end HTTP assertions live with the per-request server
  * transport tests in the server package.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import type { InboundHttpRequest, InboundLadderRejection } from '../../src/shared/inboundClassification';
 import { classifyInboundRequest, INBOUND_VALIDATION_LADDER, modernOnlyStrictRejection } from '../../src/shared/inboundClassification';

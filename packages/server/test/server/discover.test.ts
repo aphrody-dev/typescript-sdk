@@ -34,7 +34,7 @@ import {
     setNegotiatedProtocolVersion,
     SUPPORTED_PROTOCOL_VERSIONS
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { discoverAdvertisedCapabilities, Server } from '../../src/server/server';
 

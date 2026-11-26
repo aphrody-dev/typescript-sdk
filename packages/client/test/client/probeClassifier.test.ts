@@ -8,7 +8,7 @@
  * test/integration/test/client/versionNegotiation.test.ts.
  */
 import { SdkError, SdkErrorCode, UnsupportedProtocolVersionError } from '@modelcontextprotocol/core-internal';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import type { ProbeClassifierContext, ProbeOutcome, ProbeVerdict } from '../../src/client/probeClassifier';
 import { classifyProbeOutcome } from '../../src/client/probeClassifier';

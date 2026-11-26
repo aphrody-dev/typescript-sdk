@@ -14,7 +14,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import type { LoggingLevel } from '@modelcontextprotocol/server';
 import { isJSONRPCRequest, McpServer, ProtocolError, ProtocolErrorCode, Server, specTypeSchemas } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { tapWire, wire } from '../helpers/index';

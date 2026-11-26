@@ -13,7 +13,7 @@ import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import type { SkillCatalog } from '@modelcontextprotocol/server/ext/skills';
 import { loadSkills } from '@modelcontextprotocol/server/ext/skills/node';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'bun:test';
 
 import { ESCALATION, GIT, PURCHASE_ORDER, REFUNDS, writeSkillTree } from './skillTree';
 
@@ -44,9 +44,7 @@ async function overHttp(catalog: SkillCatalog, revision: string, onServer: () =>
 
 async function overStdio(root: string, revision: string): Promise<Client> {
     const client = clientFor(revision);
-    await client.connect(
-        new StdioClientTransport({ command: process.execPath, args: ['--import', 'tsx', 'skillsStdioServer.ts', root], cwd: FIXTURES_DIR })
-    );
+    await client.connect(new StdioClientTransport({ command: process.execPath, args: ['skillsStdioServer.ts', root], cwd: FIXTURES_DIR }));
     return client;
 }
 

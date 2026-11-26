@@ -12,7 +12,7 @@ import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/cli
 import { PROTOCOL_VERSION_META_KEY } from '@modelcontextprotocol/core-internal';
 import type { McpRequestContext } from '@modelcontextprotocol/server';
 import { McpServer } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { modernEnvelopeMeta, wire } from '../helpers/index';

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { configFromTargets, interpolateEnv, isHttpServer, parseConfig } from '../host/config';
 import { contentBlockToParts, resourceToContextText, stripAnsi, toolResultToParts, truncate } from '../host/content';
@@ -65,7 +65,7 @@ describe('config parsing', () => {
         const config = parseConfig(
             JSON.stringify({
                 mcpServers: {
-                    todos: { command: 'npx', args: ['-y', 'tsx', 'server.ts'], env: { API_KEY: '${TEST_TOKEN}' } },
+                    todos: { command: 'bun', args: ['server.ts'], env: { API_KEY: '${TEST_TOKEN}' } },
                     remote: { url: 'https://example.com/mcp', headers: { Authorization: 'Bearer ${TEST_TOKEN}' } }
                 }
             }),
@@ -86,9 +86,9 @@ describe('config parsing', () => {
     });
 
     it('builds a config from ad-hoc --server targets', () => {
-        const config = configFromTargets(['https://mcp.linear.app/mcp', 'npx -y tsx server.ts']);
+        const config = configFromTargets(['https://mcp.linear.app/mcp', 'bun server.ts']);
         expect(config.mcpServers['linear']).toEqual({ url: 'https://mcp.linear.app/mcp' });
-        expect(config.mcpServers['server']).toEqual({ command: 'npx', args: ['-y', 'tsx', 'server.ts'] });
+        expect(config.mcpServers['server']).toEqual({ command: 'bun', args: ['server.ts'] });
     });
 
     it('rejects an empty --server list', () => {

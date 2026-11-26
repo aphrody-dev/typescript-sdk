@@ -2,7 +2,7 @@ import type http from 'node:http';
 import { type Server } from 'node:http';
 import type { Response } from 'express';
 import { AddressInfo } from 'node:net';
-import { vi } from 'vitest';
+import { vi } from 'bun:test';
 
 export async function listenOnRandomPort(server: Server, host: string = '127.0.0.1'): Promise<URL> {
     return new Promise<URL>(resolve => {

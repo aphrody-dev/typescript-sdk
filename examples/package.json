@@ -52,7 +52,6 @@
         "@modelcontextprotocol/eslint-config": "workspace:^",
         "@modelcontextprotocol/tsconfig": "workspace:^",
         "@types/cors": "catalog:devTools",
-        "@types/express": "catalog:devTools",
-        "tsx": "catalog:devTools"
+        "@types/express": "catalog:devTools"
     }
 }

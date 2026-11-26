@@ -7,7 +7,7 @@
  */
 import type { ElicitResult, JSONRPCMessage, JSONRPCRequest } from '@modelcontextprotocol/core-internal';
 import { InMemoryTransport, SdkError, SdkErrorCode } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import { Client } from '../../src/client/client';
 import type { ClientOptions } from '../../src/client/client';

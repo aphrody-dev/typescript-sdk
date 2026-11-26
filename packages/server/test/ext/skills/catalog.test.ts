@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 
 import type { Skill, SkillResourceEntry } from '@modelcontextprotocol/core/ext/skills';
 import { InMemoryTransport } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import type { SkillCatalogOptions, SkillWarning } from '../../../src/ext/skills/index';
 import { memorySkillFiles, SkillCatalogError, SkillsExtension } from '../../../src/ext/skills/index';

@@ -55,7 +55,7 @@ import type {
 } from '@modelcontextprotocol/server';
 import { LATEST_PROTOCOL_VERSION, McpServer } from '@modelcontextprotocol/server';
 import { importSPKI, jwtVerify } from 'jose';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { defined, hostPerSession } from '../helpers/index';

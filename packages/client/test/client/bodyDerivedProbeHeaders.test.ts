@@ -8,7 +8,7 @@
  */
 import type { JSONRPCMessage } from '@modelcontextprotocol/core-internal';
 import { CLIENT_CAPABILITIES_META_KEY, CLIENT_INFO_META_KEY, PROTOCOL_VERSION_META_KEY } from '@modelcontextprotocol/core-internal';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'bun:test';
 
 import { StreamableHTTPClientTransport } from '../../src/client/streamableHttp';
 

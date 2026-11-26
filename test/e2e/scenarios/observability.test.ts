@@ -9,7 +9,7 @@ import { context, propagation, SpanKind, trace } from '@opentelemetry/api';
 import { AsyncLocalStorageContextManager } from '@opentelemetry/context-async-hooks';
 import { W3CTraceContextPropagator } from '@opentelemetry/core';
 import { InMemorySpanExporter, SimpleSpanProcessor, TracerProvider } from '@opentelemetry/sdk-trace';
-import { afterAll, beforeEach, expect } from 'vitest';
+import { afterAll, beforeEach, expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { wire } from '../helpers/index';

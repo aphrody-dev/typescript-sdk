@@ -1,5 +1,5 @@
 import * as z from 'zod/v4';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { completable, getCompleter } from '../../src/server/completable';
 

@@ -8,7 +8,7 @@
  */
 import type { JSONRPCMessage } from '@modelcontextprotocol/core-internal';
 import { InMemoryTransport, LATEST_PROTOCOL_VERSION } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { Client } from '../../src/client/client';
 

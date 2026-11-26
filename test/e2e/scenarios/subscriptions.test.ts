@@ -8,7 +8,7 @@
  */
 import { Client, SdkError, SdkErrorCode, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import { createMcpHandler, McpServer, SUBSCRIPTION_ID_META_KEY } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { modernEnvelopeMeta, modernStandardHeaders, wire } from '../helpers/index';

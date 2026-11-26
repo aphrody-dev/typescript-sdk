@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import type { JsonSchemaType } from '../../src/validators/types';
 import { AjvJsonSchemaValidator } from '../../src/validators/ajvProvider';

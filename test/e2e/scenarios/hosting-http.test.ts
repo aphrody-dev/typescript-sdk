@@ -15,7 +15,7 @@ import { randomUUID } from 'node:crypto';
 
 import type { JSONRPCMessage } from '@modelcontextprotocol/server';
 import { LATEST_PROTOCOL_VERSION, McpServer, WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import type { HttpHandler } from '../helpers/index';

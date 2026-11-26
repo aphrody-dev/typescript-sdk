@@ -8,7 +8,7 @@ import { SkillsClient } from '@modelcontextprotocol/client/ext/skills';
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import type { SkillCatalog, SkillSource } from '@modelcontextprotocol/server/ext/skills';
 import { memorySkillFiles, skillEntry, SkillsExtension } from '@modelcontextprotocol/server/ext/skills';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 const LEGACY = '2025-11-25';

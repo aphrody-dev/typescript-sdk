@@ -20,7 +20,7 @@
  */
 import type { JSONRPCMessage, Transport } from '@modelcontextprotocol/core-internal';
 import { LATEST_PROTOCOL_VERSION, PROTOCOL_VERSION_META_KEY, SdkErrorCode, SdkHttpError } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { Client } from '../../src/client/client';
 import type { ProbeClassifierContext, ProbeOutcome, ProbeVerdict } from '../../src/client/probeClassifier';

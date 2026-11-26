@@ -10,7 +10,7 @@
  * The 2025 spec-anchor parity for these names lives in `spec.types.2025-11-25.test.ts` and
  * targets the frozen wire schemas, not the public types.
  */
-import { describe, expect, expectTypeOf, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'bun:test';
 
 import type {
     CallToolResult,

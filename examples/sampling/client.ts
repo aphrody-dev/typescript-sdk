@@ -25,7 +25,7 @@ const client = new Client(
 );
 
 await (transport === 'stdio'
-    ? client.connect(new StdioClientTransport({ command: 'npx', args: ['-y', 'tsx', siblingPath(import.meta.url, 'server.ts')] }))
+    ? client.connect(new StdioClientTransport({ command: 'bun', args: [siblingPath(import.meta.url, 'server.ts')] }))
     : client.connect(new StreamableHTTPClientTransport(new URL(url))));
 
 client.setRequestHandler('sampling/createMessage', async () => ({

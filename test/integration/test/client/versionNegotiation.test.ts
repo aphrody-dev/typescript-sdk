@@ -28,7 +28,7 @@ import { SdkError, SdkErrorCode, SdkHttpError } from '@modelcontextprotocol/core
 import { NodeStreamableHTTPServerTransport } from '@modelcontextprotocol/node';
 import { McpServer } from '@modelcontextprotocol/server';
 import { listenOnRandomPort } from '@modelcontextprotocol/test-helpers';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'bun:test';
 import * as z from 'zod/v4';
 
 /** A fetch wrapper recording every request our client puts on the wire (URL, headers, body) and the raw response (status, body). */

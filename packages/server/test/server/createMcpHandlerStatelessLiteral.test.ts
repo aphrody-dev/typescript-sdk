@@ -11,7 +11,7 @@
  * the supported-versions suffix derived from `SUPPORTED_PROTOCOL_VERSIONS`.
  */
 import { SUPPORTED_PROTOCOL_VERSIONS } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { createMcpHandler } from '../../src/server/createMcpHandler';

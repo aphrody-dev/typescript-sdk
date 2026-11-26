@@ -1,6 +1,6 @@
 import type { FetchLike } from '@modelcontextprotocol/core-internal';
-import type { Mock, Mocked, MockedFunction } from 'vitest';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Mock, Mocked, MockedFunction } from 'bun:test';
+import { beforeEach, describe, expect, it, vi } from 'bun:test';
 
 import type { OAuthClientProvider } from '../../src/client/auth';
 import { DpopSession } from '../../src/client/dpop';

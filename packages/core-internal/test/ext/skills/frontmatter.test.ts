@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { FrontmatterError, parseFrontmatterYaml, parseSkillMarkdown, splitFrontmatter } from '../../../src/ext/skills/frontmatter';
 

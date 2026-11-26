@@ -1,5 +1,5 @@
-import type { MockInstance } from 'vitest';
-import { vi } from 'vitest';
+import type { MockInstance } from 'bun:test';
+import { vi } from 'bun:test';
 
 import { issueToolNameWarning, validateAndWarnToolName, validateToolName } from '../../src/shared/toolNameValidation';
 

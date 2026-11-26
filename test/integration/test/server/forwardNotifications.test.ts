@@ -16,7 +16,7 @@ import {
     SUBSCRIPTION_ID_META_KEY
 } from '@modelcontextprotocol/server';
 import { listenOnRandomPort } from '@modelcontextprotocol/test-helpers';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 const revision = '2026-07-28';
 const envelope = {

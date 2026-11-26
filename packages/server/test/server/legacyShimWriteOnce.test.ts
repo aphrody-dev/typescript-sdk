@@ -8,7 +8,7 @@
  */
 import type { CallToolResult, ElicitRequestFormParams, InputRequiredResult, JSONRPCRequest } from '@modelcontextprotocol/core-internal';
 import { acceptedContent, inputRequired, inputResponse } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { McpServer } from '../../src/server/mcp';

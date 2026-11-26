@@ -3,7 +3,7 @@
  * independently of createMcpHandler: per-request stateless serving via the
  * frozen idiom (fresh instance + sessionIdGenerator: undefined + handleRequest).
  */
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 import * as z from 'zod/v4';
 
 import type { McpRequestContext } from '../../src/server/createMcpHandler';

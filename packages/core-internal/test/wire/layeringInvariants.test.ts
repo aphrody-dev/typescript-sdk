@@ -15,7 +15,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { posix, sep } from 'node:path';
 
-import { describe, expect, expectTypeOf, test } from 'vitest';
+import { describe, expect, expectTypeOf, test } from 'bun:test';
 
 import type { WireCodec } from '../../src/wire/codec';
 

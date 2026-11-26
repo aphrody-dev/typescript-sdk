@@ -13,9 +13,7 @@
         "@modelcontextprotocol/hono": "workspace:*",
         "@modelcontextprotocol/server": "workspace:*"
     },
-    "devDependencies": {
-        "tsx": "catalog:devTools"
-    },
+    "devDependencies": {},
     "example": {
         "era": "legacy",
         "//": "supportedProtocolVersions / version negotiation is the 2025 initialize handshake; the modern era is its own negotiation story (../dual-era/)."

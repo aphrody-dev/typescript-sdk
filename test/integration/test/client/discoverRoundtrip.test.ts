@@ -18,7 +18,7 @@ import { SdkError, SdkErrorCode, setNegotiatedProtocolVersion, SUPPORTED_PROTOCO
 import { NodeStreamableHTTPServerTransport } from '@modelcontextprotocol/node';
 import { McpServer } from '@modelcontextprotocol/server';
 import { listenOnRandomPort } from '@modelcontextprotocol/test-helpers';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 const MODERN = '2026-07-28';

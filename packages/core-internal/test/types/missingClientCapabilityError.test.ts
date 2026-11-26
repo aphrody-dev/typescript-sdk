@@ -6,7 +6,7 @@
  * the version-agnostic path that also covers plain wire shapes and pre-brand
  * SDK copies (branded `instanceof` needs both copies brand-aware).
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { ProtocolErrorCode } from '../../src/types/enums';
 import { MissingRequiredClientCapabilityError, ProtocolError } from '../../src/types/errors';

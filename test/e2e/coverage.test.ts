@@ -11,7 +11,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { expect, test } from 'vitest';
+import { expect, test } from 'bun:test';
 
 import { REQUIREMENTS } from './requirements';
 import { ALL_SPEC_VERSIONS, ALL_TRANSPORTS, ENTRY_TRANSPORTS, TRANSPORT_SPEC_VERSIONS } from './types';

@@ -1,6 +1,6 @@
 import { OAuthError, OAuthErrorCode } from '@modelcontextprotocol/core-internal';
 import type { AuthInfo } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import type { OAuthTokenVerifier } from '../../src/server/middleware/bearerAuth';
 import { bearerAuthChallengeResponse, requireBearerAuth, verifyBearerToken } from '../../src/server/middleware/bearerAuth';

@@ -17,8 +17,7 @@
         "zod": "catalog:runtimeShared"
     },
     "devDependencies": {
-        "@types/cors": "catalog:devTools",
-        "tsx": "catalog:devTools"
+        "@types/cors": "catalog:devTools"
     },
     "example": {
         "transports": [

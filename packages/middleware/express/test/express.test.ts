@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import supertest from 'supertest';
-import { vi } from 'vitest';
+import { vi } from 'bun:test';
 
 import { createMcpExpressApp } from '../src/express';
 import { hostHeaderValidation, localhostHostValidation } from '../src/middleware/hostHeaderValidation';

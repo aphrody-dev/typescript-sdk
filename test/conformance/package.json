@@ -46,12 +46,10 @@
         "@modelcontextprotocol/express": "workspace:^",
         "@modelcontextprotocol/node": "workspace:^",
         "@modelcontextprotocol/tsconfig": "workspace:^",
-        "@modelcontextprotocol/vitest-config": "workspace:^",
         "@modelcontextprotocol/eslint-config": "workspace:^",
         "@modelcontextprotocol/test-helpers": "workspace:^",
         "cors": "catalog:runtimeServerOnly",
         "express": "catalog:runtimeServerOnly",
-        "tsx": "catalog:devTools",
         "@typescript/native-preview": "catalog:devTools",
         "zod": "catalog:runtimeShared"
     }

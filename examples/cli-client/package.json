@@ -18,8 +18,7 @@
         "zod": "catalog:runtimeShared"
     },
     "devDependencies": {
-        "tsx": "catalog:devTools",
-        "vitest": "catalog:devTools"
+        "bun-types": "catalog:devTools"
     },
     "example": {
         "era": "dual",

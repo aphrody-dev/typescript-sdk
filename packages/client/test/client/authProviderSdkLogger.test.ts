@@ -1,6 +1,6 @@
 import type { OAuthClientMetadata, SdkLogger, StoredOAuthClientInformation } from '@modelcontextprotocol/core-internal';
 import { createMockOAuthFetch } from '@modelcontextprotocol/test-helpers';
-import { describe, expect, expectTypeOf, it, vi } from 'vitest';
+import { describe, expect, expectTypeOf, it, vi } from 'bun:test';
 
 import type { OAuthClientProvider } from '../../src/client/auth';
 import { auth } from '../../src/client/auth';

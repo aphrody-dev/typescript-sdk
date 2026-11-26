@@ -23,7 +23,7 @@ import { OpenAIProvider } from './providers/openai';
 import type { LLMProvider } from './providers/provider';
 import { ScriptedProvider } from './providers/scripted';
 
-const USAGE = `usage: tsx cli.ts [options]
+const USAGE = `usage: bun cli.ts [options]
   --server <target>       connect to just this server: an http(s) URL (OAuth on demand) or a stdio command line (repeatable)
   --config <path>         mcpServers config file (default: ./config.json, falling back to spawning the sibling todos-server)
   --provider <name>       scripted | anthropic | openai | gemini (default: first one with an API key in the env, else scripted)

@@ -4,7 +4,7 @@
  * manual-mode schema wrapper. No nominal brand exists — the builder returns a
  * plain `resultType: 'input_required'` value (F-10).
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { acceptedContent, inputRequired, withInputRequired } from '../../src/shared/inputRequired';

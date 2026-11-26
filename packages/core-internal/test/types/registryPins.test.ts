@@ -18,7 +18,7 @@
  * edit these pins to make a refactor pass; a pin change is a wire-behavior
  * decision and needs a changeset + migration entry (Q10-L2).
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 // Post-relocation home (Q1 increment-2 step 1): the pinned contents are
 // unchanged — only the module housing the registries moved.

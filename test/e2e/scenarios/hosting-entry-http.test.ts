@@ -12,7 +12,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import type { McpRequestContext } from '@modelcontextprotocol/server';
 import { McpServer } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { wire } from '../helpers/index';

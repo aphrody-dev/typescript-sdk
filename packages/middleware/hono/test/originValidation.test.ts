@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { vi } from 'vitest';
+import { vi } from 'bun:test';
 
 import { createMcpHonoApp } from '../src/hono';
 import { localhostOriginValidation, originValidation } from '../src/middleware/originValidation';

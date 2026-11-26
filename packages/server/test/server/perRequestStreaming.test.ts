@@ -11,7 +11,7 @@ import {
     PROTOCOL_VERSION_META_KEY,
     setNegotiatedProtocolVersion
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import type { PerRequestResponseMode } from '../../src/server/perRequestTransport';
 import { PerRequestHTTPServerTransport } from '../../src/server/perRequestTransport';

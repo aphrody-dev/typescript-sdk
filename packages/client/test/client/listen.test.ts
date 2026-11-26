@@ -15,7 +15,7 @@ import {
     SdkErrorCode,
     SUBSCRIPTION_ID_META_KEY
 } from '@modelcontextprotocol/core-internal';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'bun:test';
 
 import { Client } from '../../src/client/client';
 

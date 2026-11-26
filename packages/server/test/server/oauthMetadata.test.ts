@@ -1,5 +1,5 @@
 import type { OAuthMetadata } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import type { AuthMetadataOptions } from '../../src/server/middleware/oauthMetadata';
 import {

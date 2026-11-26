@@ -14,9 +14,7 @@
         "@modelcontextprotocol/server": "workspace:*",
         "zod": "catalog:runtimeShared"
     },
-    "devDependencies": {
-        "tsx": "catalog:devTools"
-    },
+    "devDependencies": {},
     "example": {
         "era": "modern",
         "//": "The story body drives BOTH eras itself (legacy via { mode: 'legacy' }, modern via { mode: 'auto' }); pinned so the runner runs it once per transport."

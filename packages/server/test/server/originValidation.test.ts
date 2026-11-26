@@ -2,7 +2,7 @@
  * Framework-agnostic Origin validation helpers: allowlist matching, the
  * absent-header pass, and the deny-on-failure behavior for malformed values.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { localhostAllowedOrigins, originValidationResponse, validateOriginHeader } from '../../src/server/middleware/originValidation';
 

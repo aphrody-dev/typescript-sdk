@@ -7,7 +7,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { vi } from 'vitest';
+import { vi } from 'bun:test';
 
 import { Ajv, AjvJsonSchemaValidator } from '../../src/validators/ajvProvider';
 import { CfWorkerJsonSchemaValidator } from '../../src/validators/cfWorkerProvider';

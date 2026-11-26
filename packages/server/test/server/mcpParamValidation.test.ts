@@ -16,7 +16,7 @@ import {
     encodeMcpParamValue,
     PROTOCOL_VERSION_META_KEY
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import { fromJsonSchema } from '../../src/fromJsonSchema';
 import { createMcpHandler } from '../../src/server/createMcpHandler';

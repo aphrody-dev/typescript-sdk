@@ -3,7 +3,7 @@
  * dispatch time, may answer or throw itself, applies to handlers registered
  * later, runs in registration order, and can be removed.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import type { BaseContext } from '../../src/shared/protocol';

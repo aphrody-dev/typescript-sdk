@@ -11,7 +11,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import type { RegisteredPrompt } from '@modelcontextprotocol/server';
 import { McpServer, ProtocolError, ProtocolErrorCode, Server } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { wire } from '../helpers/index';

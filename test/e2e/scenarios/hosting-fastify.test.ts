@@ -16,7 +16,7 @@ import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/cli
 import { createMcpFastifyApp } from '@modelcontextprotocol/fastify';
 import { McpServer, WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/server';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { verifies } from '../helpers/verifies';

@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import type { Skill } from '@modelcontextprotocol/core/ext/skills';
 import { ListSkillsRequestParamsSchema, ReadResourceDirectoryRequestParamsSchema } from '@modelcontextprotocol/core/ext/skills';
 import { InMemoryTransport } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import type { SkillSource, SkillWarning } from '../../../src/ext/skills/index';
 import { memorySkillFiles, SkillCatalogError, skillEntry, SkillsExtension } from '../../../src/ext/skills/index';

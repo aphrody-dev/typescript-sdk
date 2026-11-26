@@ -5,7 +5,7 @@
  * the existing-knob total-timeout bound, and the typed rounds-exceeded error
  * carrying the last result.
  */
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'bun:test';
 
 import { SdkError, SdkErrorCode } from '../../src/errors/sdkErrors';
 import {

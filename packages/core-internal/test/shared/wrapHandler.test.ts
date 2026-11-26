@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { Protocol } from '../../src/shared/protocol';
 import type { BaseContext, JSONRPCRequest, Result } from '../../src/exports/public/index';

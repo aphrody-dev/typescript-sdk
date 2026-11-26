@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import { Project } from 'ts-morph';
 
 import { symbolRenamesTransform } from '../../../src/migrations/v1-to-v2/transforms/symbolRenames';

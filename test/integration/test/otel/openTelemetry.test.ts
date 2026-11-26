@@ -2,7 +2,7 @@ import type { ClientOptions } from '@modelcontextprotocol/client';
 import { Client, InMemoryTransport, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import { createMcpHandler, McpServer, ProtocolError, ProtocolErrorCode } from '@modelcontextprotocol/server';
 import { context, propagation, SpanKind, SpanStatusCode } from '@opentelemetry/api';
-import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { registerTestSdk } from './sdk';

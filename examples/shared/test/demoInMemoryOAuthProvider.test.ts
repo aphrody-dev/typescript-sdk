@@ -7,7 +7,7 @@
  * These tests verify the basic setup works correctly.
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import type { CreateDemoAuthOptions } from '../src/auth';
 import { createDemoAuth } from '../src/auth';

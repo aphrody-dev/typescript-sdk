@@ -28,7 +28,7 @@ import { randomUUID } from 'node:crypto';
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import type { LegacyHttpHandler, McpRequestContext } from '@modelcontextprotocol/server';
 import { createMcpHandler, isLegacyRequest, McpServer, WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { modernEnvelopeMeta, modernStandardHeaders } from '../helpers/index';

@@ -29,7 +29,7 @@ import {
     Server,
     SUPPORTED_PROTOCOL_VERSIONS
 } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { tapWire, wire } from '../helpers/index';

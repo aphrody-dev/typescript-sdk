@@ -15,9 +15,7 @@
         "cors": "catalog:runtimeServerOnly",
         "express": "catalog:runtimeServerOnly"
     },
-    "devDependencies": {
-        "tsx": "catalog:devTools"
-    },
+    "devDependencies": {},
     "example": {
         "transports": [
             "http"

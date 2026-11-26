@@ -5,7 +5,7 @@
  * `inputRequired.test.ts`.
  */
 import type { ServerContext } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { createRequestStateCodec } from '../../src/server/requestStateCodec';
 import type { ServerOptions } from '../../src/server/server';

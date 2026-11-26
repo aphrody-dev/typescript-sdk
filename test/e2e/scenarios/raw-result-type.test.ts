@@ -24,7 +24,7 @@
 import { Client, SdkError, SdkErrorCode, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import type { JSONRPCRequest } from '@modelcontextprotocol/server';
 import { InMemoryTransport, LATEST_PROTOCOL_VERSION } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 
 import { verifies } from '../helpers/verifies';
 import type { TestArgs } from '../types';

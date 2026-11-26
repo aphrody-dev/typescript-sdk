@@ -1,7 +1,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import { InMemoryTransport } from '@modelcontextprotocol/core-internal';
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/server';
-import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 
 describe('resource title updates', () => {
     let server: McpServer;

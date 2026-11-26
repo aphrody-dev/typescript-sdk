@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { SPEC_SCHEMA_NAMES } from '../../src/migrations/v1-to-v2/mappings/specSchemaNames';
 

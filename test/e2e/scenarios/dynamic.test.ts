@@ -9,7 +9,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import type { Prompt, RegisteredTool, Resource, Tool } from '@modelcontextprotocol/server';
 import { McpServer, ProtocolErrorCode, Server } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { wire } from '../helpers/index';

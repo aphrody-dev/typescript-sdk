@@ -17,7 +17,7 @@
  * read; with a bare `return`, `then` is read at return and called one
  * microtask later.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { SdkError, SdkErrorCode } from '../../src/errors/sdkErrors';
 import type { BaseContext } from '../../src/shared/protocol';

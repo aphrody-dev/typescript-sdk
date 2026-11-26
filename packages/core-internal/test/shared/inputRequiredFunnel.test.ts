@@ -8,7 +8,7 @@
  *   surface to handlers; wrapped `{method, result}` entries are dropped into
  *   `ctx.mcpReq.droppedInputResponseKeys` (T1/D-059).
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import * as z from 'zod/v4';
 
 import type { BaseContext } from '../../src/shared/protocol';

@@ -18,7 +18,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { rev2025NotificationMethods, rev2025RequestMethods } from '../../src/wire/rev2025-11-25/registry';
 import { rev2026NotificationMethods, rev2026RequestMethods } from '../../src/wire/rev2026-07-28/registry';

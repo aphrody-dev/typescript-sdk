@@ -11,7 +11,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import type { RegisteredResource } from '@modelcontextprotocol/server';
 import { McpServer, ProtocolError, ProtocolErrorCode, ResourceTemplate, Server } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 
 import { wire } from '../helpers/index';
 import { verifies } from '../helpers/verifies';

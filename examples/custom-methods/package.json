@@ -14,9 +14,7 @@
         "@modelcontextprotocol/server": "workspace:*",
         "zod": "catalog:runtimeShared"
     },
-    "devDependencies": {
-        "tsx": "catalog:devTools"
-    },
+    "devDependencies": {},
     "example": {
         "era": "dual",
         "//": "Vendor-prefixed methods route through both serving entries unchanged: a 2025 client sends the bare JSON-RPC request, a 2026-07-28 client sends it with the per-request envelope; setRequestHandler receives either."

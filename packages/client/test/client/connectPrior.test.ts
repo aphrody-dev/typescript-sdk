@@ -12,7 +12,7 @@
  */
 import type { DiscoverResult, JSONRPCMessage, Transport } from '@modelcontextprotocol/core-internal';
 import { isJSONRPCRequest, SdkError, SdkErrorCode } from '@modelcontextprotocol/core-internal';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { Client } from '../../src/client/client';
 import type { PriorDiscovery } from '../../src/client/probeClassifier';

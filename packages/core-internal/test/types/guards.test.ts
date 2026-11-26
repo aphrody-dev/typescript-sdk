@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { JSONRPC_VERSION } from '../../src/types/constants';
 import { isCallToolResult, isJSONRPCErrorResponse, isJSONRPCResponse, isJSONRPCResultResponse } from '../../src/types/guards';

@@ -1,6 +1,6 @@
 import type { JSONRPCMessage, JSONRPCRequest, OAuthTokens } from '@modelcontextprotocol/core-internal';
 import { OAuthError, OAuthErrorCode, SdkErrorCode, SdkHttpError } from '@modelcontextprotocol/core-internal';
-import type { Mock, Mocked } from 'vitest';
+import type { Mock, Mocked } from 'bun:test';
 
 import type { OAuthClientProvider } from '../../src/client/auth';
 import { UnauthorizedError } from '../../src/client/auth';

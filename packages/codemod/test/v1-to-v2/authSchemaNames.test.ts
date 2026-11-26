@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { AUTH_SCHEMA_NAMES, AUTH_SCHEMA_NAMES_NO_V2_PUBLIC_EXPORT } from '../../src/migrations/v1-to-v2/mappings/authSchemaNames';
 

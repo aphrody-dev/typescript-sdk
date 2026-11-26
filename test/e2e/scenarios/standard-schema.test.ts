@@ -14,7 +14,7 @@ import { McpServer, ProtocolError, ProtocolErrorCode } from '@modelcontextprotoc
 import { toStandardJsonSchema } from '@valibot/to-json-schema';
 import { type } from 'arktype';
 import * as v from 'valibot';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 
 import { wire } from '../helpers/index';
 import { verifies } from '../helpers/verifies';

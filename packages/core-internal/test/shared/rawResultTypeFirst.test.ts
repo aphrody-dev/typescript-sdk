@@ -23,7 +23,7 @@
  * Either way, the V-1 invariant holds: a non-complete body can NEVER be
  * masked into a hollow success by a tolerant result schema.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { SdkError, SdkErrorCode } from '../../src/errors/sdkErrors';
 import type { BaseContext } from '../../src/shared/protocol';

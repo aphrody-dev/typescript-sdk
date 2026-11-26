@@ -14,7 +14,7 @@
  * `schemas.ts` re-export surfaces): vitest isolates module registries per
  * test file, so preloadSchemas() is the only thing that warms the memos here.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { codecForVersion, MODERN_WIRE_REVISION } from '../../src/wire/codec';
 import { preloadSchemas } from '../../src/wire/preload';

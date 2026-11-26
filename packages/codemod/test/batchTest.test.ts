@@ -1,7 +1,7 @@
 import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'bun:test';
 
 import { parseArgs, parseCodemodCliOutput, runCodemod, installCommand } from '../src/bin/batchTest';
 import { computeResultsDirName, type ResolvedConfig } from '../src/bin/batchTest';

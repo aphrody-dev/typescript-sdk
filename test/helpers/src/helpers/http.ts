@@ -2,7 +2,7 @@ import type { Server, ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 
 import type { Response } from 'express';
-import { vi } from 'vitest';
+import { vi } from 'bun:test';
 
 /**
  * Attach a listener to an existing server on a random localhost port and return its base URL.

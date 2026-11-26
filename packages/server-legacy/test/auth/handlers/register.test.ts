@@ -3,7 +3,7 @@ import { OAuthRegisteredClientsStore } from '../../../src/auth/clients';
 import { OAuthClientInformationFull, OAuthClientMetadata } from '@modelcontextprotocol/core-internal';
 import express from 'express';
 import supertest from 'supertest';
-import { MockInstance } from 'vitest';
+import { MockInstance } from 'bun:test';
 
 describe('Client Registration Handler', () => {
     // Mock client store with registration support

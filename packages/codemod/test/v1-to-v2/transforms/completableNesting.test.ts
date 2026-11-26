@@ -1,5 +1,5 @@
 import { Project } from 'ts-morph';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { completableNestingTransform } from '../../../src/migrations/v1-to-v2/transforms/completableNesting';
 import type { TransformContext } from '../../../src/types';

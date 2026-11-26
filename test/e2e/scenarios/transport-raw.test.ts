@@ -25,17 +25,17 @@ import {
 } from '@modelcontextprotocol/core-internal';
 import type { JSONRPCMessage, JSONRPCNotification, JSONRPCRequest } from '@modelcontextprotocol/server';
 import { InMemoryTransport, McpServer } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { defined, hostPerSession, hostStateless } from '../helpers/index';
 import { verifies } from '../helpers/verifies';
 import type { TestArgs } from '../types';
 
-/** Absolute path to the runnable stdio fixture server (executed with tsx). */
+/** Absolute path to the runnable stdio fixture server (executed with bun). */
 const FIXTURE_PATH = fileURLToPath(new URL('../fixtures/stdio-server.ts', import.meta.url));
 
-/** E2E package root — spawn cwd so the workspace-local `tsx` resolves and tsconfig paths map workspace packages to source. */
+/** E2E package root — spawn cwd so bun resolves tsconfig paths to workspace sources. */
 const E2E_ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 /** Hand-built initialize request a relay would forward verbatim (no Client involved). */
@@ -147,10 +147,10 @@ async function rawRelayInMemory(protocolVersion: string): Promise<void> {
 }
 
 async function rawRelayStdio(protocolVersion: string): Promise<void> {
-    // Direct spawn (node --import tsx) so the spawned process IS the fixture server, as in the other stdio scenarios.
+    // Direct spawn (bun <fixture>) so the spawned process IS the fixture server, as in the other stdio scenarios.
     const transport = new StdioClientTransport({
         command: process.execPath,
-        args: ['--import', 'tsx', FIXTURE_PATH],
+        args: [FIXTURE_PATH],
         cwd: E2E_ROOT
     });
     const received: JSONRPCMessage[] = [];
@@ -166,7 +166,7 @@ async function rawRelayStdio(protocolVersion: string): Promise<void> {
         };
 
         await transport.send(initializeRequest(1, protocolVersion));
-        // Generous first wait: tsx compiles the fixture inside the freshly spawned child before it can answer.
+        // Generous first wait: bun transpiles the fixture inside the freshly spawned child before it can answer.
         await vi.waitFor(() => expect(received).toHaveLength(1), { timeout: 10_000, interval: 25 });
         expectInitializeResponse(
             defined(received[0], 'initialize response'),

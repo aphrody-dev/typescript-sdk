@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { extractMentions, parsePromptArgs } from '../host/loop';
 import { collectFormInput, describeField, parseFieldAnswer } from '../host/ui';

@@ -72,8 +72,8 @@ export function todosServerConfig(): CliClientConfig {
     return {
         mcpServers: {
             todos: {
-                command: 'npx',
-                args: ['-y', 'tsx', siblingPath(import.meta.url, '../../todos-server/server.ts')]
+                command: 'bun',
+                args: [siblingPath(import.meta.url, '../../todos-server/server.ts')]
             }
         }
     };
@@ -86,7 +86,7 @@ function serverNameFromUrl(url: URL): string {
     return meaningful ?? url.hostname;
 }
 
-/** Derive a friendly server name from an ad-hoc `--server` command line ("npx -y tsx server.ts" → "server"). */
+/** Derive a friendly server name from an ad-hoc `--server` command line ("bun server.ts" → "server"). */
 function serverNameFromCommand(tokens: string[]): string {
     const last = tokens.at(-1) ?? 'server';
     const base = last.split(/[/\\]/).pop() ?? last;

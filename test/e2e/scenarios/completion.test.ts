@@ -9,7 +9,7 @@
 
 import { Client } from '@modelcontextprotocol/client';
 import { completable, McpServer, ProtocolError, ProtocolErrorCode, ResourceTemplate, Server } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { wire } from '../helpers/index';

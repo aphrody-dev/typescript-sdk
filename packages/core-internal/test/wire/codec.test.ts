@@ -8,7 +8,7 @@
  * `undefined`), producing a probe with no `_meta` envelope and a silent
  * downgrade to the legacy connect path.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { codecForVersion, MODERN_WIRE_REVISION } from '../../src/wire/codec';
 

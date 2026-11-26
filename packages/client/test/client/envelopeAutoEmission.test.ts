@@ -14,7 +14,7 @@ import {
     LATEST_PROTOCOL_VERSION,
     PROTOCOL_VERSION_META_KEY
 } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { Client } from '../../src/client/client';
 

@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 
 import { decodeBase64, decodeUtf8Lossless, encodeBase64, encodeUtf8, sha256Digest } from '../../../src/ext/skills/bytes';
 

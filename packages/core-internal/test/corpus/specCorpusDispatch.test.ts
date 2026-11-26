@@ -21,7 +21,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { Protocol } from '../../src/shared/protocol';
 import type { BaseContext } from '../../src/shared/protocol';

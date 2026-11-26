@@ -85,11 +85,8 @@
     "dependencies": {
         "@modelcontextprotocol/core": "workspace:*",
         "zod": "catalog:runtimeShared",
-        "raw-body": "catalog:runtimeServerOnly",
-        "content-type": "catalog:runtimeShared",
         "cors": "catalog:runtimeServerOnly",
-        "express-rate-limit": "^8.2.1",
-        "pkce-challenge": "catalog:runtimeShared"
+        "express-rate-limit": "^8.2.1"
     },
     "peerDependencies": {
         "express": "^4.18.0 || ^5.0.0"
@@ -103,8 +100,6 @@
         "@modelcontextprotocol/core-internal": "workspace:^",
         "@modelcontextprotocol/tsconfig": "workspace:^",
         "@modelcontextprotocol/eslint-config": "workspace:^",
-        "@modelcontextprotocol/vitest-config": "workspace:^",
-        "@types/content-type": "catalog:devTools",
         "@types/cors": "catalog:devTools",
         "@types/express": "catalog:devTools",
         "@types/express-serve-static-core": "catalog:devTools",
@@ -119,6 +114,6 @@
         "tsdown": "catalog:devTools",
         "typescript": "catalog:devTools",
         "typescript-eslint": "catalog:devTools",
-        "vitest": "catalog:devTools"
+        "bun-types": "catalog:devTools"
     }
 }

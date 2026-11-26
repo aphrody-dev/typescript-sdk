@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Mock } from 'vitest';
+import { Mock } from 'bun:test';
 import { requireBearerAuth } from '../../../src/auth/middleware/bearerAuth';
 import { AuthInfo } from '../../../src/auth/types';
 import { InsufficientScopeError, InvalidTokenError, CustomOAuthError, ServerError } from '../../../src/auth/errors';

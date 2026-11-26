@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { SdkError } from '../../src/errors/sdkErrors';
 import type { BaseContext } from '../../src/shared/protocol';

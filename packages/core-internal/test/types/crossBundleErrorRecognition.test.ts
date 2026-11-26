@@ -15,7 +15,7 @@
  *  - recognition is purely structural — malformed `data` falls back to the
  *    generic class rather than guessing or throwing.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import type { BaseContext } from '../../src/shared/protocol';
 import { Protocol } from '../../src/shared/protocol';

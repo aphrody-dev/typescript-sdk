@@ -17,21 +17,21 @@ import { fileURLToPath } from 'node:url';
 
 import { Client } from '@modelcontextprotocol/client';
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 
 import { verifies } from '../helpers/verifies';
 import type { TestArgs } from '../types';
 
-/** Absolute path to the runnable dual-era fixture server (executed with tsx). */
+/** Absolute path to the runnable dual-era fixture server (executed with bun). */
 const FIXTURE_PATH = fileURLToPath(new URL('../fixtures/dual-era-stdio-server.ts', import.meta.url));
 
-/** E2E package root — spawn cwd so node/tsx resolve the local toolchain and workspace packages. */
+/** E2E package root — spawn cwd so bun resolves the workspace packages. */
 const E2E_ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 verifies('typescript:transport:stdio:dual-era-serving', async ({ protocolVersion }: TestArgs) => {
     const transport = new StdioClientTransport({
         command: process.execPath,
-        args: ['--import', 'tsx', FIXTURE_PATH],
+        args: [FIXTURE_PATH],
         cwd: E2E_ROOT
     });
 

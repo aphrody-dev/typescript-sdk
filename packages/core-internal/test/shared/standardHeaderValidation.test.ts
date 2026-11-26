@@ -20,7 +20,7 @@
  * standard-header rung the entry layers on top, so the existing
  * `inboundClassification` and cell-sheet tests stay byte-untouched.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import type { InboundHttpRequest, InboundLadderRejection, InboundModernRoute } from '../../src/shared/inboundClassification';
 import {

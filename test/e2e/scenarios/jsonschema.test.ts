@@ -18,7 +18,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import type { Tool } from '@modelcontextprotocol/server';
 import { fromJsonSchema, McpServer, ProtocolError, ProtocolErrorCode, Server } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { wire } from '../helpers/index';

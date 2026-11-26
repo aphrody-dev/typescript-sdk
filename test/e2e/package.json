@@ -40,7 +40,6 @@
         "@modelcontextprotocol/eslint-config": "workspace:^",
         "@modelcontextprotocol/test-helpers": "workspace:^",
         "@modelcontextprotocol/tsconfig": "workspace:^",
-        "@modelcontextprotocol/vitest-config": "workspace:^",
         "@opentelemetry/api": "catalog:otel",
         "@opentelemetry/context-async-hooks": "catalog:otel",
         "@opentelemetry/core": "catalog:otel",
@@ -54,10 +53,9 @@
         "fastify": "catalog:runtimeServerOnly",
         "hono": "catalog:runtimeServerOnly",
         "jose": "catalog:runtimeClientOnly",
-        "tsx": "catalog:devTools",
         "typescript": "catalog:devTools",
         "valibot": "catalog:devTools",
-        "vitest": "catalog:devTools",
-        "zod": "catalog:runtimeShared"
+        "zod": "catalog:runtimeShared",
+        "bun-types": "catalog:devTools"
     }
 }

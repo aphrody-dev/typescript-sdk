@@ -18,15 +18,15 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Client } from '@modelcontextprotocol/client';
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
 import { JSONRPCMessageSchema } from '@modelcontextprotocol/core-internal';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 
 import { verifies } from '../helpers/verifies';
 import type { TestArgs } from '../types';
 
-/** Absolute path to the runnable fixture server (executed with tsx). */
+/** Absolute path to the runnable fixture server (executed with bun). */
 const FIXTURE_PATH = fileURLToPath(new URL('../fixtures/stdio-server.ts', import.meta.url));
 
-/** E2E package root — spawn cwd so `npx`/node resolve the local `tsx` and its tsconfig paths map workspace packages to source. */
+/** E2E package root — spawn cwd so bun resolves tsconfig paths to workspace sources. */
 const E2E_ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 /** Plain client with no extra capabilities declared. */
@@ -63,7 +63,7 @@ verifies('transport:stdio:clean-shutdown', async (_args: TestArgs) => {
     ].join('\n');
     const transport = new StdioClientTransport({
         command: process.execPath,
-        args: ['--import', 'tsx', '--input-type=module', '-e', wrapperScript],
+        args: ['-e', wrapperScript],
         cwd: E2E_ROOT,
         stderr: 'pipe'
     });
@@ -122,7 +122,7 @@ verifies('transport:stdio:no-embedded-newlines', async (_args: TestArgs) => {
     const teeScript = [
         `import { spawn } from 'node:child_process';`,
         `import { appendFileSync } from 'node:fs';`,
-        `const child = spawn(process.execPath, ['--import', 'tsx', ${JSON.stringify(FIXTURE_PATH)}], { stdio: ['pipe', 'pipe', 'inherit'] });`,
+        `const child = spawn(process.execPath, [${JSON.stringify(FIXTURE_PATH)}], { stdio: ['pipe', 'pipe', 'inherit'] });`,
         `process.stdin.on('data', c => { appendFileSync(${JSON.stringify(clientToServerPath)}, c); child.stdin.write(c); });`,
         `process.stdin.on('end', () => child.stdin.end());`,
         `child.stdout.on('data', c => { appendFileSync(${JSON.stringify(serverToClientPath)}, c); process.stdout.write(c); });`,
@@ -131,7 +131,7 @@ verifies('transport:stdio:no-embedded-newlines', async (_args: TestArgs) => {
 
     const transport = new StdioClientTransport({
         command: process.execPath,
-        args: ['--input-type=module', '-e', teeScript],
+        args: ['-e', teeScript],
         cwd: E2E_ROOT
     });
     const client = newClient();
@@ -167,14 +167,14 @@ verifies('transport:stdio:no-embedded-newlines', async (_args: TestArgs) => {
 });
 
 verifies('transport:stdio:shutdown-escalation', async (_args: TestArgs) => {
-    // Spawned directly (`node --import tsx`) instead of via `npx tsx`: close()
+    // Spawned directly (`bun <fixture>`) instead of via a wrapper like `npx`: close()
     // signals the process the transport spawned, and behind npx the SIGTERM/
     // SIGKILL escalation would only ever reach the npx wrapper while the real
     // server — which ignores SIGTERM — survived as an orphan. Direct spawn makes
     // the spawned process BE the server so the full ladder is observable.
     const transport = new StdioClientTransport({
         command: process.execPath,
-        args: ['--import', 'tsx', FIXTURE_PATH],
+        args: [FIXTURE_PATH],
         cwd: E2E_ROOT,
         env: { E2E_IGNORE_SIGTERM: '1' },
         stderr: 'pipe'
@@ -218,7 +218,7 @@ verifies('transport:stdio:shutdown-escalation', async (_args: TestArgs) => {
 });
 
 verifies('transport:stdio:stderr-passthrough', async (_args: TestArgs) => {
-    const transport = new StdioClientTransport({ command: 'npx', args: ['tsx', FIXTURE_PATH], cwd: E2E_ROOT, stderr: 'pipe' });
+    const transport = new StdioClientTransport({ command: process.execPath, args: [FIXTURE_PATH], cwd: E2E_ROOT, stderr: 'pipe' });
 
     // With stderr: 'pipe' the stream is available before start(), so listeners
     // attached here cannot miss output written while the server boots.
@@ -259,8 +259,8 @@ verifies('lifecycle:connect:onerror-pre-handshake', async (_args: TestArgs) => {
     // client.onerror fires and that connect() does not hang or falsely succeed.
 
     const transport = new StdioClientTransport({
-        command: 'npx',
-        args: ['tsx', FIXTURE_PATH],
+        command: process.execPath,
+        args: [FIXTURE_PATH],
         cwd: E2E_ROOT,
         env: { E2E_GARBAGE_STDOUT: '1' }
     });
@@ -318,8 +318,8 @@ verifies('transport:stdio:default-env-safelist', async (_args: TestArgs) => {
     process.env[SENTINEL_KEY] = 'should-not-reach-child';
 
     const transport = new StdioClientTransport({
-        command: 'npx',
-        args: ['tsx', FIXTURE_PATH],
+        command: process.execPath,
+        args: [FIXTURE_PATH],
         cwd: E2E_ROOT
         // Deliberately omit `env` option, so getDefaultEnvironment() applies.
     });
@@ -369,7 +369,7 @@ verifies('transport:stdio:pre-started-tolerated', async (_args: TestArgs) => {
     // Real consumers call transport.start() themselves (to capture early stderr) before handing the transport to connect().
     const transport = new StdioClientTransport({
         command: process.execPath,
-        args: ['--import', 'tsx', FIXTURE_PATH],
+        args: [FIXTURE_PATH],
         cwd: E2E_ROOT,
         stderr: 'pipe'
     });

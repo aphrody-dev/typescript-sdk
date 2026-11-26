@@ -9,7 +9,7 @@
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import type { EventId, EventStore, JSONRPCMessage, StreamId } from '@modelcontextprotocol/server';
 import { LATEST_PROTOCOL_VERSION, McpServer, parseJSONRPCMessage } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import { hostResumable } from '../helpers/index';

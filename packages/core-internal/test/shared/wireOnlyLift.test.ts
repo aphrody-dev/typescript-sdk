@@ -14,7 +14,7 @@
  * 2025-era shape of the same call; traffic without wire-only material passes
  * through untouched (same reference — no cloning on the hot path).
  */
-import { describe, expect, expectTypeOf, test } from 'vitest';
+import { describe, expect, expectTypeOf, test } from 'bun:test';
 import * as z from 'zod/v4';
 
 import type { BaseContext } from '../../src/shared/protocol';

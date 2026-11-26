@@ -28,7 +28,7 @@
  */
 import type { JSONRPCRequest, RequestId } from '@modelcontextprotocol/core-internal';
 import { acceptedContent, inputRequired, inputResponse } from '@modelcontextprotocol/core-internal';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'bun:test';
 import * as z from 'zod/v4';
 
 import { errorOf, legacyInitialize, resultOf, toolText, wireLegacy } from './legacyShimHarness';

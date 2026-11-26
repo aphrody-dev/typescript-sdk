@@ -173,8 +173,6 @@
         "@modelcontextprotocol/eslint-config": "workspace:^",
         "@modelcontextprotocol/test-helpers": "workspace:^",
         "@modelcontextprotocol/tsconfig": "workspace:^",
-        "@modelcontextprotocol/vitest-config": "workspace:^",
-        "@types/eventsource": "catalog:devTools",
         "@typescript/native-preview": "catalog:devTools",
         "@valibot/to-json-schema": "catalog:devTools",
         "ajv": "catalog:runtimeShared",
@@ -189,6 +187,6 @@
         "typescript": "catalog:devTools",
         "typescript-eslint": "catalog:devTools",
         "valibot": "catalog:devTools",
-        "vitest": "catalog:devTools"
+        "bun-types": "catalog:devTools"
     }
 }

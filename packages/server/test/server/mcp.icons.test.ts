@@ -1,6 +1,6 @@
 import type { Icon, JSONRPCMessage } from '@modelcontextprotocol/core-internal';
 import { InMemoryTransport, LATEST_PROTOCOL_VERSION } from '@modelcontextprotocol/core-internal';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'bun:test';
 import { McpServer, ResourceTemplate } from '../../src/index';
 
 const ICONS: Icon[] = [

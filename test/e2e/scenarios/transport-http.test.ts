@@ -26,7 +26,7 @@ import {
     SUPPORTED_PROTOCOL_VERSIONS,
     WebStandardStreamableHTTPServerTransport
 } from '@modelcontextprotocol/server';
-import { expect, vi } from 'vitest';
+import { expect, vi } from 'bun:test';
 import { z } from 'zod/v4';
 
 import type { HttpHandler } from '../helpers/index';

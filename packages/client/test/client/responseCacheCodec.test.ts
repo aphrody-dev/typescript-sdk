@@ -1,6 +1,6 @@
 import type { JSONRPCRequest } from '@modelcontextprotocol/core-internal';
 import { InMemoryTransport } from '@modelcontextprotocol/core-internal';
-import { afterEach, describe, expect, test } from 'vitest';
+import { afterEach, describe, expect, test } from 'bun:test';
 import { Client } from '../../src/client/client';
 import type { CacheEntry, CacheKey, ResponseCacheStore } from '../../src/client/responseCache';
 import { ClientResponseCache, InMemoryResponseCacheStore } from '../../src/client/responseCache';

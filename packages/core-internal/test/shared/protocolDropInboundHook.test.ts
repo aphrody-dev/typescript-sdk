@@ -11,7 +11,7 @@
  *   negotiated a modern era. Era selection never happens here — era is
  *   instance state owned by the serving entry.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import type { BaseContext } from '../../src/shared/protocol';
 import { Protocol } from '../../src/shared/protocol';

@@ -19,7 +19,5 @@
         "@opentelemetry/sdk-trace": "catalog:otel",
         "zod": "catalog:runtimeShared"
     },
-    "devDependencies": {
-        "tsx": "catalog:devTools"
-    }
+    "devDependencies": {}
 }

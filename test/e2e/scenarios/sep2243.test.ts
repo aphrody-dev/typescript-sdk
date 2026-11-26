@@ -8,7 +8,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import { encodeMcpParamValue, MCP_PARAM_HEADER_PREFIX } from '@modelcontextprotocol/core-internal';
 import { fromJsonSchema, McpServer } from '@modelcontextprotocol/server';
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 
 import { modernEnvelopeMeta, wire } from '../helpers/index';
 import { verifies } from '../helpers/verifies';

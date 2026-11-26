@@ -1,6 +1,6 @@
 // #2619: the real StreamableHTTPClientTransport against a fetch stub that plays a gateway in front of a 2025 server.
 import { SdkError, SdkErrorCode } from '@modelcontextprotocol/core-internal';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 import { Client } from '../../src/client/client';
 import { StreamableHTTPClientTransport } from '../../src/client/streamableHttp';
