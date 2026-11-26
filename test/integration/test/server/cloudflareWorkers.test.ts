@@ -357,7 +357,9 @@ export default {
             // determined by probing the MCP endpoint, not by parsing wrangler's stdout — see
             // waitForMcpReady for the reasoning.
             port = await getFreePort();
-            proc = spawn(process.execPath, [WRANGLER_BIN, 'dev', '--local', '--port', String(port)], {
+            // wrangler runs on Node: under Bun its miniflare proxy accepts connections but never
+            // answers, so even a trivial worker hangs. Fall back to the current runtime without node.
+            proc = spawn(Bun.which('node') ?? process.execPath, [WRANGLER_BIN, 'dev', '--local', '--port', String(port)], {
                 cwd: tempDir,
                 stdio: 'pipe',
                 detached: process.platform !== 'win32'
